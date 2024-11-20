@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2024-11-20)
+
+
+### Features
+
+* 适配karin ([a80de7e](https://github.com/XasYer/steam-plugin/commit/a80de7e7579c8d9f71e5fb511e21fd305d047185))
+
 ## 1.3.0 (2024-11-17)
 
 
