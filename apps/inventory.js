@@ -26,8 +26,7 @@ export const rule = {
         title: '',
         games: [],
         type: 'inventory',
-        playtime_forever: 0,
-        playtime_2weeks: 0
+        desc: ''
       }
       if (e.msg.includes('近')) {
         const games = await api.IPlayerService.GetRecentlyPlayedGames(steamId)
@@ -83,20 +82,19 @@ export const rule = {
         screenshotOptions.title = `${nickname} 库存共有 ${games.length} 个游戏`
       }
       if (screenshotOptions.type !== 'wishlist') {
+        let playtimeForever = 0
+        let playtime2weeks = 0
         screenshotOptions.games.map(i => {
           i.time_info = `${getTime(i.playtime_forever)} ${i.playtime_2weeks ? `/ ${getTime(i.playtime_2weeks)}` : ''}`
-          screenshotOptions.playtime_forever += i.playtime_forever
-          i.playtime_2weeks && (screenshotOptions.playtime_2weeks += i.playtime_2weeks)
+          playtimeForever += i.playtime_forever
+          i.playtime_2weeks && (playtime2weeks += i.playtime_2weeks)
           return i
         })
-        screenshotOptions.playtime_forever = getTime(
-          screenshotOptions.playtime_forever
-        )
-        screenshotOptions.playtime_2weeks = getTime(
-          screenshotOptions.playtime_2weeks
-        )
+        screenshotOptions.desc = `总游戏时长：${getTime(playtimeForever)} / 最近两周游戏时长：${getTime(playtime2weeks)}`
       }
-      const img = await Render.simpleRender('inventory/index', screenshotOptions)
+      const img = await Render.simpleRender('inventory/index', {
+        data: [screenshotOptions]
+      })
       if (img) {
         await e.reply(img)
       } else {

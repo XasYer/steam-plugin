@@ -62,11 +62,12 @@ pnpm install --filter=steam-plugin
 - [x] 群友状态播报
 - [x] steam帮助
 - [x] steam设置
-- [ ] steam搜索
+- [x] steam搜索
 - [ ] steam成就统计
 - [ ] 群友上下线通知
 - [ ] steam喜加一
 - [ ] 开启/关闭推送
+- [x] steam特惠
 
 ## 联系方式
 

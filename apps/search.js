@@ -37,7 +37,7 @@ export const rule = {
         games,
         type: 'wishlist'
       }
-      const img = await Render.simpleRender('inventory/index', screenshotOptions)
+      const img = await Render.simpleRender('inventory/index', { data: [screenshotOptions] })
       if (img) {
         await e.reply(img)
       } else {

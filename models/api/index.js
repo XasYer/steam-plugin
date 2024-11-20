@@ -139,3 +139,64 @@ export async function search (name) {
     return res.data.replace?.(/\n/g, '')
   })
 }
+
+/**
+ * @typedef {Object} items
+ * @property {number} id appid
+ * @property {number} type 未知
+ * @property {string} name 游戏名
+ * @property {boolean} discounted 是否正在打折
+ * @property {number} discount_percent 折扣率
+ * @property {number} original_price 原价(需要 / 100)
+ * @property {number} final_price 现价(需要 / 100)
+ * @property {string} currency 货币单位
+ * @property {string} large_capsule_image 大图
+ * @property {string} small_capsule_image 小图
+ * @property {boolean} windows_available windows是否可用
+ * @property {boolean} mac_available mac是否可用
+ * @property {boolean} linux_available linux是否可用
+ * @property {boolean} streamingvideo_available 未知
+ * @property {number} discount_expiration 打折结束时间
+ * @property {string} header_image header图
+ * @property {string} controller_support 未知
+ */
+
+/**
+ * 获取优惠信息
+ * @returns {Promise<{
+ *   specials: {
+ *     id: string,
+ *     name: string,
+ *     items: items[]
+ *   },
+ *   coming_soon: {
+ *     id: string,
+ *     name: string,
+ *     items: items[]
+ *   },
+ *   top_sellers: {
+ *     id: string,
+ *     name: string,
+ *     items: items[]
+ *   },
+ *   new_releases: {
+ *     id: string,
+ *     name: string,
+ *     items: items[]
+ *   }
+ * }>}
+ */
+export async function featuredcategories () {
+  const start = Date.now()
+  logger.info('开始获取优惠信息')
+  return utils.request.get('api/featuredcategories', {
+    baseURL: 'https://store.steampowered.com',
+    params: {
+      l: 'schinese',
+      cc: 'CN'
+    }
+  }).then(res => {
+    logger.info(`获取优惠信息成功，耗时${Date.now() - start}ms`)
+    return res.data
+  })
+}

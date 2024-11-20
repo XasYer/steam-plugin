@@ -21,6 +21,7 @@
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
+            width: 890px;
         }
 
         .games>div {
@@ -56,6 +57,7 @@
 
         .wishlist-info {
             width: 220px;
+            margin-right: 10px;
         }
 
         .inventory-info {
@@ -105,22 +107,25 @@
 
 <body>
     <div id="container">
+        {{each data item}}
         <div class="header">
-            <h2>{{title}}</h2>
+            <h2>{{item.title}}</h2>
             <h4>
-                {{if type !== 'wishlist'}}
-                总游戏时长：{{playtime_forever}} /
-                最近两周游戏时长：{{playtime_2weeks}}
-                {{/if}}
+                {{item.desc}}
             </h4>
         </div>
         <div class="games">
-            {{each games i}}
-            <div class="{{type}}">
+            {{each item.games i}}
+            <div class="{{item.type}}">
                 <div class="header-img">
-                    <img src="https://steamcdn-a.akamaihd.net/steam/apps/{{i.appid}}/header.jpg">
+                    {{if i.header_image}}
+                    <img src="{{i.header_image}}">
+                    {{else}}
+                    <img
+                        src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
+                    {{/if}}
                 </div>
-                <div class="game-info overflow {{type}}-info">
+                <div class="game-info overflow {{item.type}}-info">
                     <div class="game-title">
                         {{i.name || ''}}
                     </div>
@@ -128,14 +133,14 @@
                         {{i.appid}}
                     </div>
                     <div class="game-time">
-                        {{if type === 'wishlist'}}
+                        {{if item.type === 'wishlist'}}
                         {{i.date_added || ''}}
                         {{else}}
                         {{i.time_info || ''}}
                         {{/if}}
                     </div>
                 </div>
-                {{if type === 'wishlist'}}
+                {{if item.type === 'wishlist'}}
                 <div class="overflow">
                     <div class="{{i.price_overview.discount_percent ? 'through' : ''}}">
                         {{i.price_overview.initial_formatted || i.price_overview.final_formatted || ''}}
@@ -151,6 +156,7 @@
             </div>
             {{/each}}
         </div>
+        {{/each}}
     </div>
 </body>
 
