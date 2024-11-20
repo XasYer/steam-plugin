@@ -144,7 +144,7 @@ export function getHeaderImgUrlByAppid (appid) {
 export async function getImgUrlBuffer (url) {
   for (let i = 0; i < 3; i++) {
     try {
-      const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' })
+      const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' }).then(res => res.data)
       if (Version.BotName === 'Karin') {
         return `base64://${buffer.toString('base64')}`
       } else {
