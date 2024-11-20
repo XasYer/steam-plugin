@@ -44,7 +44,7 @@ export const helpList = [
       {
         icon: 31,
         title: '#steam搜索',
-        desc: '查看steam游戏'
+        desc: '搜索steam游戏'
       },
       {
         icon: 32,
