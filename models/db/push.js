@@ -47,6 +47,8 @@ await PushTable.sync()
  * @returns {Promise<PushColumns>}
  */
 export async function PushTableAddData (userId, steamId, botId, groupId, transaction) {
+  userId = String(userId)
+  groupId = String(groupId)
   // 判断是否存在
   const data = await PushTable.findOne({
     where: {
@@ -77,6 +79,8 @@ export async function PushTableAddData (userId, steamId, botId, groupId, transac
  * @returns {Promise<number>}
  */
 export async function PushTableDelData (userId, steamId, botId, groupId, transaction) {
+  userId = String(userId)
+  groupId = String(groupId)
   return await PushTable.destroy({
     where: {
       userId,

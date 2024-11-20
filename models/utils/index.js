@@ -76,13 +76,13 @@ export async function getUserName (botId, uid, gid) {
         return uid
       }
     } else {
+      uid = Number(uid) || uid
       if (gid) {
         gid = Number(gid) || gid
         const group = Bot[botId].pickGroup(gid)
         const member = (await group.pickMember(uid)).getInfo()
         return member.card || member.nickname || member.user_id || uid
       } else {
-        uid = Number(uid) || uid
         const user = Bot[botId].pickUser(uid)
         const info = await user.getInfo()
         return info.nickname || info.user_id || uid
@@ -122,6 +122,7 @@ export async function sendGroupMsg (botId, gid, msg) {
   if (Version.BotName === 'Karin') {
     return await Bot.sendMsg(botId, { scene: 'group', peer: gid }, msg)
   } else {
+    gid = Number(gid) || gid
     return await Bot[botId].pickGroup(gid).sendMsg(msg)
   }
 }

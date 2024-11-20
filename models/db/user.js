@@ -41,6 +41,7 @@ await UserTable.sync()
  * @returns {Promise<UserColumns|null>}
  */
 export async function UserTableAddSteamIdByUserId (userId, steamId) {
+  userId = String(userId)
   const res = await UserTable.create({
     userId,
     steamId
@@ -58,6 +59,7 @@ export async function UserTableAddSteamIdByUserId (userId, steamId) {
  * @param {boolean} isBind 是否绑定
  */
 export async function UserTableBindSteamIdByUserId (userId, steamId, isBind = true) {
+  userId = String(userId)
   // 开启一个事务
   const transaction = await sequelize.transaction()
   try {
@@ -99,6 +101,7 @@ export async function UserTableBindSteamIdByUserId (userId, steamId, isBind = tr
  * @returns {Promise<UserColumns|null>}
  */
 export async function UserTableDelSteamIdByUserId (userId, steamId) {
+  userId = String(userId)
   const transaction = await sequelize.transaction()
   const data = await UserTableGetDataByUserId(userId)
   try {
@@ -141,6 +144,7 @@ export async function UserTableDelSteamIdByUserId (userId, steamId) {
  * @returns {Promise<string|null>}
  */
 export async function UserTableGetBindSteamIdByUserId (userId) {
+  userId = String(userId)
   return await UserTable.findOne({
     where: {
       userId,
@@ -168,6 +172,7 @@ export async function UserTableGetDataBySteamId (steamId) {
  * @returns {Promise<UserColumns[]>}
  */
 export async function UserTableGetDataByUserId (userId) {
+  userId = String(userId)
   return await UserTable.findAll({
     where: {
       userId
