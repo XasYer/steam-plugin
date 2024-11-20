@@ -1,0 +1,21 @@
+name: 更新版本号
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 更新版本号
+        uses: googleapis/release-please-action@v4
+        id: release_please
+        with:
+          release-type: node
+          token: ${{ secrets.GITHUB_TOKEN }}
+          bump-minor-pre-major: true
+          version-file: package.json
+          fork: false

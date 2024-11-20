@@ -1,0 +1,6 @@
+# Steam Web API的apiKey 大部分功能都需要
+# https://partner.steamgames.com/doc/webapi_overview/auth
+apiKey: ""
+
+# proxy代理
+proxy: ""
