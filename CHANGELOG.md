@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/XasYer/steam-plugin/compare/v1.0.0...v1.1.0) (2024-11-20)
+
+
+### Features
+
+* 帮助 & 设置 ([aedc7d8](https://github.com/XasYer/steam-plugin/commit/aedc7d88b36426b8105dfcf4ef67311821d32333))
+
 ## 1.0.0 (2024-11-20)
 
 
