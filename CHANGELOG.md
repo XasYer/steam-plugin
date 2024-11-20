@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.0](https://github.com/XasYer/steam-plugin/compare/v1.1.0...v1.2.0) (2024-11-20)
+
+
+### Features
+
+* steam搜索 ([9d15f14](https://github.com/XasYer/steam-plugin/commit/9d15f144a2fb37f5d4c89cfc3466b0311ef12ae5))
+* steam特惠 ([b7000a8](https://github.com/XasYer/steam-plugin/commit/b7000a84b81e786384aadf28dc4895f424c2936d))
+
+
+### Bug Fixes
+
+* 图片报错 ([0a31520](https://github.com/XasYer/steam-plugin/commit/0a3152013d14c142f7d8f906a14ba11cbd6fb145))
+* 绑定了但没完全绑定 ([5986d03](https://github.com/XasYer/steam-plugin/commit/5986d03d4e6c59b620aec55d525d8a7251452e9d))
+* 设置没判断主人 ([b762ce5](https://github.com/XasYer/steam-plugin/commit/b762ce5476bbf4ecc00de26c8828dfeea14f114b))
+
 ## [1.1.0](https://github.com/XasYer/steam-plugin/compare/v1.0.0...v1.1.0) (2024-11-20)
 
 
