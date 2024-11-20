@@ -1,0 +1,54 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{pluResPath}}setting/index.css" />
+{{/block}}
+{{block 'main'}}
+
+<div class="info_box">
+  <div class="head-box type{{bgType}}">
+    <div class="label">steam管理面板</div>
+    <div class="title">#steam设置</div>
+  </div>
+</div>
+{{each schema cfgGroup}}
+<div class="cfg-box">
+  <div class="cfg-group">{{cfgGroup.title}}</div>
+  <ul class="cfg-ul">
+    {{each cfgGroup.cfg cfgItem cfgKey}}
+    <li class="cfg-li">
+      <div class="cfg-line">
+        {{cfgItem.title}}
+        <span class="cfg-hint"> #steam设置{{cfgItem.key}}
+          {{if cfgItem.type==='number'}}
+          {{cfgItem.def}}
+          {{else if cfgItem.type==='string'}}
+          xxx
+          {{else if cfgItem.type==='boolean'}}
+          开启/关闭
+          {{/if}}
+        </span>
+        {{if cfgItem.type === 'number'}}
+        <div class="cfg-status">{{cfg[cfgKey]}}</div>
+        {{else if cfgItem.type ==='boolean'}}
+        {{if cfg[cfgKey]}}
+        <div class="cfg-status">已开启</div>
+        {{else}}
+        <div class="cfg-status status-off">已关闭</div>
+        {{/if}}
+        {{else if cfgItem.type ==='string'}}
+        {{if cfg[cfgKey]}}
+        <div class="cfg-status">已设置</div>
+        {{else}}
+        <div class="cfg-status status-off">未设置</div>
+        {{/if}}
+        {{/if}}
+      </div>
+      {{if cfgItem.desc && cfgItem.showDesc!== false}}
+      <div class="cfg-desc">{{cfgItem.desc}}</div>
+      {{/if}}
+    </li>
+    {{/each}}
+  </ul>
+</div>
+{{/each}}
+{{/block}}

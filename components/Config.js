@@ -21,6 +21,7 @@ class Config {
     if (!fs.existsSync(path)) fs.mkdirSync(path)
     const pathDef = `${Version.pluginPath}/config/default_config/`
     const files = fs.readdirSync(pathDef).filter(file => file.endsWith('.yaml'))
+    this.files = files
     const ignore = []
     for (const file of files) {
       if (!fs.existsSync(`${path}${file}`)) {
@@ -121,6 +122,15 @@ class Config {
     this.watch(file, name, type)
 
     return this.config[key]
+  }
+
+  /** 获取所有配置 */
+  getCfg () {
+    return {
+      ...this.files.map(file => this.getDefOrConfig(file.replace('.yaml', ''))).reduce((obj, item) => {
+        return { ...obj, ...item }
+      }, {})
+    }
   }
 
   /** 监听配置文件 */

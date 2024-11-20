@@ -3,7 +3,7 @@ import { puppeteer } from '#lib'
 import { Version } from '#components'
 
 function scale (pct = 1) {
-  const scale = Math.min(2, Math.max(0.5, 100 / 100))
+  const scale = Math.min(2, Math.max(0.5, 150 / 100))
   pct = pct * scale
   return `style=transform:scale(${pct})`
 }
@@ -20,7 +20,7 @@ const Render = {
       defaultLayout: join(layoutPath, 'default.html'),
       sys: {
         scale: scale(params.scale || 1),
-        copyright: params.copyright || `Created By <span class="version"> ${Version.BotName} v${Version.BotVersion} </span> & <span class="version"> ${Version.pluginName} v${Version.version} </span>`
+        copyright: params.copyright || `Created By <span class="version"> ${Version.BotName} v${Version.BotVersion} </span> & <span class="version"> ${Version.pluginName} v${Version.pluginVersion} </span>`
       },
       ...params
     }

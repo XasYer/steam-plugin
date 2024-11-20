@@ -60,8 +60,8 @@ pnpm install --filter=steam-plugin
 - [x] steam最近游玩
 - [x] steam愿望单
 - [x] 群友状态播报
-- [ ] 帮助
-- [ ] 设置
+- [x] 帮助
+- [x] 设置
 - [ ] steam搜索
 - [ ] steam成就统计
 - [ ] 群友上下线通知

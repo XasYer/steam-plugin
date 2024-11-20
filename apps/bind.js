@@ -46,7 +46,7 @@ export const rule = {
     }
   },
   unbind: {
-    reg: /^#?steam(?:解除?绑定?|unbind)\s*(\d+)$/i,
+    reg: /^#?steam(?:解除?绑定?|unbind|取消绑定)\s*(\d+)$/i,
     fnc: async e => {
       const textId = rule.unbind.reg.exec(e.msg)[1]
       if (!textId) {
