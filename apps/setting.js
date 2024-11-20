@@ -13,6 +13,10 @@ export const rule = {
   setting: {
     reg: new RegExp(`^#steam设置\\s*(${keys.join('|')})?\\s*(.*)$`),
     fnc: async e => {
+      if (!e.isMaster) {
+        await e.reply('只有主人才可以设置哦~')
+        return true
+      }
       const regRet = rule.setting.reg.exec(e.msg)
       const cfgSchemaMap = setting.getCfgSchemaMap()
       if (!regRet) {

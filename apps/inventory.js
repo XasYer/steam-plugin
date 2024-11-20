@@ -20,6 +20,7 @@ export const rule = {
         await e.reply([segment.at(uid), '\n还没有绑定steamId哦, 先绑定steamId吧'])
         return true
       }
+      e.reply([segment.at(uid), '\n在查了...在查了...'])
       const nickname = await utils.getUserName(e.self_id, e.user_id, e.group_id)
       const screenshotOptions = {
         title: '',

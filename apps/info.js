@@ -19,6 +19,7 @@ export const rule = {
         await e.reply([segment.at(uid), '\n还没有绑定steamId哦, 先绑定steamId吧'])
         return true
       }
+      e.reply([segment.at(uid), '\n在查了...在查了...'])
       // TODO: 先获取https://steamcommunity.com/profiles/${steamId}/
       const data = await api.ISteamUser.GetPlayerSummaries(steamId)
       if (!data.length) {
