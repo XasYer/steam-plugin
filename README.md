@@ -19,18 +19,32 @@
 
 ## 介绍
 
-这是一个基于 [Miao-Yunzai](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)&[Trss-Yunzai](https://gitee.com/TimeRainStarSky/Yunzai)的扩展插件, 提供 steam 群友状态播报, steam 库存, steam 愿望单 等功能
+这是一个基于 [Miao-Yunzai](https://github.com/yoimiya-kokomi/Miao-Yunzai)&[Trss-Yunzai](https://github.com/TimeRainStarSky/Yunzai)&[Karin](https://github.com/KarinJS/Karin)的扩展插件, 提供 steam 群友状态播报, steam 库存, steam 愿望单 等功能
 
 ## 安装
 
-### 使用github
+### Yunzai使用
+
+#### 使用github
 ```bash
-git clone  --depth=1 https://github.moeyy.xyz/https://github.com/XasYer/steam-plugin.git ./plugins/steam-plugin
+git clone --depth=1 https://github.com/XasYer/steam-plugin.git ./plugins/steam-plugin
 ```
 
-### 使用gitee
+#### 使用gitee
 ```bash
-git clone  --depth=1 https://gitee.com/xiaoye12123/steam-plugin.git ./plugins/steam-plugin
+git clone --depth=1 https://gitee.com/xiaoye12123/steam-plugin.git ./plugins/steam-plugin
+```
+
+### Karin使用
+
+#### 使用github
+```bash
+git clone --depth=1 https://github.com/XasYer/steam-plugin.git ./plugins/karin-plugin-steam
+```
+
+#### 使用gitee
+```bash
+git clone --depth=1 https://gitee.com/xiaoye12123/steam-plugin.git ./plugins/karin-plugin-steam
 ```
 
 ### 安装依赖

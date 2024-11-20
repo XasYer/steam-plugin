@@ -1,8 +1,13 @@
 import { utils, db, api } from '#models'
 import { segment } from '#lib'
-import { Render } from '#components'
+import { Render, App } from '#components'
 import moment from 'moment'
 import _ from 'lodash'
+
+const app = {
+  id: 'inventory',
+  name: '库存'
+}
 
 export const rule = {
   inventory: {
@@ -105,7 +110,9 @@ export const rule = {
  * 将游戏时长(单位:分)转换小时
  * @param {number} time
  * @returns {string}
- */
+*/
 function getTime (time) {
   return (time / 60).toFixed(1) + 'h'
 }
+
+export const inventory = new App(app, rule).create()

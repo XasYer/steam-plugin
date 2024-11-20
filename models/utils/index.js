@@ -1,6 +1,7 @@
 import { Version } from '#components'
 import * as request from './request.js'
 import moment from 'moment'
+import { Bot } from '#lib'
 
 export { request }
 
@@ -66,16 +67,26 @@ export function formatDuration (inp, unit = 'seconds') {
  */
 export async function getUserName (botId, uid, gid) {
   try {
-    if (gid) {
-      gid = Number(gid) || gid
-      const group = Bot[botId].pickGroup(gid)
-      const member = (await group.pickMember(uid)).getInfo()
-      return member.card || member.nickname || member.user_id || uid
+    if (Version.BotName === 'Karin') {
+      if (gid) {
+        const bot = Bot.getBot(botId)
+        const info = await bot.GetGroupMemberInfo(gid, uid)
+        return info.card || info.nick || info.uid || uid
+      } else {
+        return uid
+      }
     } else {
-      uid = Number(uid) || uid
-      const user = Bot[botId].pickUser(uid)
-      const info = await user.getInfo()
-      return info.nickname || info.user_id || uid
+      if (gid) {
+        gid = Number(gid) || gid
+        const group = Bot[botId].pickGroup(gid)
+        const member = (await group.pickMember(uid)).getInfo()
+        return member.card || member.nickname || member.user_id || uid
+      } else {
+        uid = Number(uid) || uid
+        const user = Bot[botId].pickUser(uid)
+        const info = await user.getInfo()
+        return info.nickname || info.user_id || uid
+      }
     }
   } catch {
     return uid
@@ -101,6 +112,21 @@ export function getAtUid (at, id) {
 }
 
 /**
+ * 主动发送群消息
+ * @param {string} botId
+ * @param {string} gid
+ * @param {any} msg
+ * @returns {Promise<any>}
+ */
+export async function sendGroupMsg (botId, gid, msg) {
+  if (Version.BotName === 'Karin') {
+    return await Bot.sendMsg(botId, { scene: 'group', peer: gid }, msg)
+  } else {
+    return await Bot[botId].pickGroup(gid).sendMsg(msg)
+  }
+}
+
+/**
  * 获取appid对应的header图片url
  * @param {string} appid
  * @returns {string}
@@ -117,7 +143,12 @@ export function getHeaderImgUrlByAppid (appid) {
 export async function getImgUrlBuffer (url) {
   for (let i = 0; i < 3; i++) {
     try {
-      return await request.get(url, { responseType: 'arraybuffer', baseUrl: '' }).then(res => res.data)
+      const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' })
+      if (Version.BotName === 'Karin') {
+        return `base64://${buffer.toString('base64')}`
+      } else {
+        return buffer
+      }
     } catch { }
   }
   return null

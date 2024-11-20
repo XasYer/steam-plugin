@@ -1,6 +1,12 @@
-import { db, utils, api } from '#models'
-import { segment } from '#lib'
 import moment from 'moment'
+import { segment } from '#lib'
+import { App } from '#components'
+import { db, utils, api } from '#models'
+
+const app = {
+  id: 'info',
+  name: 'Steam信息'
+}
 
 export const rule = {
   info: {
@@ -42,6 +48,8 @@ export const rule = {
     }
   }
 }
+
+export const info = new App(app, rule).create()
 
 /**
  * 将用户状态码转换为中文

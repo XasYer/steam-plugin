@@ -1,4 +1,10 @@
 import { utils, db } from '#models'
+import { App } from '#components'
+
+const app = {
+  id: 'bind',
+  name: '绑定Steam'
+}
 
 export const rule = {
   bind: {
@@ -67,3 +73,5 @@ export const rule = {
     }
   }
 }
+
+export const bind = new App(app, rule).create()

@@ -1,6 +1,5 @@
 import fs from 'fs'
 import { fileURLToPath } from 'url'
-import { exec } from 'child_process'
 import { join, dirname, basename } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -24,7 +23,7 @@ const BotName = (() => {
   if (/^karin/i.test(pluginName)) {
     return 'Karin'
   } else if (BotPackage.dependencies.react) {
-    exec(`rm -rf plugins/${pluginName}`)
+    fs.rmdirSync(pluginPath, { recursive: true })
     return 'Yunzai-Next'
   } else if (Array.isArray(global.Bot?.uin)) {
     return 'Trss-Yunzai'

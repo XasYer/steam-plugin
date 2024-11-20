@@ -1,4 +1,4 @@
-import { Config } from '#components'
+import { Config, Version } from '#components'
 import { Bot, logger } from '#lib'
 import { api, db, utils } from '#models'
 import _ from 'lodash'
@@ -37,7 +37,11 @@ export function startTimer () {
             const iconUrl = utils.getHeaderImgUrlByAppid(player.gameid)
             const iconBuffer = await utils.getImgUrlBuffer(iconUrl)
             for (const i of pushGroups) {
-              if (!Bot[i.botId]) {
+              if (Version.BotName === 'Karin') {
+                if (!Bot.getBot(i.botId)) {
+                  continue
+                }
+              } else if (!Bot[i.botId]) {
                 continue
               }
               const nickname = await utils.getUserName(i.botId, i.userId, i.groupId)
@@ -66,7 +70,7 @@ export function startTimer () {
                 continue
               }
               try {
-                await Bot[i.botId].pickGroup(i.groupId).sendMsg(msg)
+                await utils.sendGroupMsg(i.botId, i.groupId, msg)
               } catch (error) {
                 logger.error(`群消息发送失败: ${i.groupId}`, error)
               }
