@@ -103,7 +103,7 @@ export async function appdetails (appid) {
     params: {
       appids: appid,
       l: 'schinese',
-      cc: 'cn'
+      cc: 'CN'
     }
   }).then(res => {
     if (res.data[appid].success) {
@@ -113,5 +113,29 @@ export async function appdetails (appid) {
       logger.error(`获取${appid}游戏详情失败，耗时${Date.now() - start}ms`)
       return {}
     }
+  })
+}
+
+/**
+ * 搜索游戏
+ * @param {string} name
+ * @returns {Promise<string>}
+ */
+export async function search (name) {
+  const start = Date.now()
+  logger.info(`开始搜索${name}游戏`)
+  return utils.request.get('search/suggest', {
+    baseURL: 'https://store.steampowered.com',
+    params: {
+      term: name,
+      f: 'games',
+      cc: 'CN',
+      realm: 1,
+      l: 'schinese'
+    },
+    responseType: 'text'
+  }).then(res => {
+    logger.info(`搜索${name}成功，耗时${Date.now() - start}ms`)
+    return res.data.replace?.(/\n/g, '')
   })
 }

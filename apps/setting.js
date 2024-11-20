@@ -73,4 +73,4 @@ export const rule = {
   }
 }
 
-export const settingPlugin = new App(app, rule).create()
+export const settingApp = new App(app, rule).create()
