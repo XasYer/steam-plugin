@@ -1,5 +1,5 @@
 import { Config, Version } from '#components'
-import { Bot, logger } from '#lib'
+import { Bot, logger, redis, segment } from '#lib'
 import { api, db, utils } from '#models'
 import _ from 'lodash'
 
