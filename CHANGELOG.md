@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.3.0](https://github.com/XasYer/steam-plugin/compare/v1.2.0...v1.3.0) (2024-11-21)
+
+
+### Features
+
+* steam开启/关闭推送 ([bc3fcff](https://github.com/XasYer/steam-plugin/commit/bc3fcff32e1f903ca8205f0b5daa1d6ed7c5a5a3))
+* steam成就 & steam统计 ([a946ce8](https://github.com/XasYer/steam-plugin/commit/a946ce8b8b86b9822b6e60ce03f5b2734b513b10))
+* steam推送黑/白名单 ([06efe48](https://github.com/XasYer/steam-plugin/commit/06efe486a14d88ae762b3268491195fe13e2d1ec))
+
+
+### Performance Improvements
+
+* 可配置超时时间 ([aaea47d](https://github.com/XasYer/steam-plugin/commit/aaea47d7ae7595929822bc5e1ab1dcfad7217069))
+* 搜索为空 ([d460d76](https://github.com/XasYer/steam-plugin/commit/d460d760bf6e4d789fbe169c64b140d401f22457))
+* 更改图片渲染方式 ([5506851](https://github.com/XasYer/steam-plugin/commit/550685183b7b948a8b74cfa36454ee9384b35db0))
+
 ## [1.2.0](https://github.com/XasYer/steam-plugin/compare/v1.1.0...v1.2.0) (2024-11-20)
 
 
