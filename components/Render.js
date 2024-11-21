@@ -22,6 +22,9 @@ const Render = {
         scale: scale(params.scale || 1),
         copyright: params.copyright || `Created By <span class="version"> ${Version.BotName} v${Version.BotVersion} </span> & <span class="version"> ${Version.pluginName} v${Version.pluginVersion} </span>`
       },
+      pageGotoParams: {
+        waitUntil: 'networkidle0' // +0.5s
+      },
       ...params
     }
     return await puppeteer.screenshot(path, data)

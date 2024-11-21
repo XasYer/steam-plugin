@@ -58,7 +58,7 @@ export const rule = {
         }
         data.push(key)
       }
-      const img = await Render.simpleRender('inventory/index', { data })
+      const img = await Render.render('inventory/index', { data })
       if (img) {
         await e.reply(img)
       } else {

@@ -1,177 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+{{extend defaultLayout}}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inventory</title>
-    <style>
-        #container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 900px;
-        }
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{pluResPath}}inventory/index.css" />
+{{/block}}
 
-        .header {
-            text-align: center;
-        }
-
-        .games {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            width: 890px;
-        }
-
-        .games>div {
-            box-sizing: border-box;
-            display: flex;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .column-2 {
-            width: 440px;
-        }
-
-        .column-3 {
-            width: 290px;
-        }
-
-        .header-img>img {
-            height: 60px;
-            border-radius: 5px;
-        }
-
-        .square {
-            width: 60px;
-        }
-
-        .rectangle {
-            width: 120px;
-        }
-
-        .game-info {
-            margin-left: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 60px;
-        }
-
-        .column-2-info {
-            width: 220px;
-            margin-right: 10px;
-        }
-
-        .column-3-info {
-            width: 150px;
-        }
-
-        .column-full {
-            width: 350px;
-        }
-
-        .column-full-noimg {
-            width: 410px;
-        }
-
-        .overflow {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .game-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .game-appid {
-            font-size: 16px;
-            color: #666;
-        }
-
-        .game-time {
-            font-size: 14px;
-            color: #999;
-        }
-
-        .discount-percent {
-            background-color: #beee11;
-            border-radius: 5px;
-            padding: 5px;
-            font-size: 12px;
-            color: #333;
-        }
-
-        .none {
-            display: none;
-        }
-
-        .through {
-            text-decoration: line-through;
-            color: #999;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="container">
-        {{each data item}}
-        <div class="header">
-            <h2>{{item.title}}</h2>
-            <h4>
-                {{item.desc}}
-            </h4>
-        </div>
-        <div class="games">
-            {{each item.games i}}
-            <div class="column-{{item.column}}">
-                <div class="header-img">
-                    {{if i.header_image}}
-                    <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
-                    {{else if !i.noImg}}
-                    <img
-                        src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
-                    {{/if}}
+    {{block 'main'}}
+    {{each data item}}
+    <div class="header">
+        <h2>{{item.title}}</h2>
+        <h4 class="header-desc">
+            {{item.desc}}
+        </h4>
+    </div>
+    <div class="games">
+        {{each item.games i}}
+        <div class="column-{{item.column}}">
+            <div class="header-img">
+                {{if i.header_image}}
+                <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
+                {{else if !i.noImg}}
+                <img
+                    src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
+                {{/if}}
+            </div>
+            <div
+                class="game-info overflow column-{{item.column}}-info {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
+                <div class="game-title">
+                    {{i.name || ''}}
                 </div>
-                <div
-                    class="game-info overflow column-{{item.column}}-info {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
-                    <div class="game-title">
-                        {{i.name || ''}}
-                    </div>
-                    <div class="game-appid">
-                        {{i.appid || ''}}
-                    </div>
-                    <div class="game-time">
-                        {{i.desc || ''}}
-                    </div>
+                <div class="game-appid">
+                    {{i.appid || ''}}
                 </div>
-                {{if i.price}}
-                <div class="overflow">
-                    <div class="{{i.price.discount ? 'through' : ''}}">
-                        {{i.price.original || ''}}
-                    </div>
-                    {{if i.price.discount}}
-                    <div class="discount-percent">
-                        - {{i.price.discount}}%
-                    </div>
-                    <div>
-                        {{i.price.current}}
-                    </div>
-                    {{/if}}
+                <div class="game-time">
+                    {{i.desc || ''}}
+                </div>
+            </div>
+            {{if i.price}}
+            <div class="overflow">
+                <div class="{{i.price.discount ? 'through' : ''}}">
+                    {{i.price.original || ''}}
+                </div>
+                {{if i.price.discount}}
+                <div class="discount-percent">
+                    - {{i.price.discount}}%
+                </div>
+                <div>
+                    {{i.price.current}}
                 </div>
                 {{/if}}
             </div>
-            {{/each}}
+            {{/if}}
         </div>
         {{/each}}
     </div>
-</body>
-
-</html>
+    {{/each}}
+    {{/block}}

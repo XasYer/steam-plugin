@@ -6,7 +6,7 @@
 
 <br/>
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/XasYer/YePanel)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/XasYer/steam-plugin)
 ![GitHub stars](https://img.shields.io/github/stars/XasYer/steam-plugin?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/XasYer/steam-plugin?style=social)
 ![GitHub license](https://img.shields.io/github/license/XasYer/steam-plugin)

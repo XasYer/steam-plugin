@@ -91,7 +91,7 @@ export const rule = {
         })
         screenshotOptions.desc = `总游戏时长：${getTime(playtimeForever)} / 最近两周游戏时长：${getTime(playtime2weeks)}`
       }
-      const img = await Render.simpleRender('inventory/index', {
+      const img = await Render.render('inventory/index', {
         data: [screenshotOptions]
       })
       if (img) {

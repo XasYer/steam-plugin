@@ -41,7 +41,7 @@ export const rule = {
         games,
         column: 2
       }
-      const img = await Render.simpleRender('inventory/index', { data: [screenshotOptions] })
+      const img = await Render.render('inventory/index', { data: [screenshotOptions] })
       if (img) {
         await e.reply(img)
       } else {
