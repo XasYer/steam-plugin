@@ -26,9 +26,9 @@ export const rule = {
         return {
           appid,
           name,
-          price_overview: {
-            discount_percent: 0,
-            initial_formatted: price
+          price: {
+            discount: 0,
+            original: price
           }
         }
       }).filter(Boolean)
@@ -39,7 +39,7 @@ export const rule = {
       const screenshotOptions = {
         title: `${name} 搜索结果`,
         games,
-        type: 'wishlist'
+        column: 2
       }
       const img = await Render.simpleRender('inventory/index', { data: [screenshotOptions] })
       if (img) {

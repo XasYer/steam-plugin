@@ -21,11 +21,11 @@ export const rule = {
         return true
       }
       e.reply([segment.at(uid), '\n在查了...在查了...'])
-      const nickname = await utils.getUserName(e.self_id, e.user_id, e.group_id)
+      const nickname = await utils.getUserName(e.self_id, uid, e.group_id)
       const screenshotOptions = {
         title: '',
         games: [],
-        type: 'inventory',
+        column: 3,
         desc: ''
       }
       if (e.msg.includes('近')) {
@@ -46,23 +46,22 @@ export const rule = {
         let errorCount = 0
         for (const i in wishlist) {
           wishlist[i].price_overview = {
-            discount_percent: 0,
-            initial_formatted: '获取失败'
+            discount: 0,
+            original: '获取失败'
           }
-          wishlist[i].date_added = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
+          wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
           try {
             if (errorCount < 3) {
               const info = await api.appdetails(wishlist[i].appid)
               wishlist[i].name = info.name
-              wishlist[i].price_overview = info.name
+              wishlist[i].price = info.name
                 ? {
-                    discount_percent: 0,
-                    initial_formatted: '即将推出',
-                    ...info.price_overview
+                    discount: info.price_overview?.discount_percent || 0,
+                    original: info.price_overview?.initial_formatted || info.price_overview?.final_formatted || '即将推出',
+                    current: info.price_overview?.final_formatted || ''
                   }
                 : {
-                    discount_percent: 0,
-                    initial_formatted: '获取失败'
+                    original: '获取失败'
                   }
             }
           } catch {
@@ -71,7 +70,7 @@ export const rule = {
         }
         screenshotOptions.title = `${nickname} 愿望单共有 ${wishlist.length} 个游戏`
         screenshotOptions.games = _.orderBy(wishlist, 'date_added', 'desc')
-        screenshotOptions.type = 'wishlist'
+        screenshotOptions.column = 2
       } else {
         const games = await api.IPlayerService.GetOwnedGames(steamId)
         if (!games.length) {
@@ -81,11 +80,11 @@ export const rule = {
         screenshotOptions.games = _.orderBy(games, 'playtime_forever', 'desc')
         screenshotOptions.title = `${nickname} 库存共有 ${games.length} 个游戏`
       }
-      if (screenshotOptions.type !== 'wishlist') {
+      if (screenshotOptions.column === 3) {
         let playtimeForever = 0
         let playtime2weeks = 0
         screenshotOptions.games.map(i => {
-          i.time_info = `${getTime(i.playtime_forever)} ${i.playtime_2weeks ? `/ ${getTime(i.playtime_2weeks)}` : ''}`
+          i.desc = `${getTime(i.playtime_forever)} ${i.playtime_2weeks ? `/ ${getTime(i.playtime_2weeks)}` : ''}`
           playtimeForever += i.playtime_forever
           i.playtime_2weeks && (playtime2weeks += i.playtime_2weeks)
           return i

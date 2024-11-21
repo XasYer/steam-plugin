@@ -3,6 +3,7 @@ import { logger } from '#lib'
 export * as ISteamUser from './ISteamUser.js'
 export * as IPlayerService from './IPlayerService.js'
 export * as IWishlistService from './IWishlistService.js'
+export * as ISteamUserStats from './ISteamUserStats.js'
 
 /**
  * 根据appid获取游戏详情

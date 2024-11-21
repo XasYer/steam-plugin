@@ -86,7 +86,7 @@ export const rule = {
         return true
       }
       const type = regRet[1] === '添加' ? 'add' : 'del'
-      const id = regRet[3] || String(e.group_id)
+      const id = regRet[3]?.trim() || String(e.group_id)
       if (!id) {
         await e.reply('请输入群号或在指定群中使用~')
         return true

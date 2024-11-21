@@ -34,7 +34,7 @@ const Render = {
       saveId: path.split('/').pop(),
       imgType: 'jpeg',
       pageGotoParams: {
-        waitUntil: 'networkidle2'
+        waitUntil: 'networkidle0' // +0.5s
       },
       ...params
     }

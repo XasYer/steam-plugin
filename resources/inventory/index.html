@@ -33,18 +33,25 @@
             margin-bottom: 10px;
         }
 
-        .wishlist {
+        .column-2 {
             width: 440px;
         }
 
-        .inventory {
+        .column-3 {
             width: 290px;
         }
 
         .header-img>img {
-            width: 120px;
             height: 60px;
             border-radius: 5px;
+        }
+
+        .square {
+            width: 60px;
+        }
+
+        .rectangle {
+            width: 120px;
         }
 
         .game-info {
@@ -55,13 +62,21 @@
             height: 60px;
         }
 
-        .wishlist-info {
+        .column-2-info {
             width: 220px;
             margin-right: 10px;
         }
 
-        .inventory-info {
+        .column-3-info {
             width: 150px;
+        }
+
+        .column-full {
+            width: 350px;
+        }
+
+        .column-full-noimg {
+            width: 410px;
         }
 
         .overflow {
@@ -116,41 +131,40 @@
         </div>
         <div class="games">
             {{each item.games i}}
-            <div class="{{item.type}}">
+            <div class="column-{{item.column}}">
                 <div class="header-img">
                     {{if i.header_image}}
-                    <img src="{{i.header_image}}">
-                    {{else}}
+                    <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
+                    {{else if !i.noImg}}
                     <img
                         src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
                     {{/if}}
                 </div>
-                <div class="game-info overflow {{item.type}}-info">
+                <div
+                    class="game-info overflow column-{{item.column}}-info {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
                     <div class="game-title">
                         {{i.name || ''}}
                     </div>
                     <div class="game-appid">
-                        {{i.appid}}
+                        {{i.appid || ''}}
                     </div>
                     <div class="game-time">
-                        {{if item.type === 'wishlist'}}
-                        {{i.date_added || ''}}
-                        {{else}}
-                        {{i.time_info || ''}}
-                        {{/if}}
+                        {{i.desc || ''}}
                     </div>
                 </div>
-                {{if item.type === 'wishlist'}}
+                {{if i.price}}
                 <div class="overflow">
-                    <div class="{{i.price_overview.discount_percent ? 'through' : ''}}">
-                        {{i.price_overview.initial_formatted || i.price_overview.final_formatted || ''}}
+                    <div class="{{i.price.discount ? 'through' : ''}}">
+                        {{i.price.original || ''}}
                     </div>
-                    <div class="discount-percent {{i.price_overview.discount_percent ? '' : 'none'}}">
-                        - {{i.price_overview.discount_percent}}%
+                    {{if i.price.discount}}
+                    <div class="discount-percent">
+                        - {{i.price.discount}}%
                     </div>
-                    <div class="{{i.price_overview.discount_percent ? '' : 'none'}}">
-                        {{i.price_overview.final_formatted}}
+                    <div>
+                        {{i.price.current}}
                     </div>
+                    {{/if}}
                 </div>
                 {{/if}}
             </div>

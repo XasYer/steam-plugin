@@ -35,25 +35,24 @@ export const rule = {
       for (const item of items) {
         const key = {
           title: item.title,
-          type: 'wishlist',
+          column: 2,
           games: []
         }
         for (const i of res[item.key].items) {
           key.games.push({
             appid: i.id,
             name: i.name,
-            date_added: i.discount_expiration ? moment.unix(i.discount_expiration).format('YYYY-MM-DD HH:mm:ss') : '',
+            desc: i.discount_expiration ? moment.unix(i.discount_expiration).format('YYYY-MM-DD HH:mm:ss') : '',
             header_image: i.header_image,
             header_image_type: i.header_image.match(/store_item_assets\/steam\/(.+?)\//)?.[1] || 'apps',
-            price_overview: i.discounted
+            price: i.discounted
               ? {
-                  initial_formatted: `¥ ${i.original_price / 100}`,
-                  discount_percent: i.discount_percent,
-                  final_formatted: `¥ ${i.final_price / 100}`
+                  original: `¥ ${i.original_price / 100}`,
+                  discount: i.discount_percent,
+                  current: `¥ ${i.final_price / 100}`
                 }
               : {
-                  initial_formatted: i.original_price ? `¥ ${i.original_price / 100}` : '',
-                  discount_percent: 0
+                  original: i.original_price ? `¥ ${i.original_price / 100}` : ''
                 }
           })
         }

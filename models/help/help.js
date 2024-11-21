@@ -52,6 +52,16 @@ export const helpList = [
         desc: '查看steam愿望单'
       },
       {
+        icon: 43,
+        title: '#steam成就',
+        desc: '查看某个游戏的成就,需要加上appid'
+      },
+      {
+        icon: 14,
+        title: '#steam统计',
+        desc: '查看某个游戏的统计,需要加上appid'
+      },
+      {
         icon: 31,
         title: '#steam搜索',
         desc: '搜索steam游戏'

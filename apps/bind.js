@@ -18,12 +18,7 @@ export const rule = {
         if (!userBindAll.length) {
           await e.reply('要和SteamID或好友码一起发送哦')
         } else {
-          const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, e.group_id)
-          await e.reply(`全部steamId(${Config.push.enable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map(item => {
-            const isBind = item.isBind ? '√' : ''
-            const isPush = (Config.push.enable && pushSteamIds.includes(item.steamId)) ? '✧' : ''
-            return `${item.steamId} ${isPush} ${isBind} `
-          }).join('\n')}`)
+          await e.reply(await getBindSteamIdsText(uid, e.group_id, userBindAll))
         }
         return true
       }
@@ -45,13 +40,8 @@ export const rule = {
           await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
         }
       }
-      const userBindAll = await db.UserTableGetDataByUserId(uid)
-      const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, e.group_id)
-      await e.reply(`已添加steamId: ${steamId}\n全部steamId(${Config.push.enable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map(item => {
-        const isBind = item.isBind ? '√' : ''
-        const isPush = (Config.push.enable && pushSteamIds.includes(item.steamId)) ? '✧' : ''
-        return `${item.steamId} ${isPush} ${isBind} `
-      }).join('\n')}`)
+      const text = await getBindSteamIdsText(uid, e.group_id)
+      await e.reply(`已添加steamId: ${steamId}\n${text}`)
       return true
     }
   },
@@ -71,8 +61,8 @@ export const rule = {
       if (bindInfo) {
         if (bindInfo.userId == uid) {
           await db.UserTableDelSteamIdByUserId(uid, steamId)
-          const userBindAll = await db.UserTableGetDataByUserId(uid)
-          await e.reply(`已删除steamId: ${steamId}\n已绑定:\n${userBindAll.map(item => `${item.steamId} ${item.isBind ? '√' : ''}`).join('\n')}`)
+          const text = await getBindSteamIdsText(uid, e.group_id)
+          await e.reply(`已添加steamId: ${steamId}\n${text}`)
         } else {
           await e.reply('只能解绑自己绑定的steamId哦')
         }
@@ -85,3 +75,34 @@ export const rule = {
 }
 
 export const bind = new App(app, rule).create()
+
+/**
+ * 获得已绑定的steamId的文本
+ * @param {string} uid
+ * @param {string} gid
+ * @param {UserColumns[]?} userBindAll
+ * @returns
+ */
+async function getBindSteamIdsText (uid, gid, userBindAll = []) {
+  if (!userBindAll?.length) {
+    userBindAll = await db.UserTableGetDataByUserId(uid)
+  }
+  const pushEnable = (() => {
+    if (!Config.push.enable) {
+      return false
+    }
+    if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(i => i == gid)) {
+      return false
+    }
+    if (Config.push.blackGroupList.length && Config.push.blackGroupList.some(i => i == gid)) {
+      return false
+    }
+    return true
+  })()
+  const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, gid)
+  return `全部steamId(${pushEnable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map(item => {
+    const isBind = item.isBind ? '√' : ''
+    const isPush = (pushEnable && pushSteamIds.includes(item.steamId)) ? '✧' : ''
+    return `${item.steamId} ${isPush} ${isBind} `
+  }).join('\n')}`
+}

@@ -67,12 +67,13 @@ pnpm install --filter=steam-plugin
 - [x] steam帮助
 - [x] steam设置
 - [x] steam搜索
-- [ ] steam成就统计
+- [x] steam成就
+- [x] steam统计
 - [ ] 群友上下线通知
 - [ ] steam喜加一
 - [x] 开启/关闭推送
 - [x] steam特惠
-- [ ] 推送黑/白群名单
+- [x] 推送黑/白群名单
 
 ## 联系方式
 
