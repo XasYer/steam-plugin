@@ -17,6 +17,20 @@ export const cfgSchema = {
         type: 'string',
         def: '',
         desc: '用于加速访问'
+      },
+      timeout: {
+        title: '请求超时时间',
+        key: '超时',
+        type: 'number',
+        input: (n) => {
+          if (n > 0) {
+            return n * 1
+          } else {
+            return 5
+          }
+        },
+        desc: '请求超时时间,单位秒',
+        def: 5
       }
     }
   },

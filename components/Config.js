@@ -70,6 +70,7 @@ class Config {
    * @returns {{
    *  apiKey: string,
    *  proxy: string,
+   *  timeout: number,
    * }}
    */
   get steam () {

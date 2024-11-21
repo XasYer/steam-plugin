@@ -20,7 +20,7 @@ export default async function request (url, options = {}) {
       key: baseURL === ateamApi ? Config.steam.apiKey : undefined,
       ...options.params
     },
-    timeout: 5000
+    timeout: Config.steam.timeout * 1000
   })
 }
 
