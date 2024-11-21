@@ -44,7 +44,8 @@ export function startTimer () {
               } else if (!Bot[i.botId]) {
                 continue
               }
-              const nickname = await utils.getUserName(i.botId, i.userId, i.groupId)
+              // 0 就是没有人绑定
+              const nickname = i.userId == '0' ? player.personaname : await utils.getUserName(i.botId, i.userId, i.groupId)
               const msg = []
               iconBuffer && msg.push(segment.image(iconBuffer))
               // 如果有gameid就是开始玩

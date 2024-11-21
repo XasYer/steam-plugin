@@ -106,6 +106,23 @@ export async function PushTableGetDataBySteamId (steamId) {
 }
 
 /**
+ * 根据userId和groupId获取所有的steamId
+ * @param {string} userId
+ * @param {string} groupId
+ */
+export async function PushTableGetAllSteamIdBySteamIdAndGroupId (userId, groupId) {
+  if (!groupId) return []
+  userId = String(userId)
+  groupId = String(groupId)
+  return await PushTable.findAll({
+    where: {
+      userId,
+      groupId
+    }
+  }).then(result => result.map(item => item?.dataValues?.steamId))
+}
+
+/**
  * 删除steamId的所有推送群组
  * @param {string} steamId
  * @param {Transaction?} [transaction]
@@ -126,4 +143,21 @@ export async function PushTableDelAllDataBySteamId (steamId, transaction) {
  */
 export async function PushTableGetAllData () {
   return await PushTable.findAll().then(result => result?.map(item => item?.dataValues))
+}
+
+/**
+ * 将指定的steamId对应的所有为0的userId替换为真实的userId
+ * @param {string} userId
+ * @param {string} steamId
+ */
+export async function PushTableSetNAUserIdToRealUserIdBySteamId (userId, steamId) {
+  userId = String(userId)
+  return await PushTable.update({
+    userId
+  }, {
+    where: {
+      steamId,
+      userId: '0'
+    }
+  }).then(result => result?.[0])
 }

@@ -9,7 +9,7 @@ export const helpCfg = {
 }
 export const helpList = [
   {
-    group: 'steam 信息',
+    group: 'steam 信息 (可在指令后添加steamId或at用户使用)',
     list: [
       {
         icon: 9,
@@ -25,6 +25,16 @@ export const helpList = [
         icon: 11,
         title: '#steam状态',
         desc: '查看steam个人状态'
+      },
+      {
+        icon: 33,
+        title: '#steam开启推送',
+        desc: '开启steam个人状态推送'
+      },
+      {
+        icon: 34,
+        title: '#steam关闭推送',
+        desc: '关闭steam个人状态推送'
       },
       {
         icon: 12,

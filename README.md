@@ -6,6 +6,7 @@
 
 <br/>
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/XasYer/YePanel)
 ![GitHub stars](https://img.shields.io/github/stars/XasYer/steam-plugin?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/XasYer/steam-plugin?style=social)
 ![GitHub license](https://img.shields.io/github/license/XasYer/steam-plugin)
@@ -16,6 +17,8 @@
 <img src="https://count.getloli.com/get/@XasYer-steam-plugin?theme=rule34" />
 
 </div>
+
+![Star History Chart](https://api.star-history.com/svg?repos=XasYer/steam-plugin&type=Date)
 
 ## 介绍
 
@@ -56,6 +59,7 @@ pnpm install --filter=steam-plugin
 
 - [x] steam绑定
 - [x] steam更换绑定
+- [x] steam解除绑定
 - [x] steam库存
 - [x] steam最近游玩
 - [x] steam愿望单
@@ -66,8 +70,9 @@ pnpm install --filter=steam-plugin
 - [ ] steam成就统计
 - [ ] 群友上下线通知
 - [ ] steam喜加一
-- [ ] 开启/关闭推送
+- [x] 开启/关闭推送
 - [x] steam特惠
+- [ ] 推送黑/白群名单
 
 ## 联系方式
 

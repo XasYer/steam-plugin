@@ -3,7 +3,6 @@ import { logger } from '#lib'
 import { join } from 'node:path'
 import { App, Version } from '#components'
 import chalk from 'chalk'
-import { task } from '#models'
 
 const startTime = Date.now()
 
@@ -31,8 +30,6 @@ for (const i of files) {
 }
 
 export { apps }
-
-task.startTimer()
 
 const getRandomHexColor = () => {
   const randomColor = Math.floor(Math.random() * 16777215).toString(16)
