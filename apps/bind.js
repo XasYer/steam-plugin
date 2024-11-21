@@ -1,5 +1,5 @@
 import { utils, db } from '#models'
-import { App } from '#components'
+import { App, Config } from '#components'
 
 const app = {
   id: 'bind',
@@ -19,9 +19,9 @@ export const rule = {
           await e.reply('要和SteamID或好友码一起发送哦')
         } else {
           const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, e.group_id)
-          await e.reply(`全部steamId(✧:是否推送 √:是否绑定):\n${userBindAll.map(item => {
+          await e.reply(`全部steamId(${Config.push.enable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map(item => {
             const isBind = item.isBind ? '√' : ''
-            const isPush = pushSteamIds.includes(item.steamId) ? '✧' : ''
+            const isPush = (Config.push.enable && pushSteamIds.includes(item.steamId)) ? '✧' : ''
             return `${item.steamId} ${isPush} ${isBind} `
           }).join('\n')}`)
         }
@@ -39,18 +39,17 @@ export const rule = {
         return true
       } else {
         await db.UserTableAddSteamIdByUserId(uid, steamId)
-        // TODO: config如果默认开启推送则添加到推送列表
         // 群聊绑定才添加
-        if (e.group_id) {
+        if (Config.push.defaultPush && e.group_id) {
           await db.PushTableSetNAUserIdToRealUserIdBySteamId(uid, steamId)
           await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
         }
       }
       const userBindAll = await db.UserTableGetDataByUserId(uid)
       const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, e.group_id)
-      await e.reply(`已添加steamId: ${steamId}\n全部steamId(✧:是否推送 √:是否绑定):\n${userBindAll.map(item => {
+      await e.reply(`已添加steamId: ${steamId}\n全部steamId(${Config.push.enable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map(item => {
         const isBind = item.isBind ? '√' : ''
-        const isPush = pushSteamIds.includes(item.steamId) ? '✧' : ''
+        const isPush = (Config.push.enable && pushSteamIds.includes(item.steamId)) ? '✧' : ''
         return `${item.steamId} ${isPush} ${isBind} `
       }).join('\n')}`)
       return true

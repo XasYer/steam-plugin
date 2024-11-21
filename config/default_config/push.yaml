@@ -6,3 +6,13 @@ enable: true
 # 其中说明: 每天对 Steam Web API 的调用次数限制为十万 (100,000) 次
 # 多少分钟检查一次
 time: 5
+
+# 是否默认开启推送 即绑定steamId之后不需要发 #steam开启推送 指令
+defaultPush: true
+
+# 推送黑名单群
+blackGroupList: 
+  - 123456
+
+# 推送白名单群
+whiteGroupList: []

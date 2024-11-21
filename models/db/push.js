@@ -1,4 +1,5 @@
-import { sequelize, DataTypes } from './base.js'
+import { Config } from '#components'
+import { sequelize, DataTypes, Op } from './base.js'
 
 /**
  * @typedef {Object} PushColumns
@@ -139,10 +140,25 @@ export async function PushTableDelAllDataBySteamId (steamId, transaction) {
 
 /**
  * 获取所有推送群组
+ * @param {boolean} [filter=true] 是否使用黑白名单查找 默认开启
  * @returns {Promise<PushColumns[]>}
  */
-export async function PushTableGetAllData () {
-  return await PushTable.findAll().then(result => result?.map(item => item?.dataValues))
+export async function PushTableGetAllData (filter = true) {
+  const where = {}
+  if (filter) {
+    if (Config.push.whiteGroupList.length) {
+      where.groupId = {
+        [Op.in]: Config.push.whiteGroupList.map(i => String(i))
+      }
+    } else if (Config.push.blackGroupList.length) {
+      where.groupId = {
+        [Op.notIn]: Config.push.blackGroupList.map(i => String(i))
+      }
+    }
+  }
+  return await PushTable.findAll({
+    where
+  }).then(result => result?.map(item => item?.dataValues))
 }
 
 /**

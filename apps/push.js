@@ -1,4 +1,4 @@
-import { App } from '#components'
+import { App, Config } from '#components'
 import { segment } from '#lib'
 import { db, utils, task } from '#models'
 
@@ -14,6 +14,18 @@ export const rule = {
     reg: /^#?steam(?:开启|关闭)推送\s*(\d+)?$/i,
     fnc: async e => {
       if (!e.group_id) {
+        return true
+      }
+      if (!Config.push.enable) {
+        await e.reply('主人没有开启推送功能哦')
+        return true
+      }
+      if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(id => id == e.group_id)) {
+        await e.reply('本群没有在推送白名单中, 请联系主人添加~')
+        return true
+      }
+      if (Config.push.blackGroupList.length && Config.push.blackGroupList.some(id => id == e.group_id)) {
+        await e.reply('本群在推送黑名单中, 请联系主人解除~')
         return true
       }
       const textId = rule.push.reg.exec(e.msg)[1]

@@ -62,5 +62,26 @@ export const helpList = [
         desc: '查看steam热销游戏'
       }
     ]
+  },
+  {
+    group: '主人功能',
+    auth: 'master',
+    list: [
+      {
+        icon: 36,
+        title: '#steam添加推送(黑|白)名单',
+        desc: '添加指定群到推送(黑|白)名单'
+      },
+      {
+        icon: 37,
+        title: '#steam删除推送(黑|白)名单',
+        desc: '删除指定群的推送(黑|白)名单'
+      },
+      {
+        icon: 42,
+        title: '#steam推送(黑|白)名单列表',
+        desc: '查看推送(黑|白)名单列表'
+      }
+    ]
   }
 ]

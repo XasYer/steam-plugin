@@ -80,7 +80,10 @@ class Config {
    * 获取推送配置
    * @returns {{
    *  enable: boolean,
-   *  time: number
+   *  time: number,
+   *  defaultPush: boolean,
+   *  blackGroupList: string[],
+   *  whiteGroupList: string[]
    * }}
    */
   get push () {
