@@ -20,6 +20,16 @@
 
 ![Star History Chart](https://api.star-history.com/svg?repos=XasYer/steam-plugin&type=Date)
 
+## **注意**
+
+一定要填**Steam Web API Key**,否则无法使用绝大部分功能,请前往[Steam API](https://steamcommunity.com/dev/apikey)申请API Key
+
+相关链接:
+
+- [Steam Web API 说明](https://partner.steamgames.com/doc/webapi_overview/auth)
+- [申请API Key](https://steamcommunity.com/dev/apikey)
+- [Steam API 条款](https://steamcommunity.com/dev/apiterms)
+
 ## 介绍
 
 这是一个基于 [Miao-Yunzai](https://github.com/yoimiya-kokomi/Miao-Yunzai)&[Trss-Yunzai](https://github.com/TimeRainStarSky/Yunzai)&[Karin](https://github.com/KarinJS/Karin)的扩展插件, 提供 steam 群友状态播报, steam 库存, steam 愿望单 等功能
