@@ -10,3 +10,9 @@ timeout: 5
 
 # 图片渲染精度
 renderScale: 130
+
+# https://api.steampowered.com 的反代 会替换成对应地址
+apiProxy: ""
+
+# https://store.steampowered.com 的反代 会替换成对应地址
+storeProxy: ""

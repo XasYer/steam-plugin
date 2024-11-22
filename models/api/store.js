@@ -1,7 +1,8 @@
 import { utils } from '#models'
 import { logger } from '#lib'
+import { Config } from '#components'
 
-const baseURL = 'https://store.steampowered.com'
+const getBaseURL = () => Config.steam.storeProxy?.replace(/\/$/, '') || 'https://store.steampowered.com'
 
 /**
  * 根据appid获取游戏详情
@@ -98,7 +99,7 @@ export async function appdetails (appid) {
   const start = Date.now()
   logger.info(`开始获取${appid}游戏详情`)
   return utils.request.get('api/appdetails', {
-    baseURL,
+    baseURL: getBaseURL(),
     params: {
       appids: appid,
       l: 'schinese',
@@ -124,7 +125,7 @@ export async function search (name) {
   const start = Date.now()
   logger.info(`开始搜索${name}游戏`)
   return utils.request.get('search/suggest', {
-    baseURL,
+    baseURL: getBaseURL(),
     params: {
       term: name,
       f: 'games',
@@ -189,7 +190,7 @@ export async function featuredcategories () {
   const start = Date.now()
   logger.info('开始获取优惠信息')
   return utils.request.get('api/featuredcategories', {
-    baseURL,
+    baseURL: getBaseURL(),
     params: {
       l: 'schinese',
       cc: 'CN'
@@ -220,7 +221,7 @@ export async function appreviews (appid, count = 30, recent = false) {
   const start = Date.now()
   logger.info(`开始获取${appid}${recent ? '最新' : '热门'}评论`)
   return utils.request.get(`appreviews/${appid}`, {
-    baseURL,
+    baseURL: getBaseURL(),
     params: {
       l: 'schinese',
       language: 'schinese',

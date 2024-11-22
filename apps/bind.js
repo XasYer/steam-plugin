@@ -30,8 +30,8 @@ export const rule = {
           await db.UserTableBindSteamIdByUserId(uid, steamId)
         } else {
           await e.reply('这个steamId已经被绑定惹, 要不要换一个?')
+          return true
         }
-        return true
       } else {
         await db.UserTableAddSteamIdByUserId(uid, steamId)
         // 群聊绑定才添加

@@ -18,6 +18,20 @@ export const cfgSchema = {
         def: '',
         desc: '用于加速访问'
       },
+      apiProxy: {
+        title: 'api反代',
+        key: 'api反代',
+        type: 'string',
+        def: '',
+        desc: '替换https://api.steampowered.com为自定义地址'
+      },
+      storeProxy: {
+        title: 'store反代',
+        key: 'store反代',
+        type: 'string',
+        def: '',
+        desc: '替换https://store.steampowered.com为自定义地址'
+      },
       timeout: {
         title: '请求超时时间',
         key: '超时',

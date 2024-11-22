@@ -71,6 +71,8 @@ class Config {
    *  apiKey: string,
    *  proxy: string,
    *  timeout: number,
+   *  apiProxy: string,
+   *  storeProxy: string
    * }}
    */
   get steam () {

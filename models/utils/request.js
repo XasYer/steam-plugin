@@ -9,7 +9,7 @@ import { ProxyAgent } from 'proxy-agent'
  * @returns {Promise<AxiosResponse<any>>}
  */
 export default async function request (url, options = {}) {
-  const steamApi = 'https://api.steampowered.com'
+  const steamApi = Config.steam.apiUrl?.replace(/\/$/, '') ?? 'https://api.steampowered.com'
   const baseURL = options.baseURL?.replace(/\/$/, '') ?? steamApi
   return await axios.request({
     url,
