@@ -2,7 +2,6 @@ import fs from 'node:fs'
 import { logger } from '#lib'
 import { join } from 'node:path'
 import { App, Version } from '#components'
-import chalk from 'chalk'
 
 const startTime = Date.now()
 
@@ -31,13 +30,6 @@ for (const i of files) {
 
 export { apps }
 
-const getRandomHexColor = () => {
-  const randomColor = Math.floor(Math.random() * 16777215).toString(16)
-  return `#${randomColor.padStart(6, '0')}`
-}
-
-const log = (...args) => logger.info(chalk.hex(getRandomHexColor())(...args))
-
-log('-----------------')
-log(`${Version.pluginName} v${Version.pluginVersion} 加载成功~ 耗时: ${Date.now() - startTime}ms`)
-log('-------^_^-------')
+logger.info('-----------------')
+logger.info(`${Version.pluginName} v${Version.pluginVersion} 加载成功~ 耗时: ${Date.now() - startTime}ms`)
+logger.info('-------^_^-------')

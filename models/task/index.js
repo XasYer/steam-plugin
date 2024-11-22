@@ -34,7 +34,7 @@ export function startTimer () {
           if (lastPlay.appid != player.gameid) {
             // 找到所有的推送群
             const pushGroups = PushData.filter(i => i.steamId === player.steamid)
-            const iconUrl = utils.getHeaderImgUrlByAppid(player.gameid)
+            const iconUrl = utils.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid)
             const iconBuffer = await utils.getImgUrlBuffer(iconUrl)
             for (const i of pushGroups) {
               if (Version.BotName === 'Karin') {

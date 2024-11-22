@@ -64,12 +64,12 @@ export const helpList = [
       {
         icon: 46,
         title: '#steam成就统计',
-        desc: '查看某个游戏的全球成就完成度,需要加上appid'
+        desc: '查看游戏全球成就完成度,需要appid'
       },
       {
         icon: 48,
         title: '#steam在线',
-        desc: '查看某个游戏的在线人数,需要加上appid'
+        desc: '查看某个游戏的在线人数,需要appid'
       },
       {
         icon: 31,
@@ -84,12 +84,12 @@ export const helpList = [
       {
         icon: 44,
         title: '#steam评论',
-        desc: '查看某个游戏的热门评论,需要加上appid'
+        desc: '查看某个游戏的热门评论,需要appid'
       },
       {
         icon: 45,
         title: '#steam最新评论',
-        desc: '查看某个游戏的最新评论,需要加上appid'
+        desc: '查看某个游戏的最新评论,需要appid'
       }
     ]
   },
