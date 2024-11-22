@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.4.0](https://github.com/XasYer/steam-plugin/compare/v1.3.0...v1.4.0) (2024-11-22)
+
+
+### Features
+
+* steam成就统计 & steam在线统计 ([5380db7](https://github.com/XasYer/steam-plugin/commit/5380db7247c4666c8b3417f07acb819bf7aa57e3))
+* steam评论 ([31f0ff7](https://github.com/XasYer/steam-plugin/commit/31f0ff747f1c269189ee8dc9306f0eb8eab3a40f))
+
+
+### Bug Fixes
+
+* 全局redis ([517aa10](https://github.com/XasYer/steam-plugin/commit/517aa10e1f2cad9001f503dc33923fb63989e15d))
+* 没有删除黑白名单 ([e1f51c8](https://github.com/XasYer/steam-plugin/commit/e1f51c81f07fd3ad142bcd84777c92ea97093dd9))
+
+
+### Performance Improvements
+
+* steam设置默认推送 ([da69bbe](https://github.com/XasYer/steam-plugin/commit/da69bbe95917b2b7c08bb445c387775ad1c47988))
+* 优化帮助图 ([1712fd2](https://github.com/XasYer/steam-plugin/commit/1712fd28abe58aed7599f2af2bebe645adfd5a9c))
+* 优化评论图片 ([dbd0b5e](https://github.com/XasYer/steam-plugin/commit/dbd0b5e70ac54947fbcb0cbdec9d59665f08acec))
+* 优化锅巴配置项 ([4ce4ee2](https://github.com/XasYer/steam-plugin/commit/4ce4ee285dd1e5e944c1501684b18b61c50b384c))
+* 新增api和store反代 ([63b98dc](https://github.com/XasYer/steam-plugin/commit/63b98dc0374c0463b698dca9dfdfba8df28d8748))
+* 日志输出 ([07c0f34](https://github.com/XasYer/steam-plugin/commit/07c0f342ad8e5aba157df1cf59eb7c4f98b804ed))
+* 更新代理依赖 ([e9a6121](https://github.com/XasYer/steam-plugin/commit/e9a61215a7ab36ada55f4a2a03f9f3d1234dbb08))
+* 设置渲染精度 ([af72653](https://github.com/XasYer/steam-plugin/commit/af726533de6e0f972e73d559807f4028c4c5e7b4))
+* 锅巴配置项自动获取 ([c21fd2c](https://github.com/XasYer/steam-plugin/commit/c21fd2c988f785ad304993197215dceb331bab1b))
+
 ## [1.3.0](https://github.com/XasYer/steam-plugin/compare/v1.2.0...v1.3.0) (2024-11-21)
 
 
