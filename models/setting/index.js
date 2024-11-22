@@ -31,6 +31,14 @@ export const cfgSchema = {
         },
         desc: '请求超时时间,单位秒',
         def: 5
+      },
+      renderScale: {
+        title: '渲染精度',
+        key: '渲染',
+        type: 'number',
+        def: 120,
+        input: (n) => Math.min(200, Math.max(50, (n * 1 || 100))),
+        desc: '可选值50~200，设置高精度会提高图片的精细度，但因图片较大可能会影响渲染与发送速度'
       }
     }
   },

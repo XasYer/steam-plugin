@@ -1,9 +1,9 @@
 import { join } from 'path'
 import { puppeteer } from '#lib'
-import { Version } from '#components'
+import { Version, Config } from '#components'
 
 function scale (pct = 1) {
-  const scale = Math.min(2, Math.max(0.5, 150 / 100))
+  const scale = Math.min(2, Math.max(0.5, Config.renderScale / 100))
   pct = pct * scale
   return `style=transform:scale(${pct})`
 }
