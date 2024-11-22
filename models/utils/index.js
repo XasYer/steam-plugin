@@ -1,7 +1,7 @@
 import { Version } from '#components'
 import * as request from './request.js'
 import moment from 'moment'
-import { Bot } from '#lib'
+import { Bot, logger } from '#lib'
 
 export { request }
 
@@ -150,7 +150,9 @@ export async function getImgUrlBuffer (url) {
       } else {
         return buffer
       }
-    } catch { }
+    } catch (error) {
+      logger.error(`获取图片${url}失败: ${error.message}, 第${i + 1}次重试`)
+    }
   }
   return null
 }
