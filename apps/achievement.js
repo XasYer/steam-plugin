@@ -1,6 +1,7 @@
 import { App, Render } from '#components'
 import { utils, db, api } from '#models'
 import { segment } from '#lib'
+import _ from 'lodash'
 
 const app = {
   id: 'achievement',
@@ -54,14 +55,17 @@ export const rule = {
         }
       ]
       if (regRet[1] === '成就') {
+        if (!achievementsByGame.availableGameStats.achievements?.length) {
+          await e.reply([segment.at(uid), `\n${achievementsByGame.gameName}好像没有成就呢`])
+          return true
+        }
         const completeAchievements = []
-        const unCompleteAchievements = [];
-        // 处理成就数据
-        (achievementsByGame.availableGameStats.achievements || []).forEach(all => {
+        const unCompleteAchievements = []
+        achievementsByGame.availableGameStats.achievements.forEach(all => {
           const user = achievementsByUser.achievements.find(i => i.name === all.name)
           const info = {
             name: all.displayName,
-            appid: all.hidden ? '已隐藏' : all.description,
+            desc: all.hidden ? '已隐藏' : all.description,
             header_image: user ? all.icon : all.icongray,
             header_image_class: 'square'
           }
@@ -85,11 +89,13 @@ export const rule = {
             column: 2
           }
         )
-      }
-      if (regRet[1] === '统计') {
-        // 处理后的统计数据
-        const completeStats = (achievementsByUser.stats || []).map(i => {
-          const item = (achievementsByGame.availableGameStats.stats || []).find(j => j.name === i.name)
+      } else if (regRet[1] === '统计') {
+        if (!achievementsByGame.availableGameStats.stats?.length) {
+          await e.reply([segment.at(uid), `\n${achievementsByGame.gameName}好像没有统计呢`])
+          return true
+        }
+        const completeStats = achievementsByUser.stats.map(i => {
+          const item = achievementsByGame.availableGameStats.stats.find(j => j.name === i.name)
           if (item) {
             return {
               name: item.name,
@@ -110,6 +116,63 @@ export const rule = {
           }
         )
       }
+      const img = await Render.render('inventory/index', { data })
+      if (img) {
+        await e.reply(img)
+      } else {
+        await e.reply('制作图片出错辣! 再试一次吧')
+      }
+      return true
+    }
+  },
+  achievementStats: {
+    reg: /^#?steam成就统计\s*(\d+)?$/i,
+    fnc: async e => {
+      const appid = rule.achievementStats.reg.exec(e.msg)[1]
+      if (!appid) {
+        await e.reply([segment.at(e.user_id), '\n需要带上游戏的appid哦'])
+        return true
+      }
+      e.reply(['在查了...在查了...'])
+      // 先获取游戏的成就列表
+      const achievementsByGame = await api.ISteamUserStats.GetSchemaForGame(appid)
+      if (!achievementsByGame || !achievementsByGame.availableGameStats) {
+        await e.reply([segment.at(e.user_id), `\n没有找到${appid}的成就信息`])
+        return true
+      }
+      // 全球统计
+      const achievements = await api.ISteamUserStats.GetGlobalAchievementPercentagesForApp(appid)
+      const data = [
+        {
+          title: `${achievementsByGame.gameName} 全球成就统计`,
+          games: [{
+            name: achievementsByGame.gameName,
+            appid
+          }],
+          column: 2
+        }
+      ]
+      const games = []
+      achievementsByGame.availableGameStats.achievements.forEach(all => {
+        const i = achievements.find(i => i.name === all.name)
+        const percent = `${i.percent.toFixed(0)}%`
+        const info = {
+          name: all.displayName,
+          desc: all.hidden ? '已隐藏' : all.description,
+          header_image: i ? all.icon : all.icongray,
+          header_image_class: 'square',
+          appid: percent,
+          appid_style: `style="background-color: #999999; width: ${percent};"`,
+          percent: i.percent
+        }
+        games.push(info)
+      })
+      data.push({
+        title: '全球成就统计',
+        desc: `共${games.length}个`,
+        games: _.orderBy(games, 'percent', 'desc'),
+        column: 2
+      })
       const img = await Render.render('inventory/index', { data })
       if (img) {
         await e.reply(img)

@@ -88,8 +88,8 @@ pnpm install --filter=steam-plugin
 - [ ] steam绑定渲染成图片
 - [x] steam评论
 - [ ] steam游戏详情
-- [ ] steam成就统计
-- [ ] steam在线统计
+- [x] steam成就统计
+- [x] steam在线统计
 
 ## 联系方式
 

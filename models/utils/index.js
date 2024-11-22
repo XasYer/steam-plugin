@@ -139,7 +139,7 @@ export function getHeaderImgUrlByAppid (appid) {
 /**
  * 获取图片buffer
  * @param {string} url
- * @returns {Promise<Buffer|null>}
+ * @returns {Promise<Buffer|null|string>}
  */
 export async function getImgUrlBuffer (url) {
   for (let i = 0; i < 3; i++) {

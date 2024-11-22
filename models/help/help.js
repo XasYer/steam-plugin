@@ -62,6 +62,16 @@ export const helpList = [
         desc: '查看某个游戏的统计,需要加上appid'
       },
       {
+        icon: 46,
+        title: '#steam成就统计',
+        desc: '查看某个游戏的全球成就完成度,需要加上appid'
+      },
+      {
+        icon: 48,
+        title: '#steam在线',
+        desc: '查看某个游戏的在线人数,需要加上appid'
+      },
+      {
         icon: 31,
         title: '#steam搜索',
         desc: '搜索steam游戏'

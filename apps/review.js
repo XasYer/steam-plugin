@@ -8,7 +8,7 @@ const app = {
 
 export const rule = {
   review: {
-    reg: /^#?steam(?:最新|热门)?评论\s*(\d+)?$/,
+    reg: /^#?steam(?:最新|热门)?评论\s*(\d+)?$/i,
     fnc: async e => {
       const appid = rule.review.reg.exec(e.msg)[1]?.trim()
       if (!appid) {
