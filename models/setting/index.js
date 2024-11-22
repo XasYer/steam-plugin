@@ -41,8 +41,15 @@ export const cfgSchema = {
         title: '推送总开关',
         key: '推送',
         type: 'boolean',
-        def: false,
+        def: true,
         desc: '是否开启推送功能'
+      },
+      defaultPush: {
+        title: '默认开启推送',
+        key: '默认推送',
+        type: 'boolean',
+        def: true,
+        desc: '是否默认开启推送, 绑定steamId后自动开启推送'
       },
       time: {
         title: '推送间隔',

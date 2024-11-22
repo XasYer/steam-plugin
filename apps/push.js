@@ -39,10 +39,10 @@ export const rule = {
           const uid = e.isMaster ? utils.getAtUid(e.at, '0') : e.user_id
           if (open) {
             await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([uid == '0' ? '' : segment.at(uid), `已开启推送: ${steamId}`])
+            await e.reply([uid == '0' ? '' : segment.at(uid), `已开启推送${steamId}到${e.group_id}`])
           } else {
             await db.PushTableDelData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([uid == '0' ? '' : segment.at(uid), `已关闭推送: ${steamId}`])
+            await e.reply([uid == '0' ? '' : segment.at(uid), `已关闭推送${steamId}到${e.group_id}`])
           }
         } else {
           await e.reply('只能开启或关闭自己的推送哦')
@@ -54,10 +54,10 @@ export const rule = {
         if (steamId) {
           if (open) {
             await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([segment.at(uid), `已开启推送: ${steamId}`])
+            await e.reply([segment.at(uid), `已开启推送${steamId}到${e.group_id}`])
           } else {
             await db.PushTableDelData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([segment.at(uid), `已关闭推送: ${steamId}`])
+            await e.reply([segment.at(uid), `已关闭推送${steamId}到${e.group_id}`])
           }
         } else {
           await e.reply('你还没有steamId哦')
