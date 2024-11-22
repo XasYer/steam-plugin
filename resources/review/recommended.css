@@ -3213,9 +3213,12 @@ a {
 }
 
 #container>div:nth-of-type(2) {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-around;
+	column-count: 2;
+	column-gap: 10px;
+}
+
+#container>div:nth-of-type(2)>div {
+	break-inside: avoid;
 }
 
 
