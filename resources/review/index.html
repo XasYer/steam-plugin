@@ -1,0 +1,17 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{pluResPath}}review/recommended.css" />
+{{/block}}
+
+{{block 'main'}}
+
+<div class="game_review_summary positive">
+	<img src="https://steamcdn-a.akamaihd.net/steam/apps/{{appid}}/header.jpg" style="width: 300px;"
+		alt="{{name}}没有找到图片">
+	<div>
+		{{state}} {{honor ? `(${honor})` : ''}}
+	</div>
+</div>
+{{@ review}}
+{{/block}}

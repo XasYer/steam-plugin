@@ -15,7 +15,7 @@ export const rule = {
         await e.reply('要搜什么?')
         return true
       }
-      const result = await api.search(name)
+      const result = await api.store.search(name)
       const games = result.split('</a>').map(i => {
         if (!i.includes('appid')) {
           return null

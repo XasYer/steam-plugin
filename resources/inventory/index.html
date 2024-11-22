@@ -4,54 +4,53 @@
 <link rel="stylesheet" type="text/css" href="{{pluResPath}}inventory/index.css" />
 {{/block}}
 
-    {{block 'main'}}
-    {{each data item}}
-    <div class="header">
-        <h2>{{item.title}}</h2>
-        <h4 class="header-desc">
-            {{item.desc}}
-        </h4>
-    </div>
-    <div class="games">
-        {{each item.games i}}
-        <div class="column-{{item.column}}">
-            <div class="header-img">
-                {{if i.header_image}}
-                <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
-                {{else if !i.noImg}}
-                <img
-                    src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
-                {{/if}}
+{{block 'main'}}
+{{each data item}}
+<div class="header">
+    <h2>{{item.title}}</h2>
+    <h4 class="header-desc">
+        {{item.desc}}
+    </h4>
+</div>
+<div class="games">
+    {{each item.games i}}
+    <div class="column-{{item.column}}">
+        <div class="header-img">
+            {{if i.header_image}}
+            <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
+            {{else if !i.noImg}}
+            <img src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
+            {{/if}}
+        </div>
+        <div
+            class="game-info overflow column-{{item.column}}-info {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
+            <div class="game-title">
+                {{i.name || ''}}
             </div>
-            <div
-                class="game-info overflow column-{{item.column}}-info {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
-                <div class="game-title">
-                    {{i.name || ''}}
-                </div>
-                <div class="game-appid">
-                    {{i.appid || ''}}
-                </div>
-                <div class="game-time">
-                    {{i.desc || ''}}
-                </div>
+            <div class="game-appid">
+                {{i.appid || ''}}
             </div>
-            {{if i.price}}
-            <div class="overflow">
-                <div class="{{i.price.discount ? 'through' : ''}}">
-                    {{i.price.original || ''}}
-                </div>
-                {{if i.price.discount}}
-                <div class="discount-percent">
-                    - {{i.price.discount}}%
-                </div>
-                <div>
-                    {{i.price.current}}
-                </div>
-                {{/if}}
+            <div class="game-time">
+                {{i.desc || ''}}
+            </div>
+        </div>
+        {{if i.price}}
+        <div class="overflow">
+            <div class="{{i.price.discount ? 'through' : ''}}">
+                {{i.price.original || ''}}
+            </div>
+            {{if i.price.discount}}
+            <div class="discount-percent">
+                - {{i.price.discount}}%
+            </div>
+            <div>
+                {{i.price.current}}
             </div>
             {{/if}}
         </div>
-        {{/each}}
+        {{/if}}
     </div>
     {{/each}}
-    {{/block}}
+</div>
+{{/each}}
+{{/block}}

@@ -12,7 +12,7 @@ export const rule = {
     reg: /^#?steam(优惠|特惠|热销|新品|即将推出)$/,
     fnc: async e => {
       e.reply('在查了....在查了')
-      const res = await api.featuredcategories()
+      const res = await api.store.featuredcategories()
       const items = [
         {
           title: '优惠',

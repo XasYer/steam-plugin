@@ -9,15 +9,15 @@ import { HttpsProxyAgent } from 'https-proxy-agent'
  * @returns {Promise<AxiosResponse<any>>}
  */
 export default async function request (url, options = {}) {
-  const ateamApi = 'https://api.steampowered.com'
-  const baseURL = options.baseURL?.replace(/\/$/, '') ?? ateamApi
+  const steamApi = 'https://api.steampowered.com'
+  const baseURL = options.baseURL?.replace(/\/$/, '') ?? steamApi
   return await axios.request({
     url,
     baseURL,
     httpsAgent: Config.steam.proxy ? new HttpsProxyAgent(Config.steam.proxy) : undefined,
     ...options,
     params: {
-      key: baseURL === ateamApi ? Config.steam.apiKey : undefined,
+      key: baseURL === steamApi ? Config.steam.apiKey : undefined,
       ...options.params
     },
     timeout: Config.steam.timeout * 1000

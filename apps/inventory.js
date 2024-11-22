@@ -52,7 +52,7 @@ export const rule = {
           wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
           try {
             if (errorCount < 3) {
-              const info = await api.appdetails(wishlist[i].appid)
+              const info = await api.store.appdetails(wishlist[i].appid)
               wishlist[i].name = info.name
               wishlist[i].price = info.name
                 ? {

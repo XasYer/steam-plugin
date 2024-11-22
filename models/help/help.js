@@ -70,6 +70,16 @@ export const helpList = [
         icon: 32,
         title: '#steam特惠',
         desc: '查看steam热销游戏'
+      },
+      {
+        icon: 44,
+        title: '#steam评论',
+        desc: '查看某个游戏的热门评论,需要加上appid'
+      },
+      {
+        icon: 45,
+        title: '#steam最新评论',
+        desc: '查看某个游戏的最新评论,需要加上appid'
       }
     ]
   },
