@@ -85,6 +85,11 @@ export function supportGuoba () {
             placeholder: '请输入超时时间',
             addonAfter: '秒'
           }
+        },
+        {
+          field: 'steam.renderScale',
+          label: '图片渲染精度',
+          component: 'InputNumber'
         }
       ],
       getConfigData () {
