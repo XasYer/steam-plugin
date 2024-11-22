@@ -2,7 +2,7 @@ import _ from 'lodash'
 
 export const cfgSchema = {
   steam: {
-    title: '核心设置',
+    title: 'api设置',
     cfg: {
       apiKey: {
         title: 'Steam Web API Key',
@@ -43,6 +43,8 @@ export const cfgSchema = {
             return 5
           }
         },
+        min: 0,
+        max: 60,
         desc: '请求超时时间,单位秒',
         def: 5
       },
@@ -50,6 +52,8 @@ export const cfgSchema = {
         title: '渲染精度',
         key: '渲染',
         type: 'number',
+        min: 50,
+        max: 200,
         def: 120,
         input: (n) => Math.min(200, Math.max(50, (n * 1 || 100))),
         desc: '可选值50~200，设置高精度会提高图片的精细度，但因图片较大可能会影响渲染与发送速度'
@@ -73,10 +77,25 @@ export const cfgSchema = {
         def: true,
         desc: '是否默认开启推送, 绑定steamId后自动开启推送'
       },
+      blackGroupList: {
+        title: '推送黑名单群',
+        key: '推送黑名单',
+        type: 'array',
+        def: [],
+        desc: '不推送黑名单群的状态'
+      },
+      whiteGroupList: {
+        title: '推送白名单群',
+        key: '推送白名单',
+        type: 'array',
+        def: [],
+        desc: '只推送白名单群的状态'
+      },
       time: {
         title: '推送间隔',
         key: '推送间隔',
         def: 5,
+        min: 1,
         type: 'number',
         input: (n) => {
           if (n >= 0) {
@@ -113,4 +132,42 @@ export function getCfgSchemaMap () {
     })
   })
   return ret
+}
+
+export function getGuobasChemas () {
+  const ret = []
+  _.forEach(cfgSchema, (cfgGroup, fileName) => {
+    if (fileName === 'setAll') {
+      return
+    }
+    const item = []
+    item.push({
+      component: 'Divider',
+      label: cfgGroup.title
+    })
+    _.forEach(cfgGroup.cfg, (cfgItem, cfgKey) => {
+      item.push({
+        field: `${fileName}.${cfgKey}`,
+        label: cfgItem.title,
+        bottomHelpMessage: cfgItem.desc,
+        component: getComponent(cfgItem.type, cfgItem.component),
+        componentProps: {
+          ...cfgItem,
+          input: undefined
+        }
+      })
+    })
+    ret.push(...item)
+  })
+  return ret
+}
+
+function getComponent (type, def) {
+  const components = {
+    string: 'Input',
+    boolean: 'Switch',
+    number: 'InputNumber',
+    array: 'GSelectGroup'
+  }
+  return def || components[type]
 }

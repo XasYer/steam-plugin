@@ -18,13 +18,15 @@
     <li class="cfg-li">
       <div class="cfg-line">
         {{cfgItem.title}}
-        <span class="cfg-hint"> #steam设置{{cfgItem.key}}
+        <span class="cfg-hint"> #steam{{cfgItem.type === 'array' ? '添加/删除' : '设置'}}{{cfgItem.key}}
           {{if cfgItem.type==='number'}}
           {{cfgItem.def}}
           {{else if cfgItem.type==='string'}}
           xxx
           {{else if cfgItem.type==='boolean'}}
           开启/关闭
+          {{else if cfgItem.type==='array'}}
+          xxx
           {{/if}}
         </span>
         {{if cfgItem.type === 'number'}}
@@ -41,6 +43,8 @@
         {{else}}
         <div class="cfg-status status-off">未设置</div>
         {{/if}}
+        {{else if cfgItem.type === 'array'}}
+        <div class="cfg-status">已配置{{cfg[cfgKey]?.length || 0}}项</div>
         {{/if}}
       </div>
       {{if cfgItem.desc && cfgItem.showDesc!== false}}
