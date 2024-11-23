@@ -136,7 +136,7 @@ export const rule = {
             desc: utils.getPersonaState(i.personastate),
             header_image: await utils.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || i.avatarfull,
             header_image_class: 'square',
-            desc_style: `style="background-color: #${i.personaname == 1 ? 'beee11' : '999999'};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+            desc_style: `style="background-color: #${i.personastate == 1 ? 'beee11' : '999999'};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
           })
         }
       }
