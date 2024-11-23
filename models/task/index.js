@@ -65,7 +65,7 @@ export function startTimer () {
                 }))
                 // 如果有上次记录就是结束游玩
               } else if (lastPlay.name) {
-                msg.push(`${nickname} 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
+                msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
                 redis.del(redisKey + player.steamid)
               } else {
                 continue

@@ -113,11 +113,9 @@ export const rule = {
         if (i.personastate == 1) {
           return 0
         } else if (i.personastate == 0) {
-          return 3
-        } else if (i.personastate == 3) {
-          return 1
+          return 2
         } else {
-          return i.personastate
+          return 1
         }
       }
       for (const i of _.sortBy(userState, sort)) {
@@ -136,7 +134,7 @@ export const rule = {
             desc: utils.getPersonaState(i.personastate),
             header_image: await utils.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || i.avatarfull,
             header_image_class: 'square',
-            desc_style: `style="background-color: #${i.personastate == 1 ? 'beee11' : '999999'};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+            desc_style: `style="background-color: #${getColor(i.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
           })
         }
       }
@@ -184,4 +182,15 @@ async function checkGroup (e) {
     return false
   }
   return true
+}
+
+function getColor (state) {
+  switch (Number(state)) {
+    case 1:
+      return 'beee11'
+    case 0:
+      return '999999'
+    default:
+      return '8fbc8b'
+  }
 }

@@ -193,11 +193,8 @@ export function getPersonaState (state) {
   const stateMap = {
     0: '离线',
     1: '在线',
-    2: '繁忙',
     3: '离开',
-    4: '忙碌',
-    5: '游戏中',
-    6: '休息'
+    4: '离开'
   }
-  return stateMap[state] || '未知'
+  return stateMap[state] || '其他'
 }
