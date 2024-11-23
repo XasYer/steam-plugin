@@ -13,8 +13,8 @@ export const rule = {
       // 如果是主人可以at其他用户进行绑定
       const uid = utils.getAtUid(e.isMaster ? e.at : '', e.user_id)
       const textId = rule.bind.reg.exec(e.msg)[1]
+      const userBindAll = await db.UserTableGetDataByUserId(uid)
       if (!textId) {
-        const userBindAll = await db.UserTableGetDataByUserId(uid)
         if (!userBindAll.length) {
           await e.reply('要和SteamID或好友码一起发送哦')
         } else {
@@ -22,7 +22,8 @@ export const rule = {
         }
         return true
       }
-      const steamId = utils.getSteamId(textId)
+      const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
+      const steamId = index >= 0 ? userBindAll[index].steamId : utils.getSteamId(textId)
       // 检查steamId是否被绑定
       const bindInfo = await db.UserTableGetDataBySteamId(steamId)
       if (bindInfo) {
@@ -55,14 +56,16 @@ export const rule = {
       }
       // 如果是主人可以at其他用户进行绑定
       const uid = utils.getAtUid(e.isMaster ? e.at : '', e.user_id)
-      const steamId = utils.getSteamId(textId)
+      const userBindAll = await db.UserTableGetDataByUserId(uid)
+      const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
+      const steamId = index >= 0 ? userBindAll[index].steamId : utils.getSteamId(textId)
       // 检查steamId是否被绑定
       const bindInfo = await db.UserTableGetDataBySteamId(steamId)
       if (bindInfo) {
         if (bindInfo.userId == uid) {
           await db.UserTableDelSteamIdByUserId(uid, steamId)
           const text = await getBindSteamIdsText(uid, e.group_id)
-          await e.reply(`已添加steamId: ${steamId}\n${text}`)
+          await e.reply(`已删除steamId: ${steamId}\n${text}`)
         } else {
           await e.reply('只能解绑自己绑定的steamId哦')
         }
@@ -100,9 +103,9 @@ async function getBindSteamIdsText (uid, gid, userBindAll = []) {
     return true
   })()
   const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, gid, true)
-  return `全部steamId(${pushEnable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map(item => {
+  return `全部steamId(${pushEnable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map((item, index) => {
     const isBind = item.isBind ? '√' : ''
     const isPush = (pushEnable && pushSteamIds.includes(item.steamId)) ? '✧' : ''
-    return `${item.steamId} ${isPush} ${isBind} `
+    return `${index + 1}: ${item.steamId} ${isPush} ${isBind} `
   }).join('\n')}`
 }

@@ -51,7 +51,7 @@ export function startTimer () {
               // 如果有gameid就是开始玩
               if (player.gameid) {
                 logger.info(`${player.personaname} 正在玩 ${player.gameextrainfo}`)
-                msg.push(`${nickname} 正在玩 ${player.gameextrainfo}`)
+                msg.push(`${nickname}(${player.personaname}) 正在玩 ${player.gameextrainfo}`)
                 // 看看上次有没有在玩别的游戏
                 if (lastPlay.name) {
                   msg.push(`\n已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)

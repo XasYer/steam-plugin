@@ -116,11 +116,11 @@ export const rule = {
           playing.push({
             name: i.gameextrainfo,
             appid: i.gameid,
-            desc: `${nickname}`
+            desc: `${nickname}(${i.personaname})`
           })
         } else {
           notPlaying.push({
-            name: nickname,
+            name: `${nickname}(${i.personaname})`,
             desc: utils.getPersonaState(i.personastate),
             header_image: await utils.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId),
             header_image_class: 'square'

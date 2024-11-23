@@ -158,12 +158,15 @@ export async function PushTableGetAllSteamIdBySteamIdAndGroupId (userId, groupId
   if (!groupId) return []
   userId = String(userId)
   groupId = String(groupId)
+  const where = {
+    userId,
+    groupId
+  }
+  if (isPush) {
+    where.isPush = true
+  }
   return await PushTable.findAll({
-    where: {
-      userId,
-      groupId,
-      isPush
-    }
+    where
   }).then(result => result.map(item => item?.dataValues?.steamId))
 }
 
@@ -232,10 +235,13 @@ export async function PushTableSetNAUserIdToRealUserIdBySteamId (userId, steamId
  */
 export async function PushTableGetDataByGroupId (groupId, isPush = true) {
   groupId = String(groupId)
+  const where = {
+    groupId
+  }
+  if (isPush) {
+    where.isPush = true
+  }
   return await PushTable.findAll({
-    where: {
-      groupId,
-      isPush
-    }
+    where
   }).then(result => result?.map(item => item?.dataValues))
 }
