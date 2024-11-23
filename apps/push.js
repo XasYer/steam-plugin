@@ -113,8 +113,8 @@ export const rule = {
         if (i.personastate == 1) {
           return 0
         } else if (i.personastate == 0) {
-          return 2
-        } else if (i.personastate == 2) {
+          return 3
+        } else if (i.personastate == 3) {
           return 1
         } else {
           return i.personastate
