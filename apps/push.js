@@ -68,11 +68,11 @@ export const rule = {
       }
       const userList = []
       for (const i of list) {
-        const name = await utils.getUserName(i.botId, i.userId, i.groupId)
+        const name = i.userId == '0' ? 'N/A' : await utils.getUserName(i.botId, i.userId, i.groupId)
         userList.push({
           name,
           desc: i.steamId,
-          header_image: await utils.getUserAvatar(i.botId, i.userId, i.groupId),
+          header_image: await utils.getUserAvatar(i.botId, i.userId == '0' ? i.botId : i.userId, i.groupId),
           header_image_class: 'square'
         })
       }
@@ -80,7 +80,7 @@ export const rule = {
         title: `群${e.group_id}推送列表`,
         desc: `共${list.length}个推送用户`,
         games: userList,
-        column: 2
+        column: 3
       }]
       const img = await Render.render('inventory/index', { data })
       if (img) {
