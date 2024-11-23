@@ -23,14 +23,14 @@
             {{/if}}
         </div>
         <div
-            class="game-info overflow column-{{item.column}}-info {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
+            class="game-info overflow column-{{item.column}}-info{{!i.price? '-noprice' :''}} {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
             <div class="game-title">
                 {{i.name || ''}}
             </div>
             <div class="game-appid" {{@ i.appid_style}}>
                 {{i.appid || ''}}
             </div>
-            <div class="game-time">
+            <div class="game-desc" {{@ i.desc_style}}>
                 {{i.desc || ''}}
             </div>
         </div>

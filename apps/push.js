@@ -109,7 +109,18 @@ export const rule = {
       }
       const playing = []
       const notPlaying = []
-      for (const i of userState) {
+      const sort = (i) => {
+        if (i.personastate == 1) {
+          return 0
+        } else if (i.personastate == 0) {
+          return 2
+        } else if (i.personastate == 2) {
+          return 1
+        } else {
+          return i.personastate
+        }
+      }
+      for (const i of _.sortBy(userState, sort)) {
         const userInfo = list.find(j => j.steamId == i.steamid)
         const nickname = await utils.getUserName(userInfo.botId, userInfo.userId, userInfo.groupId)
         if (i.gameid) {
@@ -120,10 +131,12 @@ export const rule = {
           })
         } else {
           notPlaying.push({
-            name: `${nickname}(${i.personaname})`,
+            name: nickname,
+            appid: i.personaname,
             desc: utils.getPersonaState(i.personastate),
             header_image: await utils.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId),
-            header_image_class: 'square'
+            header_image_class: 'square',
+            desc_style: `style="background-color: #${i.personaname == 1 ? 'beee11' : '999999'};width: fit-content;border-radius: 5px; padding: 0 5px;"`
           })
         }
       }

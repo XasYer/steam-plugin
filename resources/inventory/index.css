@@ -64,6 +64,14 @@
     width: 150px;
 }
 
+.column-2-info-noprice {
+    width: 260px;
+}
+
+.column-3-info-noprice {
+    width: 200px;
+}
+
 .column-full {
     width: 350px;
 }
@@ -89,7 +97,7 @@
     color: #666;
 }
 
-.game-time {
+.game-desc {
     font-size: 14px;
     color: #999;
 }
