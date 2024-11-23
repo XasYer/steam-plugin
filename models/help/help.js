@@ -37,6 +37,16 @@ export const helpList = [
         desc: '关闭steam个人状态推送'
       },
       {
+        icon: 49,
+        title: '#steam推送列表',
+        desc: '查看本群推送列表'
+      },
+      {
+        icon: 50,
+        title: '#群友在玩什么',
+        desc: '看看群聊绑定了steamId的成员状态'
+      },
+      {
         icon: 12,
         title: '#steam库存',
         desc: '查看steam库存'

@@ -16,8 +16,8 @@ import { logger } from '#lib'
  *   lastlogoff?: number,
  *   personastate: number,
  *   timecreated: string,
- *   gameid: string,
- *   gameextrainfo: string,
+ *   gameid?: string,
+ *   gameextrainfo?: string,
  * }[]>}
  */
 export async function GetPlayerSummaries (steamIds) {

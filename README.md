@@ -90,6 +90,8 @@ pnpm install --filter=steam-plugin
 - [ ] steam游戏详情
 - [x] steam成就统计
 - [x] steam在线统计
+- [x] steam推送列表
+- [x] 群友在玩什么
 
 ## 联系方式
 

@@ -33,7 +33,7 @@ export const rule = {
         `好友代码: ${utils.getFriendCode(info.steamid)}`,
         `steamId: ${info.steamid}`,
         `用户名称: ${info.personaname}`,
-        `当前状态: ${getPersonaState(info.personastate)}`,
+        `当前状态: ${utils.getPersonaState(info.personastate)}`,
         `最后下线: ${moment.unix(info.lastlogoff).format('YYYY-MM-DD HH:mm:ss')}`,
         `注册时间: ${moment.unix(info.timecreated).format('YYYY-MM-DD HH:mm:ss')}`,
         `账号地区: ${getLoccountryCode(info.loccountrycode)}`
@@ -50,24 +50,6 @@ export const rule = {
 }
 
 export const info = new App(app, rule).create()
-
-/**
- * 将用户状态码转换为中文
- * @param {number} state
- * @returns {string}
- */
-function getPersonaState (state) {
-  const stateMap = {
-    0: '离线',
-    1: '在线',
-    2: '繁忙',
-    3: '忙碌',
-    4: '离开',
-    5: '游戏中',
-    6: '休息'
-  }
-  return stateMap[state] || '未知'
-}
 
 /**
  * 将地区码转换为中文

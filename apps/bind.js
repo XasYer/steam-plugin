@@ -35,7 +35,7 @@ export const rule = {
       } else {
         await db.UserTableAddSteamIdByUserId(uid, steamId)
         // 群聊绑定才添加
-        if (Config.push.defaultPush && e.group_id) {
+        if (e.group_id) {
           await db.PushTableSetNAUserIdToRealUserIdBySteamId(uid, steamId)
           await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
         }
@@ -99,7 +99,7 @@ async function getBindSteamIdsText (uid, gid, userBindAll = []) {
     }
     return true
   })()
-  const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, gid)
+  const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, gid, true)
   return `全部steamId(${pushEnable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map(item => {
     const isBind = item.isBind ? '√' : ''
     const isPush = (pushEnable && pushSteamIds.includes(item.steamId)) ? '✧' : ''

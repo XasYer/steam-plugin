@@ -93,6 +93,30 @@ export async function getUserName (botId, uid, gid) {
   }
 }
 
+export async function getUserAvatar (botId, uid, gid) {
+  try {
+    if (Version.BotName === 'Karin') {
+      const bot = Bot.getBot(botId)
+      const avatarUrl = await bot.getAvatarUrl(uid)
+      return avatarUrl || await bot.getAvatarUrl(botId) || ''
+    } else {
+      uid = Number(uid) || uid
+      if (gid) {
+        gid = Number(gid) || gid
+        const group = Bot[botId].pickGroup(gid)
+        const avatarUrl = (await group.pickMember(uid)).getAvatarUrl()
+        return avatarUrl || Bot[botId].avatar
+      } else {
+        const user = Bot[botId].pickUser(uid)
+        const avatarUrl = await user.getAvatarUrl()
+        return avatarUrl || Bot[botId].avatar || ''
+      }
+    }
+  } catch {
+    return ''
+  }
+}
+
 /**
  * 获取at的id,没有则返回用户id
  * @param {string|string[]} at
@@ -101,6 +125,9 @@ export async function getUserName (botId, uid, gid) {
  */
 export function getAtUid (at, id) {
   if (Version.BotName === 'Karin') {
+    if (typeof at === 'string') {
+      return at
+    }
     if (at.length) {
       return at.pop()
     } else {
@@ -155,4 +182,22 @@ export async function getImgUrlBuffer (url) {
     }
   }
   return null
+}
+
+/**
+ * 将用户状态码转换为中文
+ * @param {number} state
+ * @returns {string}
+ */
+export function getPersonaState (state) {
+  const stateMap = {
+    0: '离线',
+    1: '在线',
+    2: '繁忙',
+    3: '忙碌',
+    4: '离开',
+    5: '游戏中',
+    6: '休息'
+  }
+  return stateMap[state] || '未知'
 }
