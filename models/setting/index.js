@@ -18,6 +18,13 @@ export const cfgSchema = {
         def: '',
         desc: '用于加速访问'
       },
+      commonProxy: {
+        title: '通用反代',
+        key: '通用反代',
+        type: 'string',
+        def: '',
+        desc: '通用反代 比如填写: https://example.com/{{url}} 则会替换 {{url}} 为实际请求的url'
+      },
       apiProxy: {
         title: 'api反代',
         key: 'api反代',

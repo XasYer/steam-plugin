@@ -11,6 +11,10 @@ timeout: 5
 # 图片渲染精度
 renderScale: 130
 
+# 优先使用通用, 再使用指定, 如果填了proxy, 则都会带上proxy请求
+# 通用反代 比如填写: https://example.com/{{url}} 则会替换 {{url}} 为实际请求的url
+commonProxy: ""
+
 # https://api.steampowered.com 的反代 会替换成对应地址
 apiProxy: ""
 

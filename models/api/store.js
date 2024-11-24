@@ -2,7 +2,16 @@ import { utils } from '#models'
 import { logger } from '#lib'
 import { Config } from '#components'
 
-const getBaseURL = () => Config.steam.storeProxy?.replace(/\/$/, '') || 'https://store.steampowered.com'
+const getBaseURL = () => {
+  const url = 'https://store.steampowered.com'
+  if (Config.steam.commonProxy) {
+    return Config.steam.commonProxy.replace('{{url}}', encodeURIComponent(url))
+  } else if (Config.steam.storeProxy) {
+    return Config.steam.storeProxy?.replace(/\/$/, '')
+  } else {
+    return url
+  }
+}
 
 /**
  * 根据appid获取游戏详情

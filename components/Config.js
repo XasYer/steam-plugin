@@ -71,6 +71,7 @@ class Config {
    *  apiKey: string,
    *  proxy: string,
    *  timeout: number,
+   *  commonProxy: string,
    *  apiProxy: string,
    *  storeProxy: string
    * }}
