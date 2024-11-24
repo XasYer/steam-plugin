@@ -6,13 +6,20 @@
 
 {{block 'main'}}
 {{each data item}}
+<% const isHidden = item.games.length > hiddenLength %>
 <div class="header">
     <h2>{{item.title}}</h2>
     <h4 class="header-desc">
         {{item.desc}}
+        {{if isHidden}}
+        <br/>
+        <% const len = item.games.length - hiddenLength %>
+        太多辣 ! 已隐藏{{len}}个项目
+        {{/if}}
     </h4>
 </div>
 <div class="games">
+    <% item.games.length = isHidden ? hiddenLength : item.games.length %>
     {{each item.games i}}
     <div class="column-{{item.column}}">
         <div class="header-img">

@@ -34,6 +34,9 @@ class Config {
         const merge = (defValue, value, prefix = '') => {
           const defKeys = Object.keys(defValue)
           const configKeys = Object.keys(value || {})
+          if (defKeys.length !== configKeys.length) {
+            isChange = true
+          }
           for (const key of defKeys) {
             switch (typeof defValue[key]) {
               case 'object':
@@ -93,6 +96,17 @@ class Config {
    */
   get push () {
     return this.getDefOrConfig('push')
+  }
+
+  /**
+   * 获取其他配置
+   * @returns {{
+   *  renderScale: number,
+   *  hiddenLength: number
+   * }}
+   */
+  get other () {
+    return this.getDefOrConfig('other')
   }
 
   /** 默认配置和用户配置 */

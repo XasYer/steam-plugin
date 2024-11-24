@@ -3,7 +3,7 @@ import { puppeteer } from '#lib'
 import { Version, Config } from '#components'
 
 function scale (pct = 1) {
-  const scale = Math.min(2, Math.max(0.5, Config.renderScale / 100))
+  const scale = Math.min(2, Math.max(0.5, Config.other.renderScale / 100))
   pct = pct * scale
   return `style=transform:scale(${pct})`
 }
@@ -25,6 +25,7 @@ const Render = {
       pageGotoParams: {
         waitUntil: 'networkidle0' // +0.5s
       },
+      hiddenLength: Config.other.hiddenLength,
       ...params
     }
     return await puppeteer.screenshot(path, data)

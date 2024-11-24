@@ -54,16 +54,6 @@ export const cfgSchema = {
         max: 60,
         desc: '请求超时时间,单位秒',
         def: 5
-      },
-      renderScale: {
-        title: '渲染精度',
-        key: '渲染',
-        type: 'number',
-        min: 50,
-        max: 200,
-        def: 120,
-        input: (n) => Math.min(200, Math.max(50, (n * 1 || 100))),
-        desc: '可选值50~200，设置高精度会提高图片的精细度，但因图片较大可能会影响渲染与发送速度'
       }
     }
   },
@@ -128,6 +118,30 @@ export const cfgSchema = {
           }
         },
         desc: '间隔多少分钟推送一次'
+      }
+    }
+  },
+  other: {
+    title: '其他设置',
+    cfg: {
+      renderScale: {
+        title: '渲染精度',
+        key: '渲染',
+        type: 'number',
+        min: 50,
+        max: 200,
+        def: 120,
+        input: (n) => Math.min(200, Math.max(50, (n * 1 || 100))),
+        desc: '可选值50~200，设置高精度会提高图片的精细度，但因图片较大可能会影响渲染与发送速度'
+      },
+      hiddenLength: {
+        title: '隐藏长度',
+        key: '隐藏',
+        type: 'number',
+        min: 1,
+        def: 99,
+        input: (n) => Math.max(1, n * 1 || 99),
+        desc: '比如库存等超过设置的长度后会隐藏剩余的游戏, 避免太多而导致截图失败'
       }
     }
   },

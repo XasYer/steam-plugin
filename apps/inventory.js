@@ -1,6 +1,6 @@
 import { utils, db, api } from '#models'
 import { segment } from '#lib'
-import { Render, App } from '#components'
+import { Render, App, Config } from '#components'
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -41,6 +41,9 @@ export const rule = {
         if (!wishlist.length) {
           await e.reply([segment.at(uid), '\n愿望当场就实现了, 羡慕'])
           return true
+        }
+        if (wishlist.length > Config.other.hiddenLength) {
+          wishlist.length = Config.other.hiddenLength
         }
         // 愿望单没有给name, 尝试获取一下, 顺便也可以获取一下价格 获取失败超过3次就不再获取了
         let errorCount = 0
