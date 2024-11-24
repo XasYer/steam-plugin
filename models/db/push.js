@@ -197,11 +197,20 @@ export async function PushTableGetAllData (filter = true) {
   if (filter) {
     if (Config.push.whiteGroupList.length) {
       where.groupId = {
-        [Op.in]: Config.push.whiteGroupList.map(i => String(i))
+        [Op.in]: Config.push.whiteGroupList.map(String)
       }
     } else if (Config.push.blackGroupList.length) {
       where.groupId = {
-        [Op.notIn]: Config.push.blackGroupList.map(i => String(i))
+        [Op.notIn]: Config.push.blackGroupList.map(String)
+      }
+    }
+    if (Config.push.whiteBotList.length) {
+      where.botId = {
+        [Op.in]: Config.push.whiteBotList.map(String)
+      }
+    } else if (Config.push.blackBotList.length) {
+      where.botId = {
+        [Op.notIn]: Config.push.blackBotList.map(String)
       }
     }
   }

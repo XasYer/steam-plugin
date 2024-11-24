@@ -17,7 +17,7 @@ export function startTimer () {
         // 获取现在的时间
         const now = Math.floor(Date.now() / 1000)
         // 从推送表中获取所有数据
-        const PushData = await db.PushTableGetAllData()
+        const PushData = await db.PushTableGetAllData(true)
         // 所有的steamId
         const steamIds = _.uniq(PushData.map(i => i.steamId))
         // 获取所有steamId现在的状态

@@ -90,6 +90,22 @@ export const cfgSchema = {
         },
         desc: '推送模式 1: 文字推送 2: 图片推送'
       },
+      blackBotList: {
+        title: '推送黑名单机器人',
+        key: '推送bot黑名单',
+        type: 'array',
+        def: [],
+        desc: '黑名单中的Bot账号不会开启推送',
+        component: 'GTags'
+      },
+      whiteBotList: {
+        title: '推送白名单机器人',
+        key: '推送bot白名单',
+        type: 'array',
+        def: [],
+        desc: '只推送白名单Bot账号的状态',
+        component: 'GTags'
+      },
       blackGroupList: {
         title: '推送黑名单群',
         key: '推送黑名单',

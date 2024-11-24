@@ -110,17 +110,32 @@ export const helpList = [
       {
         icon: 36,
         title: '#steam添加推送(黑|白)名单',
-        desc: '添加指定群到推送(黑|白)名单'
+        desc: '黑名单中的群不会推送'
       },
       {
         icon: 37,
         title: '#steam删除推送(黑|白)名单',
-        desc: '删除指定群的推送(黑|白)名单'
+        desc: '若配置,则只会推送白名单中的群'
       },
       {
         icon: 42,
         title: '#steam推送(黑|白)名单列表',
         desc: '查看推送(黑|白)名单列表'
+      },
+      {
+        icon: 49,
+        title: '#steam添加推送bot(黑|白)名单',
+        desc: '黑名单Bot中的账号不会进行推送'
+      },
+      {
+        icon: 50,
+        title: '#steam删除推送bot(黑|白)名单',
+        desc: '只会推送白名单Bot中的账号'
+      },
+      {
+        icon: 51,
+        title: '#steam推送(黑|白)名单列表',
+        desc: '查看推送bot(黑|白)名单列表'
       }
     ]
   }

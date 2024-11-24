@@ -90,6 +90,8 @@ class Config {
    *  pushMode: number,
    *  time: number,
    *  defaultPush: boolean,
+   *  blackBotList: string[],
+   *  whiteBotList: string[],
    *  blackGroupList: string[],
    *  whiteGroupList: string[]
    * }}

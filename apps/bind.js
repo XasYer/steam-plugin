@@ -18,7 +18,7 @@ export const rule = {
         if (!userBindAll.length) {
           await e.reply('要和SteamID或好友码一起发送哦')
         } else {
-          await e.reply(await getBindSteamIdsText(uid, e.group_id, userBindAll))
+          await e.reply(await getBindSteamIdsText(e.self_id, uid, e.group_id, userBindAll))
         }
         return true
       }
@@ -41,7 +41,7 @@ export const rule = {
           await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
         }
       }
-      const text = await getBindSteamIdsText(uid, e.group_id)
+      const text = await getBindSteamIdsText(e.self_id, uid, e.group_id)
       await e.reply(`已添加steamId: ${steamId}\n${text}`)
       return true
     }
@@ -64,7 +64,7 @@ export const rule = {
       if (bindInfo) {
         if (bindInfo.userId == uid) {
           await db.UserTableDelSteamIdByUserId(uid, steamId)
-          const text = await getBindSteamIdsText(uid, e.group_id)
+          const text = await getBindSteamIdsText(e.self_id, uid, e.group_id)
           await e.reply(`已删除steamId: ${steamId}\n${text}`)
         } else {
           await e.reply('只能解绑自己绑定的steamId哦')
@@ -86,12 +86,18 @@ export const bind = new App(app, rule).create()
  * @param {UserColumns[]?} userBindAll
  * @returns
  */
-async function getBindSteamIdsText (uid, gid, userBindAll = []) {
+async function getBindSteamIdsText (bid, uid, gid, userBindAll = []) {
   if (!userBindAll?.length) {
     userBindAll = await db.UserTableGetDataByUserId(uid)
   }
   const pushEnable = (() => {
     if (!Config.push.enable) {
+      return false
+    }
+    if (Config.push.whiteBotList.length && !Config.push.whiteBotList.some(i => i == bid)) {
+      return false
+    }
+    if (Config.push.blackBotList.length && Config.push.blackBotList.some(i => i == bid)) {
       return false
     }
     if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(i => i == gid)) {
