@@ -81,7 +81,7 @@ export function startTimer () {
                     name: lastPlay.name,
                     appid: `${nickname}(${player.personaname})`,
                     desc: `时长: ${utils.formatDuration(now - lastPlay.time)}`,
-                    header_image: iconUrl
+                    header_image: utils.getHeaderImgUrlByAppid(lastPlay.appid)
                   })
                   redis.del(redisKey + player.steamid)
                 }
