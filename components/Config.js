@@ -84,6 +84,7 @@ class Config {
    * 获取推送配置
    * @returns {{
    *  enable: boolean,
+   *  pushMode: number,
    *  time: number,
    *  defaultPush: boolean,
    *  blackGroupList: string[],

@@ -1,4 +1,4 @@
-import { Config, Version } from '#components'
+import { Config, Version, Render } from '#components'
 import { Bot, logger, redis, segment } from '#lib'
 import { api, db, utils } from '#models'
 import _ from 'lodash'
@@ -22,6 +22,7 @@ export function startTimer () {
         const steamIds = _.uniq(PushData.map(i => i.steamId))
         // 获取所有steamId现在的状态
         const result = await api.ISteamUser.GetPlayerSummaries(steamIds)
+        const userList = {}
         for (const player of result) {
           // 获取上一次的状态
           let lastPlay = await redis.get(redisKey + player.steamid)
@@ -35,7 +36,8 @@ export function startTimer () {
             // 找到所有的推送群
             const pushGroups = PushData.filter(i => i.steamId === player.steamid)
             const iconUrl = utils.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid)
-            const iconBuffer = await utils.getImgUrlBuffer(iconUrl)
+            // 文本推送才获取图片
+            const iconBuffer = Config.push.pushMode != 2 ? await utils.getImgUrlBuffer(iconUrl) : null
             for (const i of pushGroups) {
               if (Version.BotName === 'Karin') {
                 if (!Bot.getBot(i.botId)) {
@@ -48,36 +50,96 @@ export function startTimer () {
               const nickname = i.userId == '0' ? player.personaname : await utils.getUserName(i.botId, i.userId, i.groupId)
               const msg = []
               iconBuffer && msg.push(segment.image(iconBuffer))
-              // 如果有gameid就是开始玩
-              if (player.gameid) {
-                logger.info(`${player.personaname} 正在玩 ${player.gameextrainfo}`)
-                msg.push(`${nickname}(${player.personaname}) 正在玩 ${player.gameextrainfo}`)
-                // 看看上次有没有在玩别的游戏
-                if (lastPlay.name) {
-                  msg.push(`\n已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
-                }
-                // 记录这一次的状态
-                redis.set(redisKey + player.steamid, JSON.stringify({
-                  name: player.gameextrainfo,
-                  appid: player.gameid,
-                  time: now,
-                  state: player.personastate
-                }))
-                // 如果有上次记录就是结束游玩
-              } else if (lastPlay.name) {
-                msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
-                redis.del(redisKey + player.steamid)
-              } else {
-                continue
+              const state = {
+                name: player.gameextrainfo,
+                appid: player.gameid,
+                time: now,
+                state: player.personastate
               }
-              try {
-                await utils.sendGroupMsg(i.botId, i.groupId, msg)
-              } catch (error) {
-                logger.error(`群消息发送失败: ${i.groupId}`, error)
+              if (Config.push.pushMode == 2) {
+                // 图片推送 先收集所有要推送的用户
+                if (!userList[i.groupId]) {
+                  userList[i.groupId] = {}
+                }
+                if (!userList[i.groupId][i.botId]) {
+                  userList[i.groupId][i.botId] = {
+                    start: [],
+                    end: []
+                  }
+                }
+                if (player.gameid) {
+                  userList[i.groupId][i.botId].start.push({
+                    name: player.gameextrainfo,
+                    appid: nickname,
+                    desc: player.personaname,
+                    header_image: iconUrl
+                  })
+                  redis.set(redisKey + player.steamid, JSON.stringify(state))
+                }
+                if (lastPlay.name) {
+                  userList[i.groupId][i.botId].end.push({
+                    name: lastPlay.name,
+                    appid: nickname,
+                    desc: player.personaname,
+                    header_image: iconUrl
+                  })
+                  redis.del(redisKey + player.steamid)
+                }
+              } else {
+                // 如果有gameid就是开始玩
+                if (player.gameid) {
+                  msg.push(`${nickname}(${player.personaname}) 正在玩 ${player.gameextrainfo}`)
+                  // 看看上次有没有在玩别的游戏
+                  if (lastPlay.name) {
+                    msg.push(`\n已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
+                  }
+                  // 记录这一次的状态
+                  redis.set(redisKey + player.steamid, JSON.stringify(state))
+                  // 如果有上次记录就是结束游玩
+                } else if (lastPlay.name) {
+                  msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
+                  redis.del(redisKey + player.steamid)
+                } else {
+                  continue
+                }
+                try {
+                  await utils.sendGroupMsg(i.botId, i.groupId, msg)
+                } catch (error) {
+                  logger.error(`群消息发送失败: ${i.groupId}`, error)
+                }
               }
             }
           } else {
             // TODO: 上下线推送
+          }
+        }
+        for (const gid in userList) {
+          for (const botId in userList[gid]) {
+            const i = userList[gid][botId]
+            const data = []
+            if (i.start.length) {
+              data.push({
+                title: '开始玩游戏的群友',
+                games: i.start,
+                column: 3
+              })
+            }
+            if (i.end.length) {
+              data.push({
+                title: '结束玩游戏的群友',
+                games: i.end,
+                column: 3
+              })
+            }
+            if (!data.length) {
+              continue
+            }
+            try {
+              const img = await Render.render('inventory/index', { data })
+              await utils.sendGroupMsg(botId, gid, img)
+            } catch (error) {
+              logger.error(`群消息发送失败: ${gid}`, error)
+            }
           }
         }
       } catch (error) {

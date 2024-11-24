@@ -84,6 +84,22 @@ export const cfgSchema = {
         def: true,
         desc: '是否默认开启推送, 绑定steamId后自动开启推送'
       },
+      pushMode: {
+        title: '推送模式',
+        key: '推送模式',
+        type: 'number',
+        def: 1,
+        min: 1,
+        max: 2,
+        input: (n) => {
+          if (n >= 1 && n <= 2) {
+            return n * 1
+          } else {
+            return 1
+          }
+        },
+        desc: '推送模式 1: 文字推送 2: 图片推送'
+      },
       blackGroupList: {
         title: '推送黑名单群',
         key: '推送黑名单',

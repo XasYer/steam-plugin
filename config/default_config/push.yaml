@@ -1,6 +1,11 @@
 # 是否开启游玩推送功能
 enable: true
 
+# 推送模式 
+# 1: 文字推送 一条消息就是一个群友 xxx正在玩xxx
+# 2: 图片推送 一张图片展示所有群友 
+pushMode: 1
+
 # Steam Web API 使用条款
 # https://steamcommunity.com/dev/apiterms 
 # 其中说明: 每天对 Steam Web API 的调用次数限制为十万 (100,000) 次

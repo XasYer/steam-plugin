@@ -21,11 +21,16 @@ export const rule = {
       const open = e.msg.includes('开启')
       // 如果附带了steamId
       if (textId) {
-        const steamId = utils.getSteamId(textId)
+        let steamId = utils.getSteamId(textId)
         const user = await db.UserTableGetDataBySteamId(steamId)
         // 如果没有人绑定这个steamId则判断是否为主人,主人才能添加推送
         if (((!user && e.isMaster) || (user && user.userId == e.user_id))) {
           const uid = e.isMaster ? utils.getAtUid(_.isEmpty(e.at) ? e.user_id : e.at, '0') : e.user_id
+          if (uid != '0') {
+            const userBindAll = await db.UserTableGetDataByUserId(uid)
+            const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
+            steamId = index >= 0 ? userBindAll[index].steamId : steamId
+          }
           if (open) {
             await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
             await e.reply([uid == '0' ? '' : segment.at(uid), `已开启推送${steamId}到${e.group_id}`])
@@ -124,8 +129,8 @@ export const rule = {
         if (i.gameid) {
           playing.push({
             name: i.gameextrainfo,
-            appid: i.gameid,
-            desc: `${nickname}(${i.personaname})`
+            appid: nickname,
+            desc: i.personaname
           })
         } else {
           notPlaying.push({
