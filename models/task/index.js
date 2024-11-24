@@ -79,8 +79,8 @@ export function startTimer () {
                 if (lastPlay.name) {
                   userList[i.groupId][i.botId].end.push({
                     name: lastPlay.name,
-                    appid: nickname,
-                    desc: player.personaname,
+                    appid: `${nickname}(${player.personaname})`,
+                    desc: `时长: ${utils.formatDuration(now - lastPlay.time)}`,
                     header_image: iconUrl
                   })
                   redis.del(redisKey + player.steamid)
@@ -128,7 +128,7 @@ export function startTimer () {
               data.push({
                 title: '结束玩游戏的群友',
                 games: i.end,
-                column: 3
+                column: 2
               })
             }
             if (!data.length) {
