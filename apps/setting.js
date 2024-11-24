@@ -2,7 +2,10 @@ import { App, Config, Render } from '#components'
 import lodash from 'lodash'
 import { setting } from '#models'
 
-const keys = lodash.map(setting.getCfgSchemaMap(), (i) => i.key)
+const keys = lodash.chain(setting.getCfgSchemaMap())
+  .map(i => i.key)
+  .sortBy(str => -str.length)
+  .value()
 
 const app = {
   id: 'setting',
@@ -40,18 +43,18 @@ export const rule = {
           }
         } else {
           const cfgSchema = cfgSchemaMap[regRet[1]]
-          if (cfgSchema.input) {
-            val = cfgSchema.input(val)
-          } else {
-            if (cfgSchema.type === 'number') {
+          if (cfgSchema.type !== 'array') {
+            if (cfgSchema.input) {
+              val = cfgSchema.input(val)
+            } else if (cfgSchema.type === 'number') {
               val = val * 1 || cfgSchema.def
             } else if (cfgSchema.type === 'boolean') {
               val = !/关闭/.test(val)
             } else if (cfgSchema.type === 'string') {
               val = val.trim() || cfgSchema.def
             }
+            Config.modify(cfgSchema.fileName, cfgSchema.cfgKey, val)
           }
-          Config.modify(cfgSchema.fileName, cfgSchema.cfgKey, val)
         }
       }
 
@@ -86,7 +89,7 @@ export const rule = {
         return true
       }
       const type = regRet[1] === '添加' ? 'add' : 'del'
-      const id = regRet[3]?.trim() || String(e.group_id)
+      const id = regRet[4]?.trim() || String(e.group_id)
       if (!id) {
         await e.reply('请输入群号或在指定群中使用~')
         return true
