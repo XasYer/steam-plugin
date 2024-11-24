@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Config } from '#components'
-import { ProxyAgent } from 'proxy-agent'
+import { HttpProxyAgent } from 'http-proxy-agent'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 
 /**
  * 通用请求方法
@@ -14,7 +15,8 @@ export default async function request (url, options = {}) {
   return await axios.request({
     url,
     baseURL,
-    httpAgent: Config.steam.proxy ? new ProxyAgent(Config.steam.proxy) : undefined,
+    httpAgent: Config.steam.proxy ? new HttpProxyAgent(Config.steam.proxy) : undefined,
+    httpsAgent: Config.steam.proxy ? new HttpsProxyAgent(Config.steam.proxy) : undefined,
     ...options,
     params: {
       key: baseURL === steamApi ? Config.steam.apiKey : undefined,
