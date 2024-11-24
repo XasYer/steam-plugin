@@ -25,7 +25,7 @@ export const rule = {
       const screenshotOptions = {
         title: '',
         games: [],
-        column: 3,
+        size: 'small',
         desc: ''
       }
       if (e.msg.includes('近')) {
@@ -73,7 +73,7 @@ export const rule = {
         }
         screenshotOptions.title = `${nickname} 愿望单共有 ${wishlist.length} 个游戏`
         screenshotOptions.games = _.orderBy(wishlist, 'date_added', 'desc')
-        screenshotOptions.column = 2
+        screenshotOptions.size = 'large'
       } else {
         const games = await api.IPlayerService.GetOwnedGames(steamId)
         if (!games.length) {
@@ -83,7 +83,7 @@ export const rule = {
         screenshotOptions.games = _.orderBy(games, 'playtime_forever', 'desc')
         screenshotOptions.title = `${nickname} 库存共有 ${games.length} 个游戏`
       }
-      if (screenshotOptions.column === 3) {
+      if (screenshotOptions.size === 'small') {
         let playtimeForever = 0
         let playtime2weeks = 0
         screenshotOptions.games.map(i => {

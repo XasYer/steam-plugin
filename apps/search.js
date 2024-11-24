@@ -39,7 +39,7 @@ export const rule = {
       const screenshotOptions = {
         title: `${name} 搜索结果`,
         games,
-        column: 2
+        size: 'large'
       }
       const img = await Render.render('inventory/index', { data: [screenshotOptions] })
       if (img) {

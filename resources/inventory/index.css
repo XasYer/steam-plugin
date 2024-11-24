@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 900px;
 }
 
 .header {
@@ -14,7 +13,6 @@
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    width: 890px;
 }
 
 .games>div {
@@ -26,11 +24,11 @@
     margin-bottom: 10px;
 }
 
-.column-2 {
-    width: 440px;
+.size-large {
+    width: 360px;
 }
 
-.column-3 {
+.size-small {
     width: 290px;
 }
 
@@ -55,29 +53,33 @@
     height: 60px;
 }
 
-.column-2-info {
-    width: 200px;
+.size-large-info {
+    width: 150px;
     margin-right: 10px;
 }
 
-.column-3-info {
+.size-small-info {
     width: 150px;
 }
 
-.column-2-info-noprice {
-    width: 260px;
+.size-large-info-noprice {
+    width: 210px;
 }
 
-.column-3-info-noprice {
+.size-small-info-noprice {
     width: 200px;
 }
 
-.column-full {
-    width: 350px;
+.size-large-square {
+    width: 270px;
 }
 
-.column-full-noimg {
-    width: 410px;
+.size-full {
+    width: 300px;
+}
+
+.size-full-noimg {
+    width: 360px;
 }
 
 .overflow {

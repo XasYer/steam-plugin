@@ -25,8 +25,17 @@ const Render = {
       pageGotoParams: {
         waitUntil: 'networkidle0' // +0.5s
       },
-      hiddenLength: Config.other.hiddenLength,
       ...params
+    }
+    if (path === 'inventory/index') {
+      data.hiddenLength = Config.other.hiddenLength
+      const minLength = Math.min(
+        Math.max(...params.data.map(i => i.games.length)),
+        Math.max(1, Number(Config.other.itemLength) || 1)
+      )
+      const size = params.data.findIndex(i => i.size === 'large') >= 0 ? 370 : 300
+      const len = minLength === 1 ? (size === 370 ? 1 : 1.4) : minLength
+      data.style = `<style>\n#container,.games{\nwidth: ${len * size}px;\n}\n</style>`
     }
     return await puppeteer.screenshot(path, data)
   },

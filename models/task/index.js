@@ -123,14 +123,14 @@ export function startTimer () {
               data.push({
                 title: '开始玩游戏的群友',
                 games: i.start,
-                column: 2
+                size: 'large'
               })
             }
             if (i.end.length) {
               data.push({
                 title: '结束玩游戏的群友',
                 games: i.end,
-                column: 2
+                size: 'large'
               })
             }
             if (!data.length) {

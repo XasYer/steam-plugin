@@ -85,7 +85,7 @@ export const rule = {
         title: `群${e.group_id}推送列表`,
         desc: `共${list.length}个推送用户`,
         games: userList,
-        column: 3
+        size: 'small'
       }]
       const img = await Render.render('inventory/index', { data })
       if (img) {
@@ -149,13 +149,13 @@ export const rule = {
           title: '正在玩游戏的群友',
           desc: `共${playing.length}个`,
           games: playing,
-          column: 3
+          size: 'small'
         },
         {
           title: '没有在玩游戏的群友',
           desc: `共${notPlaying.length}个`,
           games: notPlaying,
-          column: 3
+          size: 'small'
         }
       ]
       const img = await Render.render('inventory/index', { data })

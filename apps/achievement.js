@@ -51,7 +51,7 @@ export const rule = {
             name: achievementsByGame.gameName,
             appid
           }],
-          column: 2
+          size: 'large'
         }
       ]
       if (regRet[1] === '成就') {
@@ -80,13 +80,13 @@ export const rule = {
             title: '已完成成就',
             desc: `共${completeAchievements.length}个`,
             games: completeAchievements,
-            column: 2
+            size: 'large'
           },
           {
             title: '未完成成就',
             desc: `共${unCompleteAchievements.length}个`,
             games: unCompleteAchievements,
-            column: 2
+            size: 'large'
           }
         )
       } else if (regRet[1] === '统计') {
@@ -112,7 +112,7 @@ export const rule = {
             title: '已完成统计',
             desc: `共${completeStats.length}个`,
             games: completeStats,
-            column: 2
+            size: 'large'
           }
         )
       }
@@ -149,7 +149,7 @@ export const rule = {
             name: achievementsByGame.gameName,
             appid
           }],
-          column: 2
+          size: 'large'
         }
       ]
       const games = []
@@ -171,7 +171,7 @@ export const rule = {
         title: '全球成就统计',
         desc: `共${games.length}个`,
         games: _.orderBy(games, 'percent', 'desc'),
-        column: 2
+        size: 'large'
       })
       const img = await Render.render('inventory/index', { data })
       if (img) {

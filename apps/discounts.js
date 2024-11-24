@@ -35,7 +35,7 @@ export const rule = {
       for (const item of items) {
         const key = {
           title: item.title,
-          column: 2,
+          size: 'large',
           games: []
         }
         for (const i of res[item.key].items) {

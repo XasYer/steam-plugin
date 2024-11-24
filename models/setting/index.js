@@ -158,6 +158,15 @@ export const cfgSchema = {
         def: 99,
         input: (n) => Math.max(1, n * 1 || 99),
         desc: '比如库存等超过设置的长度后会隐藏剩余的游戏, 避免太多而导致截图失败'
+      },
+      itemLength: {
+        title: '每行最多显示数量',
+        key: '每行个数',
+        type: 'number',
+        min: 1,
+        def: 3,
+        input: (n) => Math.max(1, n * 1 || 3),
+        desc: '截图时每行最多显示的数量'
       }
     }
   },

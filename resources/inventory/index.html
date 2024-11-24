@@ -2,35 +2,40 @@
 
 {{block 'css'}}
 <link rel="stylesheet" type="text/css" href="{{pluResPath}}inventory/index.css" />
+{{@ style}}
 {{/block}}
 
 {{block 'main'}}
 {{each data item}}
-<% const isHidden = item.games.length > hiddenLength %>
+<!-- TODO: 放到Render中处理 -->
+<% const isHidden=item.games.length> hiddenLength %>
+
 <div class="header">
     <h2>{{item.title}}</h2>
     <h4 class="header-desc">
         {{item.desc}}
         {{if isHidden}}
-        <br/>
-        <% const len = item.games.length - hiddenLength %>
-        太多辣 ! 已隐藏{{len}}个项目
-        {{/if}}
+        <br />
+        <% const len=item.games.length - hiddenLength %>
+            太多辣 ! 已隐藏{{len}}个项目
+            {{/if}}
     </h4>
 </div>
 <div class="games">
-    <% item.games.length = isHidden ? hiddenLength : item.games.length %>
+<% item.games.length=isHidden ? hiddenLength : item.games.length %>
     {{each item.games i}}
-    <div class="column-{{item.column}}">
+    <div class="size-{{item.size}}">
         <div class="header-img">
             {{if i.header_image}}
             <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
             {{else if !i.noImg}}
-            <img src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
+            <img
+                src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
             {{/if}}
         </div>
+        <!-- TODO: 待重构 屎一样 -->
         <div
-            class="game-info overflow column-{{item.column}}-info{{!i.price? '-noprice' :''}} {{(!i.price && item.column === 2 ) ? `column-full${i.noImg ? '-noimg' : ''}` : '' }}">
+            class="game-info overflow size-{{item.size}}-info{{!i.price? '-noprice' :''}} {{(!i.price && item.size === 'large' ) ? `size-full${i.noImg ? '-noimg' : ''}` : '' }} {{(i.header_image_class === 'square' && item.size === 'large' && !i.price) ? 'size-large-square' : ''}}">
             <div class="game-title">
                 {{i.name || ''}}
             </div>
