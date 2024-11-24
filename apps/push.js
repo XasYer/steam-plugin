@@ -130,7 +130,8 @@ export const rule = {
           playing.push({
             name: i.gameextrainfo,
             appid: nickname,
-            desc: i.personaname
+            desc: i.personaname,
+            header_image: utils.getHeaderImgUrlByAppid(i.gameid)
           })
         } else {
           notPlaying.push({
