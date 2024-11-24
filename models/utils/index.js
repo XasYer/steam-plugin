@@ -80,11 +80,12 @@ export async function getUserName (botId, uid, gid) {
       if (gid) {
         gid = Number(gid) || gid
         const group = Bot[botId].pickGroup(gid)
-        const member = (await group.pickMember(uid)).getInfo()
-        return member.card || member.nickname || member.user_id || uid
+        const member = await group.pickMember(uid)
+        const info = await member.getInfo?.() || member.info || {}
+        return info.card || info.nickname || info.user_id || uid
       } else {
-        const user = Bot[botId].pickUser(uid)
-        const info = await user.getInfo()
+        const user = Bot[botId].pickFriend(uid)
+        const info = await user.getInfo?.() || user.info || {}
         return info.nickname || info.user_id || uid
       }
     }

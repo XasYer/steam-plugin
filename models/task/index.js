@@ -121,7 +121,7 @@ export function startTimer () {
               data.push({
                 title: '开始玩游戏的群友',
                 games: i.start,
-                column: 3
+                column: 2
               })
             }
             if (i.end.length) {
