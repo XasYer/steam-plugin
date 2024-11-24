@@ -83,7 +83,9 @@ export function startTimer () {
                     desc: `时长: ${utils.formatDuration(now - lastPlay.time)}`,
                     header_image: utils.getHeaderImgUrlByAppid(lastPlay.appid)
                   })
-                  redis.del(redisKey + player.steamid)
+                  if (!player.gameid) {
+                    redis.del(redisKey + player.steamid)
+                  }
                 }
               } else {
                 // 如果有gameid就是开始玩

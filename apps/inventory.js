@@ -21,7 +21,7 @@ export const rule = {
         return true
       }
       e.reply([segment.at(uid), '\n在查了...在查了...'])
-      const nickname = await utils.getUserName(e.self_id, uid, e.group_id)
+      const nickname = textId || await utils.getUserName(e.self_id, uid, e.group_id)
       const screenshotOptions = {
         title: '',
         games: [],
