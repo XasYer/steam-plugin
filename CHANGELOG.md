@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/XasYer/steam-plugin/compare/v1.5.0...v1.5.1) (2024-11-25)
+
+
+### Performance Improvements
+
+* 可设置是否展示steam头像 ([a002998](https://github.com/XasYer/steam-plugin/commit/a0029983b2a855de1442d0db90d26efbcf7c5a37))
+
 ## [1.5.0](https://github.com/XasYer/steam-plugin/compare/v1.4.0...v1.5.0) (2024-11-24)
 
 
