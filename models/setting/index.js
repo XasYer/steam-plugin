@@ -167,6 +167,13 @@ export const cfgSchema = {
         def: 3,
         input: (n) => Math.max(1, n * 1 || 3),
         desc: '截图时每行最多显示的数量'
+      },
+      steamAvatar: {
+        title: '展示steam头像',
+        key: '展示头像',
+        type: 'boolean',
+        def: false,
+        desc: '是否展示steam头像, 可能会有18+头像'
       }
     }
   },

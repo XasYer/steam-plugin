@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { segment } from '#lib'
-import { App } from '#components'
+import { App, Config } from '#components'
 import { db, utils, api } from '#models'
 
 const app = {
@@ -26,7 +26,7 @@ export const rule = {
         return true
       }
       const info = data.pop()
-      const avatarBuffer = await utils.getImgUrlBuffer(info.avatarfull)
+      const avatarBuffer = Config.other.steamAvatar ? await utils.getImgUrlBuffer(info.avatarfull) : ''
       const msg = []
       avatarBuffer && msg.push(segment.image(avatarBuffer))
       msg.push([

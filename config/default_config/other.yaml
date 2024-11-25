@@ -7,3 +7,6 @@ hiddenLength: 99
 
 # 截图时每行显示的最大数量
 itemLength: 3
+
+# 是否显示Steam头像 可能会有18+的头像
+steamAvatar: false

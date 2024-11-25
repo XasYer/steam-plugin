@@ -104,7 +104,9 @@ class Config {
    * 获取其他配置
    * @returns {{
    *  renderScale: number,
-   *  hiddenLength: number
+   *  hiddenLength: number,
+   *  itemLength: number,
+   *  steamAvatar: boolean,
    * }}
    */
   get other () {
