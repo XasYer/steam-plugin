@@ -88,7 +88,7 @@ export const rule = {
         : isBot ? 'whiteBotList' : 'whiteGroupList'
       const data = Config.push[target]
       if (regRet[3] || !regRet[1]) {
-        await e.reply(`${regRet[2]}名单列表:\n ${data.join('\n') || '空'}`)
+        await e.reply(`${regRet[2]}名单列表:\n${data.join('\n') || '空'}`)
         return true
       }
       const type = regRet[1] === '添加' ? 'add' : 'del'
@@ -102,7 +102,7 @@ export const rule = {
           await e.reply(`${id}已经在${regRet[2]}名单中了~`)
         } else {
           data.push(id)
-          await e.reply(`已将${id}添加到${regRet[2]}名单了~现在的${regRet[2]}名单是:\n ${data.join('\n') || '空'}`)
+          await e.reply(`已将${id}添加到${regRet[2]}名单了~现在的${regRet[2]}名单是:\n${data.join('\n') || '空'}`)
           Config.modify('push', target, data)
         }
       } else {
@@ -111,7 +111,7 @@ export const rule = {
           await e.reply(`${id}不在${regRet[2]}名单中~`)
         } else {
           data.splice(index, 1)
-          await e.reply(`已将${id}移出${regRet[2]}名单了~现在的${regRet[2]}名单是:\n ${data.join('\n') || '空'}`)
+          await e.reply(`已将${id}移出${regRet[2]}名单了~现在的${regRet[2]}名单是:\n${data.join('\n') || '空'}`)
           Config.modify('push', target, data)
         }
       }

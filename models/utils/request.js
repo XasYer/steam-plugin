@@ -21,19 +21,11 @@ export default async function request (url, options = {}) {
     }
   })()
   const baseURL = options.baseURL?.replace(/\/$/, '') ?? steamApi
-  const agents = {
-    httpAgent: undefined,
-    httpsAgent: undefined
-  }
-  if (Config.steam.proxy?.startsWith('http://')) {
-    agents.httpAgent = new HttpProxyAgent(Config.steam.proxy)
-  } else if (Config.steam.proxy?.startsWith('https://')) {
-    agents.httpsAgent = new HttpsProxyAgent(Config.steam.proxy)
-  }
   return await axios.request({
     url,
     baseURL,
-    ...agents,
+    httpAgent: Config.steam.proxy ? new HttpProxyAgent(Config.steam.proxy) : undefined,
+    httpsAgent: Config.steam.proxy ? new HttpsProxyAgent(Config.steam.proxy) : undefined,
     ...options,
     params: {
       key: baseURL === steamApi ? Config.steam.apiKey : undefined,
