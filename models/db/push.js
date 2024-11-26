@@ -254,3 +254,23 @@ export async function PushTableGetDataByGroupId (groupId, isPush = true) {
     where
   }).then(result => result?.map(item => item?.dataValues))
 }
+
+/**
+ * 根据userId列表获取对应的所有数据
+ * @param {string[]} userList
+ * @param {boolean} isPush 是否只获取开启推送的用户
+ * @returns
+ */
+export async function PushTableGetDataByUserList (userList, isPush = true) {
+  const where = {
+    userId: {
+      [Op.in]: userList.map(String)
+    }
+  }
+  if (isPush) {
+    where.isPush = true
+  }
+  return await PushTable.findAll({
+    where
+  }).then(result => result?.map(item => item?.dataValues))
+}

@@ -119,6 +119,26 @@ export async function getUserAvatar (botId, uid, gid) {
 }
 
 /**
+ * 获取某个群的群成员列表
+ * @param {string} botId
+ * @param {string} groupId
+ * @returns {Promise<string[]>}
+ */
+export async function getGroupMemberList (botId, groupId) {
+  const result = []
+  try {
+    if (Version.BotName === 'Karin') {
+      const memberList = await Bot.getBot(botId).GetGroupMemberList(groupId)
+      result.push(...memberList.map(i => i.uid))
+    } else {
+      const memberMap = await Bot[botId].pickGroup(groupId).getMemberMap()
+      result.push(...memberMap.keys())
+    }
+  } catch { }
+  return result
+}
+
+/**
  * 获取at的id,没有则返回用户id
  * @param {string|string[]} at
  * @param {string} id

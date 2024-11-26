@@ -97,16 +97,27 @@ export const rule = {
     }
   },
   now: {
-    reg: /^#?群友在玩什么呢?[?？]?$/i,
+    reg: /^#?(全部)?群友在玩什么呢?[?？]?$/i,
     fnc: async e => {
-      if (!await checkGroup(e)) {
-        return true
+      const isAll = e.msg.includes('全部')
+      let list = []
+      if (isAll) {
+        list = await db.PushTableGetAllData()
+        if (!list.length) {
+          await e.reply('还没有人绑定steamId哦')
+          return true
+        }
+      } else {
+        const memberList = await utils.getGroupMemberList(e.self_id, e.group_id)
+        list = memberList.length
+          ? await db.PushTableGetDataByUserList(memberList, false)
+          : await db.PushTableGetDataByGroupId(e.group_id, false)
+        if (!list.length) {
+          await e.reply('本群还没有用户绑定steamId哦')
+          return true
+        }
       }
-      const list = await db.PushTableGetDataByGroupId(e.group_id, false)
-      if (!list.length) {
-        await e.reply('本群还没有用户绑定steamId哦')
-        return true
-      }
+      list = _.uniqBy(list, 'steamId')
       const userState = await api.ISteamUser.GetPlayerSummaries(list.map(i => i.steamId))
       if (!userState.length) {
         await e.reply('获取玩家状态失败, 再试一次叭')
@@ -125,7 +136,7 @@ export const rule = {
       }
       for (const i of _.sortBy(userState, sort)) {
         const userInfo = list.find(j => j.steamId == i.steamid)
-        const nickname = await utils.getUserName(userInfo.botId, userInfo.userId, userInfo.groupId)
+        const nickname = isAll ? i.personaname : await utils.getUserName(userInfo.botId, userInfo.userId, userInfo.groupId)
         if (i.gameid) {
           playing.push({
             name: i.gameextrainfo,
