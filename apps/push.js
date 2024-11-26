@@ -99,6 +99,9 @@ export const rule = {
   now: {
     reg: /^#?(全部)?群友在玩什么呢?[?？]?$/i,
     fnc: async e => {
+      if (!e.group_id) {
+        return false
+      }
       const isAll = e.msg.includes('全部')
       let list = []
       if (isAll) {
