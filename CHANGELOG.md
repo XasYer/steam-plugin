@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.5.2](https://github.com/XasYer/steam-plugin/compare/v1.5.1...v1.5.2) (2024-11-26)
+
+
+### Bug Fixes
+
+* proxy代理 ([e97cf9a](https://github.com/XasYer/steam-plugin/commit/e97cf9a763687662b1b0a126d9b2f33944ad8da9))
+* 判断一下群 ([9791fcc](https://github.com/XasYer/steam-plugin/commit/9791fcc29b8ad37b7cd12caa69a0ccc44ff09628))
+
+
+### Performance Improvements
+
+* 没填apiKey时不进行推送 ([dc4d6a6](https://github.com/XasYer/steam-plugin/commit/dc4d6a63f98dfbe48213b2a5dfda61f90d88e19e))
+* 通过群成员列表获得steamId & 全部群友在玩什么 ([9c33c83](https://github.com/XasYer/steam-plugin/commit/9c33c833af7f79aa8b3eaae47301c2f48a0a6ba9))
+
 ## [1.5.1](https://github.com/XasYer/steam-plugin/compare/v1.5.0...v1.5.1) (2024-11-25)
 
 
