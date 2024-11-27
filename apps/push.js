@@ -139,7 +139,7 @@ export const rule = {
       }
       for (const i of _.sortBy(userState, sort)) {
         const userInfo = list.find(j => j.steamId == i.steamid)
-        const nickname = isAll ? i.personaname : await utils.getUserName(userInfo.botId, userInfo.userId, userInfo.groupId)
+        const nickname = isAll ? i.personaname : await utils.getUserName(userInfo.botId, userInfo.userId, e.group_id)
         if (i.gameid) {
           playing.push({
             name: i.gameextrainfo,
