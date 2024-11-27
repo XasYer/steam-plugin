@@ -73,7 +73,7 @@ export function startTimer () {
                   state: []
                 }
               }
-              if (player.gameid && Config.push.enable) {
+              if (player.gameid != lastPlay.appid && Config.push.enable) {
                 state.time = now
                 userList[i.groupId][i.botId].start.push({
                   name: player.gameextrainfo,
@@ -105,7 +105,7 @@ export function startTimer () {
               }
             } else {
               // 如果有gameid就是开始玩
-              if (player.gameid && Config.push.enable) {
+              if (player.gameid != lastPlay.appid && Config.push.enable) {
                 state.time = now
                 msg.push(`${nickname}(${player.personaname}) 正在玩 ${player.gameextrainfo}`)
                 // 看看上次有没有在玩别的游戏
