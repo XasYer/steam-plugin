@@ -94,6 +94,13 @@ export async function getUserName (botId, uid, gid) {
   }
 }
 
+/**
+ * 获取用户头像
+ * @param {string} botId
+ * @param {string} uid
+ * @param {string?} gid
+ * @returns {Promise<string>}
+ */
 export async function getUserAvatar (botId, uid, gid) {
   try {
     if (Version.BotName === 'Karin') {

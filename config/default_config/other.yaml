@@ -9,4 +9,4 @@ hiddenLength: 99
 itemLength: 3
 
 # 是否显示Steam头像 可能会有18+的头像
-steamAvatar: false
+steamAvatar: true

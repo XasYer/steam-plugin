@@ -28,7 +28,7 @@ export const rule = {
       const info = data.pop()
       const avatarBuffer = Config.other.steamAvatar ? await utils.getImgUrlBuffer(info.avatarfull) : ''
       const msg = []
-      avatarBuffer && msg.push(segment.image(avatarBuffer))
+      avatarBuffer && msg.push(segment.image(avatarBuffer), '\n')
       msg.push([
         `好友代码: ${utils.getFriendCode(info.steamid)}`,
         `steamId: ${info.steamid}`,
@@ -40,8 +40,7 @@ export const rule = {
       ].join('\n'))
       if (info.gameid) {
         const icon = utils.getHeaderImgUrlByAppid(info.gameid)
-        msg.push(segment.image(icon))
-        msg.push(`\n正在游玩: ${info.gameextrainfo}`)
+        msg.push('\n', segment.image(icon), `\n正在游玩: ${info.gameextrainfo}`)
       }
       await e.reply(msg)
       return true

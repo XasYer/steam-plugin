@@ -9,7 +9,10 @@ let timer = null
 const redisKey = 'steam-plugin:user-play:'
 
 export function startTimer () {
-  if (!Config.push.enable || !Config.steam.apiKey) {
+  if (!Config.steam.apiKey) {
+    return
+  }
+  if (!Config.push.enable && !Config.push.stateChange) {
     return
   }
   clearInterval(timer)
@@ -33,8 +36,14 @@ export function startTimer () {
         } else {
           lastPlay = { name: '', time: 0, appid: 0, state: 0 }
         }
+        const state = {
+          name: player.gameextrainfo,
+          appid: player.gameid,
+          time: lastPlay.time,
+          state: player.personastate
+        }
         // 如果这一次和上一次的状态不一样
-        if (lastPlay.appid != player.gameid) {
+        if (lastPlay.appid != player.gameid || lastPlay.state != player.personastate) {
           // 找到所有的推送群
           const pushGroups = PushData.filter(i => i.steamId === player.steamid)
           const iconUrl = utils.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid)
@@ -52,12 +61,6 @@ export function startTimer () {
             const nickname = i.userId == '0' ? player.personaname : await utils.getUserName(i.botId, i.userId, i.groupId)
             const msg = []
             iconBuffer && msg.push(segment.image(iconBuffer))
-            const state = {
-              name: player.gameextrainfo,
-              appid: player.gameid,
-              time: now,
-              state: player.personastate
-            }
             if (Config.push.pushMode == 2) {
               // 图片推送 先收集所有要推送的用户
               if (!userList[i.groupId]) {
@@ -66,43 +69,63 @@ export function startTimer () {
               if (!userList[i.groupId][i.botId]) {
                 userList[i.groupId][i.botId] = {
                   start: [],
-                  end: []
+                  end: [],
+                  state: []
                 }
               }
-              if (player.gameid) {
+              if (player.gameid && Config.push.enable) {
+                state.time = now
                 userList[i.groupId][i.botId].start.push({
                   name: player.gameextrainfo,
-                  appid: nickname,
-                  desc: player.personaname,
+                  appid: `${nickname}(${player.personaname})`,
+                  desc: lastPlay.time ? `距离上次 ${utils.formatDuration(now - lastPlay.time)}` : '',
                   header_image: iconUrl
                 })
-                redis.set(redisKey + player.steamid, JSON.stringify(state))
               }
-              if (lastPlay.name) {
+              if (lastPlay.name && Config.push.enable) {
+                state.time = now
                 userList[i.groupId][i.botId].end.push({
                   name: lastPlay.name,
                   appid: `${nickname}(${player.personaname})`,
                   desc: `时长: ${utils.formatDuration(now - lastPlay.time)}`,
                   header_image: utils.getHeaderImgUrlByAppid(lastPlay.appid)
                 })
-                if (!player.gameid) {
-                  redis.del(redisKey + player.steamid)
-                }
+              }
+              // 在线状态改变
+              if (player.personastate != lastPlay.state && Config.push.stateChange) {
+                state.time = now
+                userList[i.groupId][i.botId].state.push({
+                  name: `${nickname}(${player.personaname})`,
+                  appid: lastPlay.time ? `距离上次 ${utils.formatDuration(now - lastPlay.time)}` : '',
+                  desc: `已${utils.getPersonaState(player.personastate)}`,
+                  header_image: await utils.getUserAvatar(i.botId, i.userId, i.groupId) || i.avatarfull,
+                  header_image_class: 'square',
+                  desc_style: `style="background-color: #${getColor(player.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+                })
               }
             } else {
               // 如果有gameid就是开始玩
-              if (player.gameid) {
+              if (player.gameid && Config.push.enable) {
+                state.time = now
                 msg.push(`${nickname}(${player.personaname}) 正在玩 ${player.gameextrainfo}`)
                 // 看看上次有没有在玩别的游戏
                 if (lastPlay.name) {
                   msg.push(`\n已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
+                } else if (lastPlay.time) {
+                  msg.push(`\n距离上次 ${utils.formatDuration(now - lastPlay.time)}`)
                 }
                 // 记录这一次的状态
-                redis.set(redisKey + player.steamid, JSON.stringify(state))
                 // 如果有上次记录就是结束游玩
-              } else if (lastPlay.name) {
+              } else if (lastPlay.name && Config.push.enable) {
+                state.time = now
                 msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
-                redis.del(redisKey + player.steamid)
+              } else if (player.personastate != lastPlay.state && Config.push.stateChange) {
+                state.time = now
+                msg.shift()
+                msg.push(`${nickname}(${player.personaname}) 已${utils.getPersonaState(player.personastate)}`)
+                if (lastPlay.time) {
+                  msg.push(`\n距离上次 ${utils.formatDuration(now - lastPlay.time)}`)
+                }
               } else {
                 continue
               }
@@ -116,6 +139,7 @@ export function startTimer () {
         } else {
           // TODO: 上下线推送
         }
+        redis.set(redisKey + player.steamid, JSON.stringify(state))
       }
       for (const gid in userList) {
         for (const botId in userList[gid]) {
@@ -135,6 +159,13 @@ export function startTimer () {
               size: 'large'
             })
           }
+          if (i.state.length) {
+            data.push({
+              title: '在线状态改变的群友',
+              games: i.state,
+              size: 'large'
+            })
+          }
           if (!data.length) {
             continue
           }
@@ -150,4 +181,16 @@ export function startTimer () {
       logger.error('检查Steam游戏信息出现错误', error)
     }
   }, 1000 * 60 * Config.push.time)
+}
+
+// TODO:
+function getColor (state) {
+  switch (Number(state)) {
+    case 1:
+      return 'beee11'
+    case 0:
+      return '999999'
+    default:
+      return '8fbc8b'
+  }
 }

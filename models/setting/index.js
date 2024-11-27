@@ -74,6 +74,13 @@ export const cfgSchema = {
         def: true,
         desc: '是否默认开启推送, 绑定steamId后自动开启推送'
       },
+      stateChange: {
+        title: '状态改变推送',
+        key: '状态推送',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送游戏状态改变 比如上线 下线等'
+      },
       pushMode: {
         title: '推送模式',
         key: '推送模式',
