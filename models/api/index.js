@@ -1,5 +1,6 @@
+export * as store from './store.js'
 export * as ISteamUser from './ISteamUser.js'
 export * as IPlayerService from './IPlayerService.js'
-export * as IWishlistService from './IWishlistService.js'
 export * as ISteamUserStats from './ISteamUserStats.js'
-export * as store from './store.js'
+export * as IWishlistService from './IWishlistService.js'
+export * as IStoreBrowseService from './IStoreBrowseService.js'

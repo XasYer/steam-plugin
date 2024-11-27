@@ -30,7 +30,7 @@
             <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
             {{else if !i.noImg}}
             <img
-                src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg">
+                src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg" class="{{i.header_image_class || 'rectangle'}}">
             {{/if}}
         </div>
         <!-- TODO: 待重构 屎一样 -->

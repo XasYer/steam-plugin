@@ -46,30 +46,30 @@ export const rule = {
           wishlist.length = Config.other.hiddenLength
         }
         // 愿望单没有给name, 尝试获取一下, 顺便也可以获取一下价格 获取失败超过3次就不再获取了
-        let errorCount = 0
+        // 2024年11月27日 已更新 有个api可以获取多个appid
+        const appidsInfo = await api.IStoreBrowseService.GetItems(wishlist.map(i => i.appid))
         for (const i in wishlist) {
-          wishlist[i].price_overview = {
-            discount: 0,
-            original: '获取失败'
+          const appid = wishlist[i].appid
+          const info = appidsInfo[appid]
+          if (!info) {
+            wishlist[i].price = {
+              discount: 0,
+              original: '获取失败'
+            }
+            continue
           }
           wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
-          try {
-            if (errorCount < 3) {
-              const info = await api.store.appdetails(wishlist[i].appid)
-              wishlist[i].name = info.name
-              wishlist[i].price = info.name
-                ? {
-                    discount: info.price_overview?.discount_percent || 0,
-                    original: info.price_overview?.initial_formatted || info.price_overview?.final_formatted || '即将推出',
-                    current: info.price_overview?.final_formatted || ''
-                  }
-                : {
-                    original: '获取失败'
-                  }
-            }
-          } catch {
-            errorCount++
-          }
+          wishlist[i].name = info.name
+          wishlist[i].price = info.is_free
+            ? {
+                discount: 0,
+                original: '免费'
+              }
+            : {
+                discount: info.best_purchase_option?.discount_pct || 0,
+                original: info.best_purchase_option?.formatted_original_price || info.best_purchase_option?.formatted_final_price || '即将推出',
+                current: info.best_purchase_option?.formatted_final_price || ''
+              }
         }
         screenshotOptions.title = `${nickname} 愿望单共有 ${wishlist.length} 个游戏`
         screenshotOptions.games = _.orderBy(wishlist, 'date_added', 'desc')
