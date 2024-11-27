@@ -188,6 +188,7 @@ export async function sendGroupMsg (botId, gid, msg) {
  * @returns {string}
  */
 export function getHeaderImgUrlByAppid (appid) {
+  if (!appid) return ''
   return `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/header.jpg`
 }
 
@@ -197,6 +198,7 @@ export function getHeaderImgUrlByAppid (appid) {
  * @returns {Promise<Buffer|null|string>}
  */
 export async function getImgUrlBuffer (url) {
+  if (!url) return null
   for (let i = 0; i < 3; i++) {
     try {
       const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' }).then(res => res.data)
