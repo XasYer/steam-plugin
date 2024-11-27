@@ -97,7 +97,7 @@ export const rule = {
     }
   },
   now: {
-    reg: /^#?(全部)?群友在玩什么呢?[?？]?$/i,
+    reg: /^#?(全部)?群友(在玩什么呢?|状态)[?？]?$/i,
     fnc: async e => {
       if (!e.group_id) {
         return false

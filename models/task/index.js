@@ -82,7 +82,7 @@ export function startTimer () {
                   header_image: iconUrl
                 })
               }
-              if (lastPlay.name && Config.push.enable) {
+              if (lastPlay.name != player.gameextrainfo && Config.push.enable) {
                 state.time = now
                 userList[i.groupId][i.botId].end.push({
                   name: lastPlay.name,
@@ -116,7 +116,7 @@ export function startTimer () {
                 }
                 // 记录这一次的状态
                 // 如果有上次记录就是结束游玩
-              } else if (lastPlay.name && Config.push.enable) {
+              } else if (lastPlay.name != player.gameextrainfo && Config.push.enable) {
                 state.time = now
                 msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
               } else if (player.personastate != lastPlay.state && Config.push.stateChange) {
