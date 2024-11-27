@@ -73,7 +73,7 @@ export function startTimer () {
                   state: []
                 }
               }
-              if (player.gameid != lastPlay.appid && Config.push.enable) {
+              if (Config.push.enable && player.gameid && player.gameid != lastPlay.appid) {
                 state.time = now
                 userList[i.groupId][i.botId].start.push({
                   name: player.gameextrainfo,
@@ -82,7 +82,7 @@ export function startTimer () {
                   header_image: iconUrl
                 })
               }
-              if (lastPlay.name != player.gameextrainfo && Config.push.enable) {
+              if (Config.push.enable && lastPlay.name != player.gameextrainfo) {
                 state.time = now
                 userList[i.groupId][i.botId].end.push({
                   name: lastPlay.name,
@@ -92,7 +92,7 @@ export function startTimer () {
                 })
               }
               // 在线状态改变
-              if (player.personastate != lastPlay.state && Config.push.stateChange) {
+              if (Config.push.stateChange && player.personastate != lastPlay.state) {
                 state.time = now
                 userList[i.groupId][i.botId].state.push({
                   name: `${nickname}(${player.personaname})`,
@@ -105,7 +105,7 @@ export function startTimer () {
               }
             } else {
               // 如果有gameid就是开始玩
-              if (player.gameid != lastPlay.appid && Config.push.enable) {
+              if (Config.push.enable && player.gameid && player.gameid != lastPlay.appid) {
                 state.time = now
                 msg.push(`${nickname}(${player.personaname}) 正在玩 ${player.gameextrainfo}`)
                 // 看看上次有没有在玩别的游戏
@@ -116,10 +116,10 @@ export function startTimer () {
                 }
                 // 记录这一次的状态
                 // 如果有上次记录就是结束游玩
-              } else if (lastPlay.name != player.gameextrainfo && Config.push.enable) {
+              } else if (Config.push.enable && lastPlay.name && lastPlay.name != player.gameextrainfo) {
                 state.time = now
                 msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
-              } else if (player.personastate != lastPlay.state && Config.push.stateChange) {
+              } else if (Config.push.stateChange && player.personastate != lastPlay.state) {
                 state.time = now
                 msg.shift()
                 msg.push(`${nickname}(${player.personaname}) 已${utils.getPersonaState(player.personastate)}`)
