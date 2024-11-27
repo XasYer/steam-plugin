@@ -133,6 +133,7 @@ export function startTimer () {
                   }
                 } else {
                   state.state = player.personastate === 0 ? 0 : 1
+                  continue
                 }
               } else {
                 continue
