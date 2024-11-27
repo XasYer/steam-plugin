@@ -105,7 +105,7 @@ export const rule = {
       const isAll = e.msg.includes('全部')
       let list = []
       if (isAll) {
-        list = await db.PushTableGetAllData()
+        list = await db.PushTableGetAllData(false)
         if (!list.length) {
           await e.reply('还没有人绑定steamId哦')
           return true

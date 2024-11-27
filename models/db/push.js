@@ -32,36 +32,17 @@ const PushTable = sequelize.define('push', {
   groupId: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  isPush: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    allowNull: false
   }
 }, {
   freezeTableName: true
 })
 
 await PushTable.sync()
-
-// 添加一个字段isPush是否开启推送
-// 2024年11月23日 七天后删除
-async function PushTableColumnAddIsPush () {
-  const queryInterface = sequelize.getQueryInterface()
-  // 检查isPush是否存在
-  const isPush = await queryInterface.describeTable('push').then(i => i.isPush)
-  if (isPush) {
-    return
-  }
-  // 添加isPush字段
-  await queryInterface.addColumn('push', 'isPush', {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
-    allowNull: false
-  })
-  await PushTable.update({
-    isPush: true
-  }, {
-    where: {}
-  })
-}
-
-await PushTableColumnAddIsPush()
 
 /**
  * 添加一个推送群
