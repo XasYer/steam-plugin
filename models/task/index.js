@@ -82,7 +82,7 @@ export function startTimer () {
                   header_image: iconUrl
                 })
               }
-              if (Config.push.enable && lastPlay.name != player.gameextrainfo) {
+              if (Config.push.enable && lastPlay.name && lastPlay.name != player.gameextrainfo) {
                 state.time = now
                 userList[i.groupId][i.botId].end.push({
                   name: lastPlay.name,
