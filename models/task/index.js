@@ -108,8 +108,11 @@ export function startTimer () {
                 }
               }
             } else {
+              // TODO: 临时方案
+              let send = false
               // 如果有gameid就是开始玩
               if (Config.push.enable && player.gameid && player.gameid != lastPlay.appid) {
+                send = true
                 state.time = now
                 msg.push(`${nickname}(${player.personaname}) 正在玩 ${player.gameextrainfo}`)
                 // 看看上次有没有在玩别的游戏
@@ -121,10 +124,12 @@ export function startTimer () {
                 // 记录这一次的状态
                 // 如果有上次记录就是结束游玩
               } else if (Config.push.enable && lastPlay.name && lastPlay.name != player.gameextrainfo) {
+                send = true
                 state.time = now
                 msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
               } else if (Config.push.stateChange && player.personastate != lastPlay.state) {
                 if ([0, 1].includes(player.personastate)) {
+                  send = true
                   state.time = now
                   msg.shift()
                   msg.push(`${nickname}(${player.personaname}) 已${utils.getPersonaState(player.personastate)}`)
@@ -133,13 +138,14 @@ export function startTimer () {
                   }
                 } else {
                   state.state = player.personastate === 0 ? 0 : 1
-                  continue
                 }
               } else {
                 continue
               }
               try {
-                await utils.sendGroupMsg(i.botId, i.groupId, msg)
+                if (send) {
+                  await utils.sendGroupMsg(i.botId, i.groupId, msg)
+                }
               } catch (error) {
                 logger.error(`群消息发送失败: ${i.groupId}`, error)
               }
