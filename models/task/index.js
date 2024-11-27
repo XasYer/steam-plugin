@@ -93,15 +93,19 @@ export function startTimer () {
               }
               // 在线状态改变
               if (Config.push.stateChange && player.personastate != lastPlay.state) {
-                state.time = now
-                userList[i.groupId][i.botId].state.push({
-                  name: `${nickname}(${player.personaname})`,
-                  appid: lastPlay.time ? `距离上次 ${utils.formatDuration(now - lastPlay.time)}` : '',
-                  desc: `已${utils.getPersonaState(player.personastate)}`,
-                  header_image: await utils.getUserAvatar(i.botId, i.userId, i.groupId) || i.avatarfull,
-                  header_image_class: 'square',
-                  desc_style: `style="background-color: #${getColor(player.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
-                })
+                if ([0, 1].includes(player.personastate)) {
+                  state.time = now
+                  userList[i.groupId][i.botId].state.push({
+                    name: `${nickname}(${player.personaname})`,
+                    appid: lastPlay.time ? `距离上次 ${utils.formatDuration(now - lastPlay.time)}` : '',
+                    desc: `已${utils.getPersonaState(player.personastate)}`,
+                    header_image: await utils.getUserAvatar(i.botId, i.userId, i.groupId) || i.avatarfull,
+                    header_image_class: 'square',
+                    desc_style: `style="background-color: #${getColor(player.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+                  })
+                } else {
+                  state.state = player.personastate === 0 ? 0 : 1
+                }
               }
             } else {
               // 如果有gameid就是开始玩
@@ -120,11 +124,15 @@ export function startTimer () {
                 state.time = now
                 msg.push(`${nickname}(${player.personaname}) 已结束游玩 ${lastPlay.name} 时长 ${utils.formatDuration(now - lastPlay.time)}`)
               } else if (Config.push.stateChange && player.personastate != lastPlay.state) {
-                state.time = now
-                msg.shift()
-                msg.push(`${nickname}(${player.personaname}) 已${utils.getPersonaState(player.personastate)}`)
-                if (lastPlay.time) {
-                  msg.push(`\n距离上次 ${utils.formatDuration(now - lastPlay.time)}`)
+                if ([0, 1].includes(player.personastate)) {
+                  state.time = now
+                  msg.shift()
+                  msg.push(`${nickname}(${player.personaname}) 已${utils.getPersonaState(player.personastate)}`)
+                  if (lastPlay.time) {
+                    msg.push(`\n距离上次 ${utils.formatDuration(now - lastPlay.time)}`)
+                  }
+                } else {
+                  state.state = player.personastate === 0 ? 0 : 1
                 }
               } else {
                 continue
