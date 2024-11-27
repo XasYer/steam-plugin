@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.6.0](https://github.com/XasYer/steam-plugin/compare/v1.5.2...v1.6.0) (2024-11-27)
+
+
+### Features
+
+* 在线状态推送 ([de6e106](https://github.com/XasYer/steam-plugin/commit/de6e106060949a6eb564663f6ef0efa99ca69572))
+
+
+### Bug Fixes
+
+* 不对 ([4c9ff00](https://github.com/XasYer/steam-plugin/commit/4c9ff008a0d83c44f2b614d14d9dd706dff31aff))
+* 会推送undefined ([aa0907c](https://github.com/XasYer/steam-plugin/commit/aa0907c00360e1e6527f2516e7332c7255967bf3))
+* 全部群友不判断黑白名单 ([1670744](https://github.com/XasYer/steam-plugin/commit/1670744a73574cb078166721d3a460ec675246b3))
+* 定时任务获取图片 ([211d34b](https://github.com/XasYer/steam-plugin/commit/211d34b5c9030daa61d3a209f6ad55b63fcc5157))
+* 布什,戈门 ([9d9bb43](https://github.com/XasYer/steam-plugin/commit/9d9bb4361272067867f8034c70af18852380f99d))
+* 状态改变时重复推送开始游玩 ([4a1b649](https://github.com/XasYer/steam-plugin/commit/4a1b649823dee60fa91b906b43a2ea66697dc8e6))
+* 离开时单独发图片 ([bbd4494](https://github.com/XasYer/steam-plugin/commit/bbd44942771b6db2f62c9e0a9b5850720efc644d))
+* 获取本群的昵称 ([f97e26c](https://github.com/XasYer/steam-plugin/commit/f97e26c91afd8e5a02a700c26a8c874d4de15763))
+* 重复推送结束游玩 ([7e507f2](https://github.com/XasYer/steam-plugin/commit/7e507f22a62cb4175f8064b13533ec7524125b5a))
+
+
+### Performance Improvements
+
+* 仅推送上下线 ([3ca964a](https://github.com/XasYer/steam-plugin/commit/3ca964a29c9eec40df3718ebd58704bc869f6a4b))
+* 优化愿望单请求 ([498b811](https://github.com/XasYer/steam-plugin/commit/498b81165326c74767e0e4362b15c52935f96206))
+* 增加几个api,以后可能用得上 ([ada1c5d](https://github.com/XasYer/steam-plugin/commit/ada1c5dd66659800cfdb8c3c1d3d870b784d8b73))
+
 ## [1.5.2](https://github.com/XasYer/steam-plugin/compare/v1.5.1...v1.5.2) (2024-11-26)
 
 
