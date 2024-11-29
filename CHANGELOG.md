@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.1](https://github.com/XasYer/steam-plugin/compare/v1.6.0...v1.6.1) (2024-11-29)
+
+
+### Bug Fixes
+
+* 好像没用 ([4f37a99](https://github.com/XasYer/steam-plugin/commit/4f37a997774efef54a7ec5bedd3ae580022882f6))
+* 没判断 ([decafaa](https://github.com/XasYer/steam-plugin/commit/decafaa8ef697911d899d5066ab3d7b77cff8be4))
+
+
+### Performance Improvements
+
+* 主人可强制解绑某个steamId不需要艾特 ([b3bf892](https://github.com/XasYer/steam-plugin/commit/b3bf892f2ee3a30a6370e43a75ce62e2a19301f8))
+* 没有填apiKey时输出提示 ([74df179](https://github.com/XasYer/steam-plugin/commit/74df179857158f86734210d1683a9116589bfb80))
+
 ## [1.6.0](https://github.com/XasYer/steam-plugin/compare/v1.5.2...v1.6.0) (2024-11-27)
 
 
