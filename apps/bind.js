@@ -47,7 +47,7 @@ export const rule = {
     }
   },
   unbind: {
-    reg: /^#?steam(?:解除?绑定?|unbind|取消绑定)\s*(\d+)?$/i,
+    reg: /^#?steam(?:强制)?(?:解除?绑定?|unbind|取消绑定)\s*(\d+)?$/i,
     fnc: async e => {
       const textId = rule.unbind.reg.exec(e.msg)[1]
       if (!textId) {
@@ -62,10 +62,10 @@ export const rule = {
       // 检查steamId是否被绑定
       const bindInfo = await db.UserTableGetDataBySteamId(steamId)
       if (bindInfo) {
-        if (bindInfo.userId == uid) {
+        if (bindInfo.userId == uid || (e.msg.includes('强制') && e.isMaster)) {
           await db.UserTableDelSteamIdByUserId(uid, steamId)
           const text = await getBindSteamIdsText(e.self_id, uid, e.group_id)
-          await e.reply(`已删除steamId: ${steamId}\n${text}`)
+          await e.reply(`${uid}\n已删除steamId: ${steamId}\n${text}`)
         } else {
           await e.reply('只能解绑自己绑定的steamId哦')
         }
