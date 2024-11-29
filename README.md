@@ -22,7 +22,7 @@
 
 ## **注意**
 
-一定要填**Steam Web API Key**,否则无法使用绝大部分功能,请前往[Steam API](https://steamcommunity.com/dev/apikey)申请API Key
+一定要填**Steam Web API Key**,否则无法使用绝大部分功能,通常会返回 401 或 403 错误,请前往[Steam API](https://steamcommunity.com/dev/apikey)申请API Key
 
 相关链接:
 
@@ -79,7 +79,7 @@ pnpm install --filter=steam-plugin
 - [x] steam搜索
 - [x] steam成就
 - [x] steam统计
-- [ ] 群友上下线通知
+- [x] 群友上下线通知
 - [ ] steam喜加一
 - [x] 开启/关闭推送
 - [x] steam特惠

@@ -179,7 +179,7 @@ export const cfgSchema = {
         title: '展示steam头像',
         key: '展示头像',
         type: 'boolean',
-        def: false,
+        def: true,
         desc: '是否展示steam头像, 可能会有18+头像'
       }
     }

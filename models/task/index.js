@@ -9,14 +9,14 @@ let timer = null
 const redisKey = 'steam-plugin:user-play:'
 
 export function startTimer () {
-  if (!Config.steam.apiKey) {
-    return
-  }
   if (!Config.push.enable && !Config.push.stateChange) {
     return
   }
   clearInterval(timer)
   timer = setInterval(async () => {
+    if (!Config.steam.apiKey) {
+      return
+    }
     logger.info('开始检查Steam游戏信息')
     try {
       // 获取现在的时间

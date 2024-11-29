@@ -1,6 +1,7 @@
 import lodash from 'lodash'
 import Version from './Version.js'
 import { plugin, logger } from '#lib'
+import Config from './Config.js'
 
 const throttle = {}
 
@@ -54,9 +55,13 @@ export default class {
         ...cfg
       })
       cls.prototype[name] = async (e) => {
+        if (!Config.steam.apiKey && !/帮助|设置/.test(e.msg)) {
+          await e.reply('没有配置apiKey不能调用Steam Web API哦\n先到https://steamcommunity.com/dev/apikey 申请一下apiKey\n然后使用 #steam设置apiKey + 申请到的apiKey\n之后再使用吧')
+          return true
+        }
         const key = `${name}:${e.user_id}`
         if (throttle[key]) {
-          e.reply('太快辣! 要受不了了🥵')
+          await e.reply('太快辣! 要受不了了🥵')
           return true
         } else {
           throttle[key] = setTimeout(() => {
