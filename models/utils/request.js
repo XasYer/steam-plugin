@@ -13,7 +13,7 @@ export default async function request (url, options = {}) {
   const steamApi = (() => {
     const url = 'https://api.steampowered.com'
     if (Config.steam.commonProxy) {
-      return Config.steam.commonProxy.replace('{{url}}', encodeURIComponent(url))
+      return Config.steam.commonProxy.replace('{{url}}', url)
     } else if (Config.steam.apiProxy) {
       return Config.steam.apiProxy.replace(/\/$/, '')
     } else {

@@ -5,7 +5,7 @@ import { Config } from '#components'
 const getBaseURL = () => {
   const url = 'https://store.steampowered.com'
   if (Config.steam.commonProxy) {
-    return Config.steam.commonProxy.replace('{{url}}', encodeURIComponent(url))
+    return Config.steam.commonProxy.replace('{{url}}', url)
   } else if (Config.steam.storeProxy) {
     return Config.steam.storeProxy?.replace(/\/$/, '')
   } else {
