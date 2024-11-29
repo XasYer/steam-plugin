@@ -54,6 +54,7 @@ export const rule = {
         await e.reply('要和SteamID或好友码一起发送哦')
         return true
       }
+      const isForce = e.msg.includes('强制') && e.isMaster
       // 如果是主人可以at其他用户进行绑定
       const uid = utils.getAtUid(e.isMaster ? e.at : '', e.user_id)
       const userBindAll = await db.UserTableGetDataByUserId(uid)
@@ -62,10 +63,11 @@ export const rule = {
       // 检查steamId是否被绑定
       const bindInfo = await db.UserTableGetDataBySteamId(steamId)
       if (bindInfo) {
-        if (bindInfo.userId == uid || (e.msg.includes('强制') && e.isMaster)) {
-          await db.UserTableDelSteamIdByUserId(uid, steamId)
-          const text = await getBindSteamIdsText(e.self_id, uid, e.group_id)
-          await e.reply(`${uid}\n已删除steamId: ${steamId}\n${text}`)
+        if (bindInfo.userId == uid || isForce) {
+          const id = isForce ? bindInfo.userId : uid
+          await db.UserTableDelSteamIdByUserId(id, steamId)
+          const text = await getBindSteamIdsText(e.self_id, id, e.group_id)
+          await e.reply(`${id}\n已删除steamId: ${steamId}\n${text}`)
         } else {
           await e.reply('只能解绑自己绑定的steamId哦')
         }
