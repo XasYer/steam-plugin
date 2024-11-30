@@ -33,7 +33,7 @@ export const rule = {
         }
       }).filter(Boolean)
       if (!games.length) {
-        await e.reply(`没有所有到${name}相关的游戏, 换个关键词试试?`)
+        await e.reply(`没有搜索到${name}相关的游戏, 换个关键词试试?`)
         return true
       }
       const screenshotOptions = {
