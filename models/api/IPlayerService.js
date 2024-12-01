@@ -359,9 +359,9 @@ export async function GetProfileItemsEquipped (steamid) {
     params: {
       steamid
     }
-  }.then(res => {
+  }).then(res => {
     const data = res.data.response || {}
     logger.info(`获取${steamid}头像背景信息等成功，耗时${Date.now() - start}ms`)
     return data
-  }))
+  })
 }

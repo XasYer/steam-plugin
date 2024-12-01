@@ -1,0 +1,57 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{pluResPath}}info/index.css" />
+<style>
+    #container {
+        background: url({{background}}) no-repeat #363a42;
+    }
+</style>
+{{/block}}
+
+{{block 'main'}}
+
+<div id="profile" class="color-{{color}}">
+    <div id="avatar-box">
+        {{if frame}}
+        <div id="avatar-frame">
+            <img src="{{frame}}">
+        </div>
+        {{/if}}
+        <img src="{{avatar}}" width="164" height="164">
+        <div id="name-box">
+            <div id="profile-name">{{name}}</div>
+            <div id="profile-status">{{status}}</div>
+        </div>
+    </div>
+    {{if gameId}}
+    <div id="playing-box">
+        <div>
+            <img src="https://steamcdn-a.akamaihd.net/steam/apps/{{gameId}}/header.jpg" width="164">
+        </div>
+        <div id="playing-info">
+            <div>游戏中</div>
+            <div>{{gameName}}</div>
+        </div>
+    </div>
+    {{/if}}
+    <div id="profile-info">
+        <div>
+            好友代码: {{friendCode}}
+        </div>
+        <div>
+            注册时间: {{createTime}}
+        </div>
+        {{if lastTime}}
+        <div>
+            最后在线: {{lastTime}}
+        </div>
+        {{/if}}
+        {{if country}}
+        <div>
+            账号地区: {{country}}
+        </div>
+        {{/if}}
+    </div>
+</div>
+{{/block}}

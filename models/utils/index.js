@@ -193,6 +193,17 @@ export function getHeaderImgUrlByAppid (appid) {
 }
 
 /**
+ * 获取静态资源url items/xxx
+ * @param {string} path
+ */
+export function getStaticUrl (path) {
+  if (path?.startsWith('items')) {
+    return `https://cdn.fastly.steamstatic.com/steamcommunity/public/images/${path}`
+  }
+  return ''
+}
+
+/**
  * 获取图片buffer
  * @param {string} url
  * @returns {Promise<Buffer|null|string>}

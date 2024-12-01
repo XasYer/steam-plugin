@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#container {
+    width: 593px;
+    height: 561px;
+    font-size: 20px;
+}
+
+.color-1 {
+    color: #90ba3c
+}
+
+.color-2 {
+    color: #57cbde;
+}
+
+.color-3 {
+    color: #898989
+}
+
+#profile {
+    width: 563px;
+    height: 502px;
+    padding: 20px;
+}
+
+#avatar-box {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+#avatar-frame {
+    position: absolute;
+    width: 164px;
+    height: 164px;
+}
+
+#avatar-frame>img {
+    width: 200px;
+    height: 200px;
+    margin: -18px;
+}
+
+#name-box {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#profile-name {
+    font-size: 30px;
+    white-space: nowrap;
+}
+
+#profile-status {
+    margin-top: 10px;
+}
+
+#playing-box {
+    margin-top: 20px;
+    display: flex;
+}
+
+#playing-info {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#profile-info {
+    line-height: 2;
+}

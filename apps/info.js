@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { segment } from '#lib'
-import { App, Config } from '#components'
+import { App, Config, Render } from '#components'
 import { db, utils, api } from '#models'
 
 const app = {
@@ -26,23 +26,28 @@ export const rule = {
         return true
       }
       const info = data.pop()
-      const avatarBuffer = Config.other.steamAvatar ? await utils.getImgUrlBuffer(info.avatarfull) : ''
-      const msg = []
-      avatarBuffer && msg.push(segment.image(avatarBuffer), '\n')
-      msg.push([
-        `好友代码: ${utils.getFriendCode(info.steamid)}`,
-        `steamId: ${info.steamid}`,
-        `用户名称: ${info.personaname}`,
-        `当前状态: ${utils.getPersonaState(info.personastate)}`,
-        `最后下线: ${moment.unix(info.lastlogoff).format('YYYY-MM-DD HH:mm:ss')}`,
-        `注册时间: ${moment.unix(info.timecreated).format('YYYY-MM-DD HH:mm:ss')}`,
-        `账号地区: ${getLoccountryCode(info.loccountrycode)}`
-      ].join('\n'))
-      if (info.gameid) {
-        const icon = utils.getHeaderImgUrlByAppid(info.gameid)
-        msg.push('\n', segment.image(icon), `\n正在游玩: ${info.gameextrainfo}`)
+      const color = info.gameid ? 1 : info.personastate === 0 ? 3 : 2
+      const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
+      const img = await Render.render('info/index', {
+        background: utils.getStaticUrl(bg.mini_profile_background.image_large),
+        frame: utils.getStaticUrl(bg.avatar_frame.image_small),
+        avatar: Config.other.steamAvatar ? info.avatarfull : utils.getUserAvatar(e.self_id, uid, e.group_id),
+        name: info.personaname,
+        status: utils.getPersonaState(info.personastate),
+        gameId: info.gameid,
+        gameName: info.gameextrainfo,
+        friendCode: utils.getFriendCode(info.steamid),
+        createTime: moment.unix(info.timecreated).format('YYYY-MM-DD HH:mm:ss'),
+        lastTime: (info.lastlogoff && info.personastate === 0) ? moment.unix(info.lastlogoff).format('YYYY-MM-DD HH:mm:ss') : '',
+        country: info.loccountrycode ? getLoccountryCode(info.loccountrycode) : '',
+        color,
+        scale: 1.4
+      })
+      if (img) {
+        await e.reply(img)
+      } else {
+        await e.reply([segment.at(uid), '\n截图失败了, 重试一下吧'])
       }
-      await e.reply(msg)
       return true
     }
   }
