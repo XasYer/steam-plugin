@@ -181,6 +181,22 @@ export const cfgSchema = {
         type: 'boolean',
         def: true,
         desc: '是否展示steam头像, 可能会有18+头像'
+      },
+      infoMode: {
+        title: 'steam状态发送模式',
+        key: '状态模式',
+        type: 'number',
+        def: 2,
+        min: 1,
+        max: 2,
+        input: (n) => {
+          if (n >= 1 && n <= 2) {
+            return n * 1
+          } else {
+            return 2
+          }
+        },
+        desc: 'steam状态发送消息的模式 1: 文字 2: 图片 若图片发送时间长可更换为文字'
       }
     }
   },

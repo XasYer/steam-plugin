@@ -10,3 +10,8 @@ itemLength: 3
 
 # 是否显示Steam头像 可能会有18+的头像
 steamAvatar: true
+
+# steam状态 发送消息模式
+# 1: 文字
+# 2: 图片 (若图片发送时间长可更换为文字模式)
+infoMode: 2

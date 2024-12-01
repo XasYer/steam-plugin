@@ -224,7 +224,7 @@ export async function getImgUrlBuffer (url, retry = 3) {
   retry = Number(retry) || 3
   for (let i = 0; i < retry; i++) {
     try {
-      const buffer = await request.get(path.pathname, {
+      const buffer = await request.get(path.pathname + path.search, {
         responseType: 'arraybuffer',
         baseURL: path.origin
       }).then(res => res.data)
@@ -253,7 +253,7 @@ export async function saveImg (url, retry = 3) {
   for (let i = 0; i < retry; i++) {
     try {
       let ext = ''
-      const buffer = await request.get(path.pathname, {
+      const buffer = await request.get(path.pathname + path.search, {
         responseType: 'arraybuffer',
         baseURL: path.origin
       }).then(res => {
