@@ -31,7 +31,7 @@ export const rule = {
       const img = await Render.render('info/index', {
         background: utils.getStaticUrl(bg.mini_profile_background.image_large),
         frame: utils.getStaticUrl(bg.avatar_frame.image_small),
-        avatar: Config.other.steamAvatar ? info.avatarfull : utils.getUserAvatar(e.self_id, uid, e.group_id),
+        avatar: Config.other.steamAvatar ? info.avatarfull : await utils.getUserAvatar(e.self_id, uid, e.group_id),
         name: info.personaname,
         status: utils.getPersonaState(info.personastate),
         gameId: info.gameid,
