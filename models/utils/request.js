@@ -20,7 +20,12 @@ export default async function request (url, options = {}) {
       return url
     }
   })()
-  const baseURL = options.baseURL?.replace(/\/$/, '') ?? steamApi
+  const baseURL = (() => {
+    if (options.baseURL && options.baseURL.includes('steam') && Config.steam.commonProxy) {
+      return Config.steam.commonProxy.replace('{{url}}', options.baseURL)
+    }
+    return options.baseURL ?? steamApi
+  })()
   return await axios.request({
     url,
     baseURL,

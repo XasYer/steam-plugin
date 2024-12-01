@@ -10,7 +10,7 @@ export { request }
 const tempDir = join(Version.pluginPath, 'temp')
 
 if (fs.existsSync(tempDir)) {
-  fs.rmdirSync(tempDir, { recursive: true })
+  fs.rmSync(tempDir, { recursive: true })
 }
 fs.mkdirSync(tempDir)
 
@@ -220,17 +220,21 @@ export function getStaticUrl (path) {
  */
 export async function getImgUrlBuffer (url, retry = 3) {
   if (!url) return null
+  const path = new URL(url)
   retry = Number(retry) || 3
   for (let i = 0; i < retry; i++) {
     try {
-      const buffer = await request.get(url, { responseType: 'arraybuffer', baseURL: '' }).then(res => res.data)
+      const buffer = await request.get(path.pathname, {
+        responseType: 'arraybuffer',
+        baseURL: path.origin
+      }).then(res => res.data)
       if (Version.BotName === 'Karin') {
         return `base64://${buffer.toString('base64')}`
       } else {
         return buffer
       }
     } catch (error) {
-      logger.error(`获取图片${url}失败: ${error.message}, 第${i + 1}次重试`)
+      logger.error(`获取图片${url}失败, 第${i + 1}次重试\n`, error.message)
     }
   }
   return null
@@ -244,11 +248,15 @@ export async function getImgUrlBuffer (url, retry = 3) {
  */
 export async function saveImg (url, retry = 3) {
   if (!url) return ''
+  const path = new URL(url)
   retry = Number(retry) || 3
   for (let i = 0; i < retry; i++) {
     try {
       let ext = ''
-      const buffer = await request.get(url, { responseType: 'arraybuffer', baseURL: '' }).then(res => {
+      const buffer = await request.get(path.pathname, {
+        responseType: 'arraybuffer',
+        baseURL: path.origin
+      }).then(res => {
         ext = res.headers['content-type']?.split('/')?.pop() || 'png'
         return res.data
       })
@@ -260,7 +268,7 @@ export async function saveImg (url, retry = 3) {
       }, 1000 * 60 * 10) // 10分钟后删除
       return filepath.replace(/\\/g, '/')
     } catch (error) {
-      logger.error(`保存图片${url}失败: ${error.message}, 第${i + 1}次重试`)
+      logger.error(`保存图片${url}失败, 第${i + 1}次重试\n${error.message}`)
     }
   }
   return ''

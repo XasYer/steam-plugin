@@ -23,7 +23,7 @@ const BotName = (() => {
   if (/^karin/i.test(pluginName)) {
     return 'Karin'
   } else if (BotPackage.dependencies.react) {
-    fs.rmdirSync(pluginPath, { recursive: true })
+    fs.rmSync(pluginPath, { recursive: true })
     return 'Yunzai-Next'
   } else if (Array.isArray(global.Bot?.uin)) {
     return 'Trss-Yunzai'

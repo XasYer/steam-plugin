@@ -107,22 +107,27 @@ pnpm install --filter=steam-plugin
 
 1. 需要`cloudflare账号`, 以及在`cf托管的域名`
 2. 打开[Workers 和 Pages](https://dash.cloudflare.com/1e36e2833bb5f40af76d604e0894cb93/workers-and-pages), 点击`创建`, 然后点击`创建 Worker`
-3. 名字随意, 可参考`api-steam` 然后点击`部署` 再点击`编辑代码`
+3. 名字随意, 可参考`steam` 然后点击`部署` 再点击`编辑代码`
 4. 复制以下代码到编辑器, `覆盖`原内容, 然后点击`部署`, 出现`版本已保存`即可
-  ```js
-  export default {
-    async fetch(request) {
-      const url = new URL(request.url)
-      url.hostname = "api.steampowered.com"
-      const newRequest = new Request(url, request)
-      return await fetch(newRequest)
+    ```js
+    export default {
+      async fetch(request) {
+        const url = new URL(request.url)
+        const path = decodeURIComponent(url.pathname.replace('/',''))
+        if (!path || !path.startsWith('http')) {
+          return new Response('Ciallo～(∠・ω< )⌒☆');
+        }
+        const target = new URL(path)
+        url.hostname = path.replace(/https?:\/\//,'')
+        url.protocol = target.protocol
+        url.pathname = target.pathname
+        return await fetch(new Request(url, request))
+      }
     }
-  }
-  ```
-5. 依次点击`左上角第3步填写的名字`, `设置`, `域和路由`右边的`添加`, `自定义域`, 然后填入你想设置的二级或多级域名, 比如`api.steam.example.com`, 然后点`添加域`
-6. 测试(可选): 浏览器访问`https://api.steam.example.com/ISteamWebAPIUtil/GetServerInfo/v1/`, `api.steam.example.com`替换成第5步设置的域名, 如果能看到`servertime`字段, 说明配置成功
-7. 对你的Bot发送`#steam设置api反代https://api.steam.example.com`, 域名替换成第5步设置的域名
-8. store反代重复步骤2-6,把api换成store即可
+    ```
+5. 依次点击`左上角第3步填写的名字`, `设置`, `域和路由`右边的`添加`, `自定义域`, 然后填入你想设置的二级或多级域名, 比如`steam.example.com`, 然后点`添加域`
+6. 测试(可选): 浏览器访问`https://steam.example.com/https://api.steampowered.com/ISteamWebAPIUtil/GetServerInfo/v1/`, `steam.example.com`替换成第5步设置的域名, 如果能看到`servertime`字段, 说明配置成功
+7. 对你的Bot发送`#steam设置通用反代https://steam.example.com/{{url}}`, 域名替换成第5步设置的域名
 
 ### 注意事项
 
