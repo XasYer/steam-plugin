@@ -223,7 +223,7 @@ export async function getImgUrlBuffer (url, retry = 3) {
   retry = Number(retry) || 3
   for (let i = 0; i < retry; i++) {
     try {
-      const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' }).then(res => res.data)
+      const buffer = await request.get(url, { responseType: 'arraybuffer', baseURL: '' }).then(res => res.data)
       if (Version.BotName === 'Karin') {
         return `base64://${buffer.toString('base64')}`
       } else {
@@ -248,7 +248,7 @@ export async function saveImg (url, retry = 3) {
   for (let i = 0; i < retry; i++) {
     try {
       let ext = ''
-      const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' }).then(res => {
+      const buffer = await request.get(url, { responseType: 'arraybuffer', baseURL: '' }).then(res => {
         ext = res.headers['content-type']?.split('/')?.pop() || 'png'
         return res.data
       })
