@@ -1,9 +1,18 @@
-import { Version } from '#components'
-import * as request from './request.js'
+import fs from 'fs'
 import moment from 'moment'
 import { Bot, logger } from '#lib'
+import { Version } from '#components'
+import * as request from './request.js'
+import { join } from 'path'
 
 export { request }
+
+const tempDir = join(Version.pluginPath, 'temp')
+
+if (fs.existsSync(tempDir)) {
+  fs.rmdirSync(tempDir, { recursive: true })
+}
+fs.mkdirSync(tempDir)
 
 const steamIdOffset = 76561197960265728n
 
@@ -206,11 +215,13 @@ export function getStaticUrl (path) {
 /**
  * 获取图片buffer
  * @param {string} url
+ * @param {number} retry 重试次数 默认3
  * @returns {Promise<Buffer|null|string>}
  */
-export async function getImgUrlBuffer (url) {
+export async function getImgUrlBuffer (url, retry = 3) {
   if (!url) return null
-  for (let i = 0; i < 3; i++) {
+  retry = Number(retry) || 3
+  for (let i = 0; i < retry; i++) {
     try {
       const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' }).then(res => res.data)
       if (Version.BotName === 'Karin') {
@@ -223,6 +234,36 @@ export async function getImgUrlBuffer (url) {
     }
   }
   return null
+}
+
+/**
+ * 将图片保存到临时文件夹
+ * @param {*} url
+ * @param {number} retry 重试次数 默认3
+ * @returns {Promise<string>} 图片绝对路径
+ */
+export async function saveImg (url, retry = 3) {
+  if (!url) return ''
+  retry = Number(retry) || 3
+  for (let i = 0; i < retry; i++) {
+    try {
+      let ext = ''
+      const buffer = await request.get(url, { responseType: 'arraybuffer', baseUrl: '' }).then(res => {
+        ext = res.headers['content-type']?.split('/')?.pop() || 'png'
+        return res.data
+      })
+      const filename = `${Date.now()}.${ext}`
+      const filepath = join(tempDir, filename)
+      fs.writeFileSync(filepath, buffer)
+      setTimeout(() => {
+        fs.unlinkSync(filepath)
+      }, 1000 * 60 * 10) // 10分钟后删除
+      return filepath.replace(/\\/g, '/')
+    } catch (error) {
+      logger.error(`保存图片${url}失败: ${error.message}, 第${i + 1}次重试`)
+    }
+  }
+  return ''
 }
 
 /**

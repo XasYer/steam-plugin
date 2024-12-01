@@ -70,6 +70,7 @@ pnpm install --filter=steam-plugin
 - [x] steam绑定
 - [x] steam更换绑定
 - [x] steam解除绑定
+- [x] steam状态
 - [x] steam库存
 - [x] steam最近游玩
 - [x] steam愿望单
@@ -84,7 +85,6 @@ pnpm install --filter=steam-plugin
 - [x] 开启/关闭推送
 - [x] steam特惠
 - [x] 推送黑/白群名单
-- [ ] steam状态渲染成图片
 - [ ] steam绑定渲染成图片
 - [x] steam评论
 - [ ] steam游戏详情
