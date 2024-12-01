@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.6.2](https://github.com/XasYer/steam-plugin/compare/v1.6.1...v1.6.2) (2024-12-01)
+
+
+### Bug Fixes
+
+* typo ([4200578](https://github.com/XasYer/steam-plugin/commit/4200578df8907d75bb0ea3d5db57372cf4f4c6fb))
+* 投降喵 ([6f23550](https://github.com/XasYer/steam-plugin/commit/6f2355066519607b0c856ea4846d6f600c9d52e6))
+* 未开启steam头像时图片失败 ([64b89d3](https://github.com/XasYer/steam-plugin/commit/64b89d38ec20b513395eabd3b8cce6775136b9fd))
+
+
+### Performance Improvements
+
+* axios 1.7.7 -&gt; 1.7.8 ([6c48870](https://github.com/XasYer/steam-plugin/commit/6c488700a482803b9bb86da0f145fb9dd6d8ca6d))
+* steam状态改为图片 ([10cfb83](https://github.com/XasYer/steam-plugin/commit/10cfb838408bbf2b18f281b749a62755c707ff69))
+* steam静态图走通用反代,更新反代教程 ([8b6e8af](https://github.com/XasYer/steam-plugin/commit/8b6e8af43df2370ff6da3ff934d4a527614a5082))
+* 字体加个描边 ([0114e85](https://github.com/XasYer/steam-plugin/commit/0114e85b22ee150ece9b5c920adbb49254ca7336))
+* 缓存图片到本地 ([81045e3](https://github.com/XasYer/steam-plugin/commit/81045e31f2290273e837dd5c8e18a325c301677a))
+
 ## [1.6.1](https://github.com/XasYer/steam-plugin/compare/v1.6.0...v1.6.1) (2024-11-29)
 
 
