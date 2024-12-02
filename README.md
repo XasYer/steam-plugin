@@ -131,7 +131,7 @@ pnpm install --filter=steam-plugin
 
 ### 注意事项
 
-1. cloudflare的workers免费账户的请求数量限制10w次(总共)
+1. cloudflare的workers免费账户的每天请求数量限制10w次(一个账号所有的workers请求总量)
 
 ## 贡献者
 
