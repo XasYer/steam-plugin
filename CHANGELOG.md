@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.3](https://github.com/XasYer/steam-plugin/compare/v1.6.2...v1.6.3) (2024-12-02)
+
+
+### Performance Improvements
+
+* 可开关日志输出 ([492d498](https://github.com/XasYer/steam-plugin/commit/492d49879db42316a945eb58aeed425d497f4606))
+* 更换静态图链接不使用通用反代 ([cd2cbdb](https://github.com/XasYer/steam-plugin/commit/cd2cbdb63ecf40f05c69b3e26d1fcde1f4c3a67e))
+
 ## [1.6.2](https://github.com/XasYer/steam-plugin/compare/v1.6.1...v1.6.2) (2024-12-01)
 
 
