@@ -30,9 +30,9 @@ export const rule = {
         const color = info.gameid ? 1 : info.personastate === 0 ? 3 : 2
         const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
         const img = await Render.render('info/index', {
-          background: await utils.saveImg(utils.getStaticUrl(bg.mini_profile_background.image_large)),
-          frame: await utils.saveImg(utils.getStaticUrl(bg.avatar_frame.image_small)),
-          avatar: await utils.saveImg(Config.other.steamAvatar ? info.avatarfull : await utils.getUserAvatar(e.self_id, uid, e.group_id)),
+          background: utils.getStaticUrl(bg.mini_profile_background.image_large),
+          frame: utils.getStaticUrl(bg.avatar_frame.image_small),
+          avatar: Config.other.steamAvatar ? info.avatarfull : await utils.getUserAvatar(e.self_id, uid, e.group_id),
           name: info.personaname,
           status: utils.getPersonaState(info.personastate),
           gameId: info.gameid,

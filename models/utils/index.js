@@ -198,6 +198,7 @@ export async function sendGroupMsg (botId, gid, msg) {
  */
 export function getHeaderImgUrlByAppid (appid) {
   if (!appid) return ''
+  // return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`
   return `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/header.jpg`
 }
 
@@ -207,7 +208,8 @@ export function getHeaderImgUrlByAppid (appid) {
  */
 export function getStaticUrl (path) {
   if (path?.startsWith('items')) {
-    return `https://cdn.fastly.steamstatic.com/steamcommunity/public/images/${path}`
+    // return `https://cdn.fastly.steamstatic.com/steamcommunity/public/images/${path}`
+    return `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/${path}`
   }
   return ''
 }
