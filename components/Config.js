@@ -109,6 +109,7 @@ class Config {
    *  itemLength: number,
    *  steamAvatar: boolean,
    *  infoMode: number,
+   *  log: boolean
    * }}
    */
   get other () {

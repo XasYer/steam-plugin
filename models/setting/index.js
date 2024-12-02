@@ -197,6 +197,13 @@ export const cfgSchema = {
           }
         },
         desc: 'steam状态发送消息的模式 1: 文字 2: 图片 若图片发送时间长可更换为文字'
+      },
+      log: {
+        title: '日志输出',
+        key: '日志',
+        type: 'boolean',
+        def: true,
+        desc: '是否输出日志'
       }
     }
   },

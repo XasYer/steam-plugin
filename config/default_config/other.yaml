@@ -15,3 +15,6 @@ steamAvatar: true
 # 1: 文字
 # 2: 图片 (若图片发送时间长可更换为文字模式)
 infoMode: 2
+
+# 是否开启日志
+log: true
