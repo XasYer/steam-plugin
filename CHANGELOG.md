@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.4](https://github.com/XasYer/steam-plugin/compare/v1.6.3...v1.6.4) (2024-12-06)
+
+
+### Bug Fixes
+
+* 反代错误时不输出反代地址 ([7efd160](https://github.com/XasYer/steam-plugin/commit/7efd160238eaf2732fffb196d3fe02803ad5bc92))
+
+
+### Performance Improvements
+
+* `#steam设置随机bot开启` 仅限TRSS ([4c35030](https://github.com/XasYer/steam-plugin/commit/4c350303f783b5ee33fd48fc0792212c8a5d7fc2))
+
 ## [1.6.3](https://github.com/XasYer/steam-plugin/compare/v1.6.2...v1.6.3) (2024-12-02)
 
 
