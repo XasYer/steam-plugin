@@ -73,7 +73,22 @@ export default class {
           res = await fnc(e)
         } catch (error) {
           logger.error(error)
-          await e.reply(`出错辣! ${error.message}`)
+          let message = error.message
+          const keyMap = [
+            { key: 'apiProxy', title: 'api反代' },
+            { key: 'storeProxy', title: 'store反代' },
+            { key: 'commonProxy', title: '通用反代' }
+          ]
+          for (const i of keyMap) {
+            const url = Config.steam[i.key]
+            if (url && error.message) {
+              try {
+                const { host } = new URL(url)
+                message = message.replace(host, `${i.title}地址`)
+              } catch (error) { }
+            }
+          }
+          await e.reply(`出错辣! ${message}`)
         }
         clearTimeout(throttle[key])
         delete throttle[key]
