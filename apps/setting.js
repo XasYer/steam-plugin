@@ -14,7 +14,7 @@ const app = {
 
 export const rule = {
   setting: {
-    reg: new RegExp(`^#steam设置\\s*(${keys.join('|')})?[\\s+]*(.*)$`),
+    reg: new RegExp(`^#steam设置\\s*(${keys.join('|')})?[\\s+]*(.*)$`, 'i'),
     fnc: async e => {
       if (!e.isMaster) {
         await e.reply('只有主人才可以设置哦~')
@@ -30,7 +30,17 @@ export const rule = {
         // 设置模式
         let val = regRet[2] || ''
 
-        if (regRet[1] == '全部') {
+        const key = (() => {
+          if (/apikey/i.test(regRet[1])) {
+            return 'apiKey'
+          } if (/随机Bot/i.test(regRet[1])) {
+            return '随机Bot'
+          } else {
+            return regRet[1]
+          }
+        })()
+
+        if (key == '全部') {
           val = !/关闭/.test(val)
           for (const i of keys) {
             if (typeof cfgSchemaMap[i].def == 'boolean') {
@@ -42,7 +52,7 @@ export const rule = {
             }
           }
         } else {
-          const cfgSchema = cfgSchemaMap[regRet[1]]
+          const cfgSchema = cfgSchemaMap[key]
           if (cfgSchema.type !== 'array') {
             if (cfgSchema.input) {
               val = cfgSchema.input(val)

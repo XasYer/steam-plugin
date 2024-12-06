@@ -86,8 +86,11 @@ export const cfgSchema = {
         key: '推送模式',
         type: 'number',
         def: 1,
-        min: 1,
-        max: 2,
+        component: 'RadioGroup',
+        options: [
+          { label: '文字推送', value: 1 },
+          { label: '图片推送', value: 2 }
+        ],
         input: (n) => {
           if (n >= 1 && n <= 2) {
             return n * 1
@@ -96,6 +99,13 @@ export const cfgSchema = {
           }
         },
         desc: '推送模式 1: 文字推送 2: 图片推送'
+      },
+      randomBot: {
+        title: '随机推送Bot',
+        key: '随机Bot',
+        type: 'boolean',
+        def: false,
+        desc: '有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)'
       },
       blackBotList: {
         title: '推送黑名单机器人',

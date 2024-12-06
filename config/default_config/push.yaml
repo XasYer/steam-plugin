@@ -18,6 +18,9 @@ time: 5
 # 是否默认开启推送 即绑定steamId之后不需要发 #steam开启推送 指令
 defaultPush: true
 
+# 是否随机Bot进行推送, 有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)
+randomBot: false
+
 # 推送的Bot黑名单, 不开启推送的Bot将不会被推送, 比如腾讯QQBot限制主动消息
 blackBotList:
   - 3889000138

@@ -1,7 +1,7 @@
 import fs from 'fs'
 import moment from 'moment'
 import { Bot, logger } from '#lib'
-import { Version } from '#components'
+import { Config, Version } from '#components'
 import * as request from './request.js'
 import { join } from 'path'
 
@@ -86,14 +86,15 @@ export async function getUserName (botId, uid, gid) {
       }
     } else {
       uid = Number(uid) || uid
+      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
       if (gid) {
         gid = Number(gid) || gid
-        const group = Bot[botId].pickGroup(gid)
+        const group = bot.pickGroup(gid)
         const member = await group.pickMember(uid)
         const info = await member.getInfo?.() || member.info || {}
         return info.card || info.nickname || info.user_id || uid
       } else {
-        const user = Bot[botId].pickFriend(uid)
+        const user = bot.pickFriend(uid)
         const info = await user.getInfo?.() || user.info || {}
         return info.nickname || info.user_id || uid
       }
@@ -118,15 +119,16 @@ export async function getUserAvatar (botId, uid, gid) {
       return avatarUrl || await bot.getAvatarUrl(botId) || ''
     } else {
       uid = Number(uid) || uid
+      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
       if (gid) {
         gid = Number(gid) || gid
-        const group = Bot[botId].pickGroup(gid)
+        const group = bot.pickGroup(gid)
         const avatarUrl = (await group.pickMember(uid)).getAvatarUrl()
-        return avatarUrl || Bot[botId].avatar
+        return avatarUrl || bot.avatar
       } else {
-        const user = Bot[botId].pickUser(uid)
+        const user = bot.pickUser(uid)
         const avatarUrl = await user.getAvatarUrl()
-        return avatarUrl || Bot[botId].avatar || ''
+        return avatarUrl || bot.avatar || ''
       }
     }
   } catch {
@@ -147,7 +149,8 @@ export async function getGroupMemberList (botId, groupId) {
       const memberList = await Bot.getBot(botId).GetGroupMemberList(groupId)
       result.push(...memberList.map(i => i.uid))
     } else {
-      const memberMap = await Bot[botId].pickGroup(groupId).getMemberMap()
+      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
+      const memberMap = await bot.pickGroup(groupId).getMemberMap()
       result.push(...memberMap.keys())
     }
   } catch { }
@@ -187,7 +190,8 @@ export async function sendGroupMsg (botId, gid, msg) {
     return await Bot.sendMsg(botId, { scene: 'group', peer: gid }, msg)
   } else {
     gid = Number(gid) || gid
-    return await Bot[botId].pickGroup(gid).sendMsg(msg)
+    const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
+    return await bot.pickGroup(gid).sendMsg(msg)
   }
 }
 

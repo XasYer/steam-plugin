@@ -91,6 +91,7 @@ class Config {
    *  pushMode: number,
    *  time: number,
    *  defaultPush: boolean,
+   *  randomBot: boolean,
    *  blackBotList: string[],
    *  whiteBotList: string[],
    *  blackGroupList: string[],
