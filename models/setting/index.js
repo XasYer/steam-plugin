@@ -192,6 +192,15 @@ export const cfgSchema = {
         def: true,
         desc: '是否展示steam头像, 可能会有18+头像'
       },
+      rollGameCount: {
+        title: '游戏推荐数量',
+        key: '推荐数量',
+        type: 'number',
+        min: 1,
+        def: 3,
+        input: (n) => Math.max(1, n * 1 || 99),
+        desc: 'roll游戏推荐的游戏数量'
+      },
       infoMode: {
         title: 'steam状态发送模式',
         key: '状态模式',
