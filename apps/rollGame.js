@@ -63,4 +63,13 @@ export const rule = {
     }
 }
 
+/**
+ * 将游戏时长(单位:分)转换小时
+ * @param {number} time
+ * @returns {string}
+*/
+function getTime (time) {
+    return (time / 60).toFixed(1) + 'h'
+}
+
 export const rollGame = new App(app, rule).create()
