@@ -47,6 +47,11 @@ export const helpList = [
         desc: '看看群聊绑定了steamId的成员状态'
       },
       {
+        icon: 51,
+        title: '#steam玩什么',
+        desc: '从自己的游戏库中roll几个游戏玩'
+      },
+      {
         icon: 12,
         title: '#steam库存',
         desc: '查看steam库存'

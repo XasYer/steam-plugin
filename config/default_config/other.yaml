@@ -18,3 +18,6 @@ infoMode: 2
 
 # 是否开启日志
 log: true
+
+# 游戏推荐数量
+rollGameCount: 3
