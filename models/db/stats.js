@@ -162,9 +162,9 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
         botId,
         steamId,
         ...{
-          playTotal: 0,
+          playTotal: 1,
           playTime: 0,
-          onlineTotal: 0,
+          onlineTotal: 1,
           onlineTime: 0,
           [field]: value
         }
@@ -195,7 +195,7 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
           appid,
           name,
           ...{
-            playTotal: 0,
+            playTotal: 1,
             playTime: 0,
             [field]: value
           }

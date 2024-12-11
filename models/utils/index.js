@@ -60,10 +60,10 @@ export function formatDuration (inp, unit = 'seconds') {
   const secs = duration.seconds()
 
   let formatted = ''
-  if (days > 0)formatted += `${days} 天`
-  if (hours > 0) formatted += `${hours} 小时`
-  if (minutes > 0) formatted += `${minutes} 分钟`
-  if (formatted === '' && secs > 0) formatted += `${secs} 秒`
+  if (days > 0)formatted += `${days}天`
+  if (hours > 0) formatted += `${hours}小时`
+  if (minutes > 0) formatted += `${minutes}分钟`
+  if (formatted === '' && secs > 0) formatted += `${secs}秒`
 
   return formatted.trim()
 }

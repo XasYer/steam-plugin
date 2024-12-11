@@ -27,7 +27,7 @@ export const rule = {
       if (stats.gamePlayTime.length) {
         data.push({
           title: '本群游玩时长最多的游戏',
-          games: stats.gamePlayTime.map(i => ({ ...i, desc: `共 ${utils.formatDuration(i.playTime)}` })),
+          games: stats.gamePlayTime.map(i => ({ ...i, desc: `共 ${utils.formatDuration(i.playTime) || '正在游玩中'}` })),
           size: 'small'
         })
       }
@@ -55,7 +55,7 @@ export const rule = {
         userPlayTime.push({
           name: await utils.getUserName(i.botId, i.userId, e.group_id),
           appid: i.steamId,
-          desc: `共 ${utils.formatDuration(i.playTime)}`,
+          desc: `共 ${utils.formatDuration(i.playTime) || '正在游玩中'}`,
           header_image: await utils.getUserAvatar(i.botId, i.userId, e.group_id),
           header_image_class: 'square'
         })
@@ -91,7 +91,7 @@ export const rule = {
         userOnlineTime.push({
           name: await utils.getUserName(i.botId, i.userId, e.group_id),
           appid: i.steamId,
-          desc: `共 ${utils.formatDuration(i.onlineTime)}`,
+          desc: `共 ${utils.formatDuration(i.onlineTime) || '正在游玩中'}`,
           header_image: await utils.getUserAvatar(i.botId, i.userId, e.group_id),
           header_image_class: 'square'
         })
