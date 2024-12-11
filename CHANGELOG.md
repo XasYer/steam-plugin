@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.7.0](https://github.com/XasYer/steam-plugin/compare/v1.6.4...v1.7.0) (2024-12-11)
+
+
+### Features
+
+* steam群统计 ([628fd48](https://github.com/XasYer/steam-plugin/commit/628fd48c3a9554e57007c7179db1f1cce4d364a0))
+* 增加roll游戏功能 ([7611c70](https://github.com/XasYer/steam-plugin/commit/7611c709de4fa9abdebcce5ffb290b13ba9f31d6))
+
+
+### Bug Fixes
+
+* 游玩0次 ([c3a6143](https://github.com/XasYer/steam-plugin/commit/c3a61432d7d2c260d790eb99edd31b3bed4e08cd))
+* 补充误删的函数 ([c627e9a](https://github.com/XasYer/steam-plugin/commit/c627e9a38cbf4b11f573d777c4b1ad709dddcc7f))
+
 ## [1.6.4](https://github.com/XasYer/steam-plugin/compare/v1.6.3...v1.6.4) (2024-12-06)
 
 
