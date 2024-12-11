@@ -82,7 +82,7 @@ pnpm install --filter=steam-plugin
 - [x] steam统计
 - [x] 群友上下线通知
 - [ ] steam喜加一
-- [x] 开启/关闭推送
+- [x] 开启/关闭推送 
 - [x] steam特惠
 - [x] 推送黑/白群名单
 - [ ] steam绑定渲染成图片
@@ -92,6 +92,8 @@ pnpm install --filter=steam-plugin
 - [x] steam在线统计
 - [x] steam推送列表
 - [x] 群友在玩什么
+- [x] steam群统计
+- [ ] steam用户统计
 
 ## 联系方式
 

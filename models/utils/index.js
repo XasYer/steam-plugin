@@ -57,13 +57,13 @@ export function formatDuration (inp, unit = 'seconds') {
   const days = duration.days()
   const hours = duration.hours()
   const minutes = duration.minutes()
-  // const secs = duration.seconds()
+  const secs = duration.seconds()
 
   let formatted = ''
-  if (days > 0)formatted += `${days}天`
-  if (hours > 0) formatted += `${hours}小时`
-  if (minutes > 0) formatted += `${minutes}分钟`
-  // if (secs > 0 || formatted === '') formatted += `${secs}秒`
+  if (days > 0)formatted += `${days} 天`
+  if (hours > 0) formatted += `${hours} 小时`
+  if (minutes > 0) formatted += `${minutes} 分钟`
+  if (formatted === '' && secs > 0) formatted += `${secs} 秒`
 
   return formatted.trim()
 }
@@ -186,12 +186,16 @@ export function getAtUid (at, id) {
  * @returns {Promise<any>}
  */
 export async function sendGroupMsg (botId, gid, msg) {
-  if (Version.BotName === 'Karin') {
-    return await Bot.sendMsg(botId, { scene: 'group', peer: gid }, msg)
-  } else {
-    gid = Number(gid) || gid
-    const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
-    return await bot.pickGroup(gid).sendMsg(msg)
+  try {
+    if (Version.BotName === 'Karin') {
+      return await Bot.sendMsg(botId, { scene: 'group', peer: gid }, msg)
+    } else {
+      gid = Number(gid) || gid
+      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
+      return await bot.pickGroup(gid).sendMsg(msg)
+    }
+  } catch (error) {
+    logger.error(`群消息发送失败: ${gid}`, error)
   }
 }
 

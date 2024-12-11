@@ -1,5 +1,6 @@
 import { PushTableDelAllDataBySteamId } from './push.js'
 import { sequelize, DataTypes } from './base.js'
+import { StatsTableDelete } from './stats.js'
 
 /**
  * @typedef {Object} UserColumns
@@ -130,6 +131,7 @@ export async function UserTableDelSteamIdByUserId (userId, steamId) {
     })
     // 删除steamId对应的所有推送数据
     await PushTableDelAllDataBySteamId(steamId, transaction)
+    await StatsTableDelete(steamId, transaction)
     transaction.commit()
     return res
   } catch (error) {

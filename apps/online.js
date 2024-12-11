@@ -9,7 +9,7 @@ const app = {
 
 export const rule = {
   online: {
-    reg: /^#?steam在线(?:统计|数据)?\s*(\d+)?$/i,
+    reg: /^#?steam在线(?:统计|数据|人数)?\s*(\d+)?$/i,
     fnc: async e => {
       const appid = rule.online.reg.exec(e.msg)[1]
       if (!appid) {

@@ -46,7 +46,7 @@ async function help (e) {
     helpCfg: helpUtil.helpCfg,
     helpGroup,
     ...themeData,
-    scale: 1.2
+    scale: 1.4
   })
   if (img) {
     await e.reply(img)

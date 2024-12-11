@@ -9,7 +9,7 @@ export const helpCfg = {
 }
 export const helpList = [
   {
-    group: 'steam 信息 (可在指令后添加steamId或at用户使用)',
+    group: '需要绑定steamid或好友码后才能使用',
     list: [
       {
         icon: 9,
@@ -22,32 +22,22 @@ export const helpList = [
         desc: '解除绑定steamid或好友码'
       },
       {
+        icon: 34,
+        title: '#steam(开启|关闭)推送',
+        desc: '开启或关闭steam个人状态推送'
+      }
+    ]
+  },
+  {
+    group: '个人相关功能 此功能大部分可at用户或加上steamId使用',
+    list: [
+      {
         icon: 11,
         title: '#steam状态',
         desc: '查看steam个人状态'
       },
       {
-        icon: 33,
-        title: '#steam开启推送',
-        desc: '开启steam个人状态推送'
-      },
-      {
-        icon: 34,
-        title: '#steam关闭推送',
-        desc: '关闭steam个人状态推送'
-      },
-      {
-        icon: 49,
-        title: '#steam推送列表',
-        desc: '查看本群推送列表'
-      },
-      {
-        icon: 50,
-        title: '#群友在玩什么',
-        desc: '看看群聊绑定了steamId的成员状态'
-      },
-      {
-        icon: 51,
+        icon: 52,
         title: '#steam玩什么',
         desc: '从自己的游戏库中roll几个游戏玩'
       },
@@ -75,7 +65,32 @@ export const helpList = [
         icon: 14,
         title: '#steam统计',
         desc: '查看某个游戏的统计,需要加上appid'
+      }
+    ]
+  },
+  {
+    group: '群聊相关功能',
+    list: [
+      {
+        icon: 49,
+        title: '#steam推送列表',
+        desc: '查看本群推送列表'
       },
+      {
+        icon: 50,
+        title: '#群友在玩什么',
+        desc: '看看群聊绑定了steamId的成员状态'
+      },
+      {
+        icon: 65,
+        title: '#steam群统计',
+        desc: '查看本群的一些统计数据'
+      }
+    ]
+  },
+  {
+    group: 'steam相关信息',
+    list: [
       {
         icon: 46,
         title: '#steam成就统计',
@@ -83,7 +98,7 @@ export const helpList = [
       },
       {
         icon: 48,
-        title: '#steam在线',
+        title: '#steam在线人数',
         desc: '查看某个游戏的在线人数,需要appid'
       },
       {

@@ -201,6 +201,15 @@ export const cfgSchema = {
         input: (n) => Math.max(1, n * 1 || 99),
         desc: 'roll游戏推荐的游戏数量'
       },
+      statsCount: {
+        title: '统计数据数量',
+        key: '统计数量',
+        type: 'number',
+        min: 1,
+        def: 10,
+        input: (n) => Math.max(1, n * 1 || 10),
+        desc: '统计数据数量 (由steam-plugin统计)'
+      },
       infoMode: {
         title: 'steam状态发送模式',
         key: '状态模式',
