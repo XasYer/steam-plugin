@@ -11,7 +11,7 @@ export default class {
     name,
     dsc,
     event = 'message',
-    priority = 5
+    priority = Number(Config.other.priority) || 5
   }, rule) {
     this.id = id
     this.name = name

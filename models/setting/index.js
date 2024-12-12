@@ -232,6 +232,14 @@ export const cfgSchema = {
         type: 'boolean',
         def: true,
         desc: '是否输出日志'
+      },
+      priority: {
+        title: '插件优先级',
+        key: '优先级',
+        type: 'number',
+        def: 5,
+        input: (n) => Number(n) || 5,
+        desc: '数值越小优先级越高'
       }
     }
   },

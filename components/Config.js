@@ -113,6 +113,7 @@ class Config {
    *  log: boolean,
    *  rollGameCount: number,
    *  statsCount: number,
+   *  priority: number,
    * }}
    */
   get other () {

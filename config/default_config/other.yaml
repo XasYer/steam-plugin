@@ -24,3 +24,6 @@ rollGameCount: 3
 
 # 统计数据的显示数量 比如群统计
 statsCount: 10
+
+# 插件优先级 数值越小优先级越高
+priority: 5
