@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/XasYer/steam-plugin/compare/v1.7.0...v1.7.1) (2024-12-12)
+
+
+### Performance Improvements
+
+* 支持设置插件优先级 ([853c4d5](https://github.com/XasYer/steam-plugin/commit/853c4d5d814c72e756e202d35cbdb87d4ffddb89))
+
 ## [1.7.0](https://github.com/XasYer/steam-plugin/compare/v1.6.4...v1.7.0) (2024-12-11)
 
 
