@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { join } from 'path'
 import { Version } from '#components'
-import { Sequelize, DataTypes, Op } from 'sequelize'
+import { Sequelize, DataTypes, Op, fn, col } from 'sequelize'
 
 const dataPath = join(Version.pluginPath, 'data')
 if (!fs.existsSync(dataPath)) {
@@ -18,6 +18,8 @@ await sequelize.authenticate()
 
 export {
   Op,
+  fn,
+  col,
   DataTypes,
   sequelize
 }

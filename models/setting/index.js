@@ -239,7 +239,7 @@ export const cfgSchema = {
         type: 'number',
         def: 5,
         input: (n) => Number(n) || 5,
-        desc: '数值越小优先级越高'
+        desc: '数值越小优先级越高, 可以为负数, 重启后生效'
       }
     }
   },

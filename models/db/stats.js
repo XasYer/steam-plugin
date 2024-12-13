@@ -1,4 +1,4 @@
-import { sequelize, DataTypes } from './base.js'
+import { sequelize, DataTypes, fn, col } from './base.js'
 
 /**
  * @typedef {Object} GameStatsColumns
@@ -262,22 +262,32 @@ export async function StatsTableGetByGroupId (groupId, limit = 10) {
     userPlayTime: []
   }
   const keys = [
-    { table: UserStatsTable, ret: 'userPlayTotal', key: 'playTotal', attributes: ['userId'] },
-    { table: UserStatsTable, ret: 'userPlayTime', key: 'playTime', attributes: ['userId'] },
-    { table: UserStatsTable, ret: 'userOnlineTotal', key: 'onlineTotal', attributes: ['userId'] },
-    { table: UserStatsTable, ret: 'userOnlineTime', key: 'onlineTime', attributes: ['userId'] },
-    { table: GameStatsTable, ret: 'gamePlayTotal', key: 'playTotal', attributes: ['appid', 'name'] },
-    { table: GameStatsTable, ret: 'gamePlayTime', key: 'playTime', attributes: ['appid', 'name'] }
+    { table: UserStatsTable, ret: 'userPlayTotal', key: 'playTotal', type: 'user' },
+    { table: UserStatsTable, ret: 'userPlayTime', key: 'playTime', type: 'user' },
+    { table: UserStatsTable, ret: 'userOnlineTotal', key: 'onlineTotal', type: 'user' },
+    { table: UserStatsTable, ret: 'userOnlineTime', key: 'onlineTime', type: 'user' },
+    { table: GameStatsTable, ret: 'gamePlayTotal', key: 'playTotal', type: 'game' },
+    { table: GameStatsTable, ret: 'gamePlayTime', key: 'playTime', type: 'game' }
   ]
   for (const i of keys) {
-    result[i.ret] = await i.table.findAll({
+    const options = {
       where,
-      attributes: [...i.attributes, i.key, 'botId', 'steamId'],
-      order: [
-        [i.key, 'DESC']
-      ],
+      attributes: ['botId', 'steamId'],
       limit
-    }).then(rows => rows.map(row => row?.dataValues))
+    }
+    if (i.type === 'game') {
+      options.attributes.push('appid', 'name', [fn('SUM', col(i.key)), i.key])
+      options.group = ['appid']
+      options.order = [
+        [fn('SUM', col(i.key)), 'DESC']
+      ]
+    } else {
+      options.attributes.push(i.key, 'userId')
+      options.order = [
+        [i.key, 'DESC']
+      ]
+    }
+    result[i.ret] = await i.table.findAll(options).then(rows => rows.map(row => row?.dataValues))
   }
   return result
 }
