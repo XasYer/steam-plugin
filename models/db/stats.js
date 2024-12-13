@@ -156,19 +156,23 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
     })
 
     if (UserUpdateRows === 0) {
-      await UserStatsTable.create({
+      const data = {
         userId,
         groupId,
         botId,
         steamId,
-        ...{
-          playTotal: 1,
-          playTime: 0,
-          onlineTotal: 1,
-          onlineTime: 0,
-          [field]: value
-        }
-      }, { transaction })
+        playTotal: 0,
+        playTime: 0,
+        onlineTotal: 0,
+        onlineTime: 0,
+        [field]: value
+      }
+      if (field === 'onlineTime') {
+        data.onlineTotal = 1
+      } else if (field === 'playTime') {
+        data.playTotal = 1
+      }
+      await UserStatsTable.create(data, { transaction })
     }
 
     if (['playTotal', 'playTime'].includes(field)) {
@@ -187,19 +191,21 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
       })
 
       if (GameUpdateRows === 0) {
-        await GameStatsTable.create({
+        const data = {
           userId,
           groupId,
           botId,
           steamId,
           appid,
           name,
-          ...{
-            playTotal: 1,
-            playTime: 0,
-            [field]: value
-          }
-        }, { transaction })
+          playTotal: 0,
+          playTime: 0,
+          [field]: value
+        }
+        if (field === 'playTime') {
+          data.playTotal = 1
+        }
+        await GameStatsTable.create(data, { transaction })
       }
     }
 
