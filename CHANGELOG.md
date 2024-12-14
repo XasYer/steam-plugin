@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.2](https://github.com/XasYer/steam-plugin/compare/v1.7.1...v1.7.2) (2024-12-14)
+
+
+### Bug Fixes
+
+* 在多个群开启统计时只会统计一个群 ([bd8ad0c](https://github.com/XasYer/steam-plugin/commit/bd8ad0ca24ee2216bdf63457420f591048656855))
+* 群统计中相同的游戏没有组合在一起 ([cfaf66f](https://github.com/XasYer/steam-plugin/commit/cfaf66f8586a00063c932c5e4d9d5e5151879069))
+* 默认1次 ([01568f0](https://github.com/XasYer/steam-plugin/commit/01568f0aed8a8f6e24016d9fa706bfb8a2bf3945))
+
 ## [1.7.1](https://github.com/XasYer/steam-plugin/compare/v1.7.0...v1.7.1) (2024-12-12)
 
 
