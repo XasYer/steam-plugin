@@ -243,6 +243,36 @@ export const cfgSchema = {
       }
     }
   },
+  gif: {
+    title: '渲染成gif图片',
+    cfg: {
+      frameCount: {
+        title: '图片数量',
+        key: 'gif数量',
+        type: 'number',
+        def: 30,
+        min: 1,
+        input: (n) => Math.max(1, n * 1 || 30),
+        desc: '多少张图片合成一张gif, 图片越多渲染时间越长'
+      },
+      frameSleep: {
+        title: '每张图片间隔',
+        key: 'gif间隔',
+        type: 'number',
+        def: 50,
+        min: 1,
+        input: (n) => Math.max(1, n * 1 || 50),
+        desc: '每张图片间隔多少毫秒'
+      },
+      infoGif: {
+        title: 'steam状态发送gif',
+        key: '状态gif',
+        type: 'boolean',
+        def: false,
+        desc: '是否将#steam状态发送为gif图片'
+      }
+    }
+  },
   setAll: {
     title: '一键操作',
     cfg: {

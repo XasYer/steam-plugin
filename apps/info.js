@@ -29,10 +29,11 @@ export const rule = {
       if (Config.other.infoMode == 2) {
         const color = info.gameid ? 1 : info.personastate === 0 ? 3 : 2
         const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
-        const img = await Render.render('info/index', {
+        const avatar = utils.getStaticUrl(bg.animated_avatar.image_small) || info.avatarfull
+        const options = {
           background: utils.getStaticUrl(bg.mini_profile_background.image_large),
           frame: utils.getStaticUrl(bg.avatar_frame.image_small),
-          avatar: Config.other.steamAvatar ? info.avatarfull : await utils.getUserAvatar(e.self_id, uid, e.group_id),
+          avatar: Config.other.steamAvatar ? avatar : await utils.getUserAvatar(e.self_id, uid, e.group_id),
           name: info.personaname,
           status: utils.getPersonaState(info.personastate),
           gameId: info.gameid,
@@ -45,8 +46,26 @@ export const rule = {
           scale: 1.4,
           pageGotoParams: {
             waitUntil: 'load'
-          }
-        })
+          },
+          tempName: steamId,
+          backgroundWebm: utils.getStaticUrl(bg.mini_profile_background.movie_webm),
+          toGif: Config.gif.infoGif
+        }
+
+        const target = Config.gif.infoGif ? 'renderGif' : 'render'
+        if (target === 'renderGif') {
+          e.reply([segment.at(uid), '\n制作gif中, 请稍稍稍稍稍后...']).then(res => {
+            setTimeout(() => {
+              if (e.group) {
+                e.group.recallMsg(res.message_id)
+              } else if (e.friend) {
+                e.friend.recallMsg(res.message_id)
+              }
+            }, 1000 * 10)
+          })
+        }
+
+        const img = await Render[target]('info/index', options)
         if (img) {
           await e.reply(img)
         } else {

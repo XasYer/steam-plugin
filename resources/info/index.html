@@ -1,15 +1,24 @@
 {{extend defaultLayout}}
-
 {{block 'css'}}
 <link rel="stylesheet" type="text/css" href="{{pluResPath}}info/index.css" />
+{{if !toGif}}
 <style>
     #container {
         background: url('{{background}}') no-repeat #363a42;
     }
 </style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}
+
+{{if toGif}}
+<div class="bg-webm">
+    <video autoplay muted loop playsinline>
+        <source src="{{backgroundWebm}}" type="video/webm">
+    </video>
+</div>
+{{/if}}
 
 <div id="profile" class="color-{{color}}">
     <div id="avatar-box">

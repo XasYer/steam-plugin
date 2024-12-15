@@ -120,6 +120,18 @@ class Config {
     return this.getDefOrConfig('other')
   }
 
+  /**
+   * 获取测试配置
+   * @returns {{
+   *   frameCount: number,
+   *   frameSleep: number,
+   *   infoGif: boolean,
+   * }}
+   */
+  get gif () {
+    return this.getDefOrConfig('gif')
+  }
+
   /** 默认配置和用户配置 */
   getDefOrConfig (name) {
     const def = this.getdefSet(name)
