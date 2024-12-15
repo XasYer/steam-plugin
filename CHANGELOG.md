@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.7.3](https://github.com/XasYer/steam-plugin/compare/v1.7.2...v1.7.3) (2024-12-15)
+
+
+### Performance Improvements
+
+* #steam绑定 渲染成图片 ([65f5def](https://github.com/XasYer/steam-plugin/commit/65f5def50e7f35d56073cfc1579fa1d940f492be))
+* gif新增视频模式 ([a888aa9](https://github.com/XasYer/steam-plugin/commit/a888aa98e6647e7b3b89ea6ab1dff8b7e96e8f2f))
+* 可设置帧率 ([27a3ce7](https://github.com/XasYer/steam-plugin/commit/27a3ce7cfe8ef5e8bef26dc2106edf304539aa25))
+* 增加tip ([138fafd](https://github.com/XasYer/steam-plugin/commit/138fafd1bf8bfccd27af0f1827389489cbce9b0a))
+* 新增gif设置, 目前可将`#steam状态`转换成动图 ([bf58d74](https://github.com/XasYer/steam-plugin/commit/bf58d74066124c67820874e584d508e55e665590))
+
 ## [1.7.2](https://github.com/XasYer/steam-plugin/compare/v1.7.1...v1.7.2) (2024-12-14)
 
 

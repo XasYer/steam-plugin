@@ -1,6 +1,6 @@
 {
   "name": "steam-plugin",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "main": "index.js",
   "author": "XasYer",
   "type": "module",
