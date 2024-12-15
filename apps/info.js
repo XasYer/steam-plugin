@@ -43,7 +43,7 @@ export const rule = {
           lastTime: (info.lastlogoff && info.personastate === 0) ? moment.unix(info.lastlogoff).format('YYYY-MM-DD HH:mm:ss') : '',
           country: info.loccountrycode ? getLoccountryCode(info.loccountrycode) : '',
           color,
-          scale: 1.4,
+          scale: 1.2,
           pageGotoParams: {
             waitUntil: 'load'
           },

@@ -244,7 +244,7 @@ export const cfgSchema = {
     }
   },
   gif: {
-    title: '渲染成gif图片',
+    title: '渲染成gif !谨慎开启! 会短时间内截图多次, 可能导致服务器压力过大',
     cfg: {
       frameCount: {
         title: '截图数量',

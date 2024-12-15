@@ -1,4 +1,4 @@
-# 渲染gif图片
+# 渲染gif图片 !谨慎开启! 会短时间内截图多次, 可能导致服务器压力过大
 # 由puppeteer截图多张图片通过ffmpeg生成gif
 # 需要有全局安装ffmpeg
 
@@ -7,7 +7,7 @@ frameCount: 30
 # 每张截图之间的延迟 单位毫秒
 frameSleep: 50
 # 帧率
-frameRate: 20
+frameRate: 15
 
 # steam状态 迷你背景图 头像框 头像
 infoGif: false
