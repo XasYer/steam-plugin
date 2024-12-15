@@ -1,5 +1,5 @@
-import { utils, db } from '#models'
-import { App, Config } from '#components'
+import { utils, db, bind } from '#models'
+import { App } from '#components'
 
 const app = {
   id: 'bind',
@@ -7,6 +7,10 @@ const app = {
 }
 
 export const rule = {
+  getBindImg: {
+    reg: /^#steam$/i,
+    fnc: async e => await e.reply(await bind.getBindSteamIdsImg(e.self_id, e.user_id, e.group_id))
+  },
   bind: {
     reg: /^#?steam(?:[切更]换)?(?:绑定|bind)\s*(\d+)?$/i,
     fnc: async e => {
@@ -15,11 +19,7 @@ export const rule = {
       const textId = rule.bind.reg.exec(e.msg)[1]
       const userBindAll = await db.UserTableGetDataByUserId(uid)
       if (!textId) {
-        if (!userBindAll.length) {
-          await e.reply('要和SteamID或好友码一起发送哦')
-        } else {
-          await e.reply(await getBindSteamIdsText(e.self_id, uid, e.group_id, userBindAll))
-        }
+        await e.reply(await bind.getBindSteamIdsImg(e.self_id, uid, e.group_id, userBindAll))
         return true
       }
       const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
@@ -41,8 +41,8 @@ export const rule = {
           await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
         }
       }
-      const text = await getBindSteamIdsText(e.self_id, uid, e.group_id)
-      await e.reply(`已添加steamId: ${steamId}\n${text}`)
+      const text = await bind.getBindSteamIdsImg(e.self_id, uid, e.group_id)
+      await e.reply(text)
       return true
     }
   },
@@ -66,8 +66,8 @@ export const rule = {
         if (bindInfo.userId == uid || isForce) {
           const id = isForce ? bindInfo.userId : uid
           await db.UserTableDelSteamIdByUserId(id, steamId)
-          const text = await getBindSteamIdsText(e.self_id, id, e.group_id)
-          await e.reply(`${id}\n已删除steamId: ${steamId}\n${text}`)
+          const text = await bind.getBindSteamIdsImg(e.self_id, id, e.group_id)
+          await e.reply(text)
         } else {
           await e.reply('只能解绑自己绑定的steamId哦')
         }
@@ -79,41 +79,4 @@ export const rule = {
   }
 }
 
-export const bind = new App(app, rule).create()
-
-/**
- * 获得已绑定的steamId的文本
- * @param {string} uid
- * @param {string} gid
- * @param {UserColumns[]?} userBindAll
- * @returns
- */
-async function getBindSteamIdsText (bid, uid, gid, userBindAll = []) {
-  if (!userBindAll?.length) {
-    userBindAll = await db.UserTableGetDataByUserId(uid)
-  }
-  const pushEnable = (() => {
-    if (!Config.push.enable) {
-      return false
-    }
-    if (Config.push.whiteBotList.length && !Config.push.whiteBotList.some(i => i == bid)) {
-      return false
-    }
-    if (Config.push.blackBotList.length && Config.push.blackBotList.some(i => i == bid)) {
-      return false
-    }
-    if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(i => i == gid)) {
-      return false
-    }
-    if (Config.push.blackGroupList.length && Config.push.blackGroupList.some(i => i == gid)) {
-      return false
-    }
-    return true
-  })()
-  const pushSteamIds = await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, gid, true)
-  return `全部steamId(${pushEnable ? '✧:是否推送 ' : ''}√:是否绑定):\n${userBindAll.map((item, index) => {
-    const isBind = item.isBind ? '√' : ''
-    const isPush = (pushEnable && pushSteamIds.includes(item.steamId)) ? '✧' : ''
-    return `${index + 1}: ${item.steamId} ${isPush} ${isBind} `
-  }).join('\n')}`
-}
+export const bindApp = new App(app, rule).create()

@@ -1,0 +1,64 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{pluResPath}}user/index.css" />
+<style>
+  #container {
+    background: url('{{pluResPath}}help/theme/{{random}}.png') top / cover no-repeat #363a42;
+  }
+</style>
+{{/block}}
+
+{{block 'main'}}
+
+<div class="uid-list">
+  {{each data i}}
+  <div class="game-cont">
+    <div class="game-title">
+      <strong>{{i.title}}</strong>
+      <span>使用<nobr>#steam更换绑定1</nobr>切换steamId</span>
+    </div>
+    <div class="game-ul">
+      {{each i.list uid}}
+      <div class="game-li  {{uid.isBind ? 'active':''}}">
+        <div class="game-idx">
+          <span>{{uid.index}}</span>
+        </div>
+        <div class="game-bar">
+          <div class="game-inner">
+            <div class="face" style="background-image:url('{{uid.avatar}}')"></div>
+            <div class="info">
+              <div class="uid-info">
+                <div class="uid shadow">{{uid.steamId}}<span>{{uid.steamId}}</span></div>
+              </div>
+              <div class="detail">
+                <div class="name">{{uid.name}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+  </div>
+  {{/each}}
+</div>
+
+<ul class="tips">
+  <li>
+    <nobr>#steam解除绑定1</nobr>
+    删除指定序号steamId
+  </li>
+  <li>
+    <nobr>#steam绑定123456789</nobr>
+    绑定对应steamId或好友码
+  </li>
+  {{if enablePush}}
+  <li>
+    <nobr>#steam(开启/关闭)推送1</nobr>
+    可以开启或关闭对应序号steamId的推送功能
+  </li>
+  {{/if}}
+</ul>
+{{/block}}

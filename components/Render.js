@@ -38,7 +38,7 @@ const Render = {
       const len = minLength === 1 ? 1.4 : minLength
       data.style = `<style>\n#container,.games{\nwidth: ${len * size}px;\n}\n</style>`
     }
-    return await puppeteer.screenshot(path, data)
+    return await puppeteer.screenshot(`${Version.pluginName}/${path}`, data)
   },
   async simpleRender (path, params) {
     path = path.replace(/.html$/, '')
@@ -52,7 +52,7 @@ const Render = {
       },
       ...params
     }
-    return await puppeteer.screenshot(path, data)
+    return await puppeteer.screenshot(`${Version.pluginName}/${path}`, data)
   }
 }
 

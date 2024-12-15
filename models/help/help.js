@@ -12,6 +12,11 @@ export const helpList = [
     group: '需要绑定steamid或好友码后才能使用',
     list: [
       {
+        icon: 66,
+        title: '#steam',
+        desc: '查看已绑定的steamId'
+      },
+      {
         icon: 9,
         title: '#steam绑定',
         desc: '绑定steamid或好友码'
@@ -23,8 +28,13 @@ export const helpList = [
       },
       {
         icon: 34,
-        title: '#steam(开启|关闭)推送',
-        desc: '开启或关闭steam个人状态推送'
+        title: '#steam开启推送',
+        desc: '开启steam个人状态推送'
+      },
+      {
+        icon: 67,
+        title: '#steam关闭推送',
+        desc: '关闭steam个人状态推送'
       }
     ]
   },
@@ -78,7 +88,7 @@ export const helpList = [
       },
       {
         icon: 50,
-        title: '#群友在玩什么',
+        title: '#steam群友状态',
         desc: '看看群聊绑定了steamId的成员状态'
       },
       {

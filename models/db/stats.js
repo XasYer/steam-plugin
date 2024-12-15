@@ -252,9 +252,9 @@ export async function StatsTableDelete (steamId, transaction) {
         transaction
       })
     }
-    hasTransaction && await transaction.commit()
+    !hasTransaction && await transaction.commit()
   } catch (error) {
-    hasTransaction && await transaction.rollback()
+    !hasTransaction && await transaction.rollback()
     throw error
   }
   return true

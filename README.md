@@ -85,7 +85,7 @@ pnpm install --filter=steam-plugin
 - [x] 开启/关闭推送 
 - [x] steam特惠
 - [x] 推送黑/白群名单
-- [ ] steam绑定渲染成图片
+- [x] steam绑定渲染成图片
 - [x] steam评论
 - [ ] steam游戏详情
 - [x] steam成就统计

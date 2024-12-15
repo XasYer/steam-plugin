@@ -5,7 +5,6 @@ const helpTheme = {
   getThemeCfg () {
     const resPath = `{{pluResPath}}help/theme/${lodash.random(1, 5)}.png`
     return {
-      main: resPath,
       bg: resPath,
       style
     }
@@ -18,8 +17,7 @@ const helpTheme = {
     const theme = helpTheme.getThemeCfg()
     const themeStyle = theme.style || {}
     const ret = [`
-    body{background-image:url(${theme.bg});width:${width}px;}
-    .container{background-image:url(${theme.main});width:${width}px;}
+    .container{background-image:url(${theme.bg});width:${width}px;}
     .help-table .td,.help-table .th{width:${100 / colCount}%}
     `]
     const defFnc = (...args) => {
