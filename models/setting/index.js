@@ -224,6 +224,11 @@ export const cfgSchema = {
             return 2
           }
         },
+        component: 'RadioGroup',
+        options: [
+          { label: '文字', value: 1 },
+          { label: '图片', value: 2 }
+        ],
         desc: 'steam状态发送消息的模式 1: 文字 2: 图片 若图片发送时间长可更换为文字'
       },
       log: {
@@ -246,6 +251,36 @@ export const cfgSchema = {
   gif: {
     title: '渲染成gif !谨慎开启! 会短时间内截图多次, 可能导致服务器压力过大',
     cfg: {
+      gifMode: {
+        title: '渲染gif模式',
+        key: 'gif模式',
+        type: 'number',
+        def: 1,
+        min: 1,
+        max: 2,
+        input: (n) => {
+          if (n >= 1 && n <= 2) {
+            return n * 1
+          } else {
+            return 1
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '截图合成', value: 1 },
+          { label: '视频合成', value: 2 }
+        ],
+        desc: '1: 多张截图合成一张gif 2: 视频转换gif'
+      },
+      frameRate: {
+        title: 'gif帧率',
+        key: 'gif帧率',
+        type: 'number',
+        def: 24,
+        min: 1,
+        input: (n) => Math.max(1, n * 1 || 24),
+        desc: 'gif的帧率'
+      },
       frameCount: {
         title: '截图数量',
         key: 'gif数量',
@@ -264,14 +299,14 @@ export const cfgSchema = {
         input: (n) => Math.max(1, n * 1 || 50),
         desc: '每张截图间隔多少毫秒'
       },
-      frameRate: {
-        title: 'gif帧率',
-        key: 'gif帧率',
+      videoLimit: {
+        title: '录制视频的长度',
+        key: 'gif长度',
         type: 'number',
-        def: 24,
+        def: 3,
         min: 1,
-        input: (n) => Math.max(1, n * 1 || 24),
-        desc: 'gif的帧率'
+        input: (n) => Math.max(1, n * 1 || 3),
+        desc: '视频合成模式下, 视频的长度, 单位秒'
       },
       infoGif: {
         title: 'steam状态发送gif',

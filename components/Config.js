@@ -123,9 +123,11 @@ class Config {
   /**
    * 获取测试配置
    * @returns {{
+   *   gifMode: number,
    *   frameCount: number,
    *   frameSleep: number,
    *   frameRate: number,
+   *   videoLimit: number,
    *   infoGif: boolean,
    * }}
    */
