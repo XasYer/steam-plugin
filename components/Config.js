@@ -125,6 +125,7 @@ class Config {
    * @returns {{
    *   frameCount: number,
    *   frameSleep: number,
+   *   frameRate: number,
    *   infoGif: boolean,
    * }}
    */

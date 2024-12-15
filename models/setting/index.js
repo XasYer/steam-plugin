@@ -247,7 +247,7 @@ export const cfgSchema = {
     title: '渲染成gif图片',
     cfg: {
       frameCount: {
-        title: '图片数量',
+        title: '截图数量',
         key: 'gif数量',
         type: 'number',
         def: 30,
@@ -256,13 +256,22 @@ export const cfgSchema = {
         desc: '多少张图片合成一张gif, 图片越多渲染时间越长'
       },
       frameSleep: {
-        title: '每张图片间隔',
+        title: '每张截图间隔',
         key: 'gif间隔',
         type: 'number',
         def: 50,
         min: 1,
         input: (n) => Math.max(1, n * 1 || 50),
-        desc: '每张图片间隔多少毫秒'
+        desc: '每张截图间隔多少毫秒'
+      },
+      frameRate: {
+        title: 'gif帧率',
+        key: 'gif帧率',
+        type: 'number',
+        def: 24,
+        min: 1,
+        input: (n) => Math.max(1, n * 1 || 24),
+        desc: 'gif的帧率'
       },
       infoGif: {
         title: 'steam状态发送gif',

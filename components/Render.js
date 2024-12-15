@@ -99,6 +99,7 @@ const Render = {
 
     const sleep = Math.abs(Config.gif.frameSleep || 50)
     const count = Math.abs(Config.gif.frameCount || 30)
+    const rate = Math.abs(Config.gif.frameRate || 24)
 
     const task = []
     for (let i = 1; i < count; i++) {
@@ -113,7 +114,7 @@ const Render = {
     await Promise.all(task)
 
     const output = `${tempPath}/output.gif`
-    execSync(`ffmpeg -framerate 10 -i "${tempPath}/%d.jpeg" "${output}"`)
+    execSync(`ffmpeg -framerate ${rate} -i "${tempPath}/%d.jpeg" "${output}"`)
     setTimeout(() => {
       fs.rmSync(tempPath, { force: true, recursive: true })
     }, 1000 * 60 * 5) // 5分钟后删除
