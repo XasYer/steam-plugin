@@ -117,7 +117,7 @@ const Render = {
         const input = `${tempPath}/output.mp4`
 
         await recorder.start(input)
-        const sleep = Math.abs(Config.gif.videoLimit || 5)
+        const sleep = Math.abs(Config.gif.videoLimit || 3)
         await new Promise(resolve => setTimeout(resolve, sleep * 1000))
 
         await recorder.stop()
