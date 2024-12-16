@@ -134,6 +134,7 @@ pnpm install --filter=steam-plugin
 ### 注意事项
 
 1. cloudflare的workers免费账户的每天请求数量限制10w次(一个账号所有的workers请求总量)
+2. 2024年12月03日 cloudflare 更新[服务条款 2.2.1](https://www.cloudflare.com/zh-cn/terms/) **禁止使用服务提供虚拟专用网络或其他类似的代理服务** 若任使用请知晓可能出现的风险, 包括但不限于: **暂停或终止您对cloudflare服务的使用或访问** 等等。
 
 ## 贡献者
 
