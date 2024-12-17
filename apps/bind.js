@@ -9,7 +9,7 @@ const app = {
 export const rule = {
   getBindImg: {
     reg: /^#steam$/i,
-    fnc: async e => await e.reply(await bind.getBindSteamIdsImg(e.self_id, e.user_id, e.group_id))
+    fnc: async e => await e.reply(await bind.getBindSteamIdsImg(e.self_id, utils.getAtUid(e.at, e.user_id), e.group_id))
   },
   bind: {
     reg: /^#?steam(?:[切更]换)?(?:绑定|bind)\s*(\d+)?$/i,

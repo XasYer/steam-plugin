@@ -2,11 +2,11 @@ import { db, utils, api } from '#models'
 import { Config, Render } from '#components'
 
 /**
- * 获得已绑定的steamId的文本
+ * 获得已绑定的steamId的图片
  * @param {string} uid
  * @param {string} gid
  * @param {UserColumns[]?} userBindAll
- * @returns
+ * @returns {Promise<Object>}
  */
 export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
   if (!userBindAll?.length) {

@@ -39,7 +39,7 @@ export const rule = {
         return true
       }
       const achievementsByUser = await api.ISteamUserStats.GetUserStatsForGame(appid, steamId)
-      if (!achievementsByUser) {
+      if (!achievementsByUser || !achievementsByUser.achievements) {
         await e.reply([segment.at(uid), `\n没有找到${steamId}在${appid}的成就信息`])
         return true
       }
