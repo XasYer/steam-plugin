@@ -33,12 +33,12 @@ export const rule = {
       }
       e.reply(['在查了...在查了...'])
       // 先获取游戏的成就列表
-      const achievementsByGame = await api.ISteamUserStats.GetSchemaForGame(appid)
+      const achievementsByGame = await api.ISteamUserStats.GetSchemaForGame(appid).catch(() => {})
       if (!achievementsByGame || !achievementsByGame.availableGameStats) {
         await e.reply([segment.at(uid), `\n没有找到${appid}的成就信息`])
         return true
       }
-      const achievementsByUser = await api.ISteamUserStats.GetUserStatsForGame(appid, steamId)
+      const achievementsByUser = await api.ISteamUserStats.GetUserStatsForGame(appid, steamId).catch(() => {})
       if (!achievementsByUser || !achievementsByUser.achievements) {
         await e.reply([segment.at(uid), `\n没有找到${steamId}在${appid}的成就信息`])
         return true
