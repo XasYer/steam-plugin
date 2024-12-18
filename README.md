@@ -74,33 +74,13 @@ pnpm install --filter=steam-plugin
 
 ## 功能
 
-- [x] steam绑定
-- [x] steam更换绑定
-- [x] steam解除绑定
-- [x] steam状态
-- [x] steam库存
-- [x] steam最近游玩
-- [x] steam愿望单
-- [x] 群友状态播报
-- [x] steam帮助
-- [x] steam设置
-- [x] steam搜索
-- [x] steam成就
-- [x] steam统计
-- [x] 群友上下线通知
-- [ ] steam喜加一
-- [x] 开启/关闭推送
-- [x] steam特惠
-- [x] 推送黑/白群名单
-- [x] steam绑定渲染成图片
-- [x] steam评论
-- [ ] steam游戏详情
-- [x] steam成就统计
-- [x] steam在线统计
-- [x] steam推送列表
-- [x] 群友在玩什么
-- [x] steam群统计
-- [ ] steam用户统计
+![帮助图](./resources/help/help.jpg)
+
+### TODO: 可能会做的功能
+
+- steam喜加一
+- steam游戏详情
+- steam用户统计
 
 ## 联系方式
 
