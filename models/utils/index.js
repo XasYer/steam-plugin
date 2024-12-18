@@ -1,6 +1,6 @@
 import fs from 'fs'
 import moment from 'moment'
-import { Bot, logger } from '#lib'
+import { Bot, common, logger, segment } from '#lib'
 import { Config, Version } from '#components'
 import * as request from './request.js'
 import { join } from 'path'
@@ -196,6 +196,27 @@ export async function sendGroupMsg (botId, gid, msg) {
     }
   } catch (error) {
     logger.error(`群消息发送失败: ${gid}`, error)
+  }
+}
+
+/**
+ * 制作并发送转发消息
+ * @param {any} e
+ * @param {any} msg
+ */
+export async function makeForwardMsg (e, msg) {
+  try {
+    if (Version.BotName === 'Karin') {
+      msg = msg.map(i => typeof i === 'string' ? segment.text(i) : i)
+      msg = common.makeForward(msg, e.selfId, e.bot.account.name)
+      return await e.bot.sendForwardMsg(e.contact, msg)
+    } else {
+      msg = await common.makeForwardMsg(e, msg)
+      return await e.reply(msg)
+    }
+  } catch (error) {
+    logger.error('发送转发消息失败', error)
+    return ''
   }
 }
 

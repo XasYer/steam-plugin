@@ -142,6 +142,32 @@ export async function GetCommunityBadgeProgress (steamid, badgeid) {
 }
 
 /**
+ * 获得用户标记为收藏的徽章
+ * @param {string} steamid
+ * @returns {Promise<{
+ *   has_favorite_badge: boolean,
+ *   communityitemid?: string,
+ *   item_type?: number
+ *   border_color?: number
+ *   appid?: number
+ *   level?: number
+ * }>}
+ */
+export async function GetFavoriteBadge (steamid) {
+  const start = Date.now()
+  logger.info(`开始获取${steamid}的标记为收藏的徽章`)
+  return utils.request.get('IPlayerService/GetFavoriteBadge/v1', {
+    params: {
+      steamid
+    }
+  }).then(res => {
+    const data = res.data.response
+    logger.info(`获取${steamid}的标记为收藏的徽章成功，耗时${Date.now() - start}ms`)
+    return data
+  })
+}
+
+/**
  * 也是获取指定游戏的全局成就百分比
  * @param {string} appid
  * @returns {Promise<{
@@ -165,6 +191,55 @@ export async function GetGameAchievements (appid) {
     const data = res.data.response
     logger.info(`获取${appid}的成就列表成功，共${data.achievements?.length}个成就，耗时${Date.now() - start}ms`)
     return data.achievements || []
+  })
+}
+
+/**
+ * 获取用户信息
+ * rich_presence_kv 包含了当前状态, 但是没有中文
+ * @param {string[]} steamids
+ * @returns {Promise<{
+ *   public_data: {
+ *     steamid: string,
+ *     visibility_state: number,
+ *     profile_state: number,
+ *     sha_digest_avatar: string,
+ *     persona_name: string,
+ *     profile_url: string,
+ *     content_country_restricted: number
+ *   }
+ *   private_data: {
+ *     persona_state?: number,
+ *     persona_state_flags?: number,
+ *     time_created?: number,
+ *     game_id?: number,
+ *     game_server_steam_id?: number,
+ *     game_server_ip_address?: number,
+ *     game_server_port?: number,
+ *     game_extra_info?: string,
+ *     rich_presence_kv?: string,
+ *     broadcast_session_id: string,
+ *     last_logoff_time?: number,
+ *     last_seen_online?: number,
+ *     game_os_type?: number,
+ *     game_device_type?: number,
+ *     game_device_name?: string,
+ *   }
+ * }[]>}
+ */
+export async function GetPlayerLinkDetails (steamids) {
+  const params = steamids.reduce((acc, steamid) => {
+    acc[`steamids[${acc.length}]`] = steamid
+    return acc
+  }, {})
+  const start = Date.now()
+  logger.info(`开始获取${steamids.length}个用户的信息`)
+  return utils.request.get('IPlayerService/GetPlayerLinkDetails/v1', {
+    params
+  }).then(res => {
+    const data = res.data.response.account
+    logger.info(`获取${steamids.length}个用户的信息成功，耗时${Date.now() - start}ms`)
+    return data
   })
 }
 
@@ -193,6 +268,52 @@ export async function GetAnimatedAvatar (steamid) {
   }).then(res => {
     const data = res.data.response?.avatar || {}
     logger.info(`获取${steamid}的动态头像成功，耗时${Date.now() - start}ms`)
+    return data
+  })
+}
+
+/**
+ * 获取steamId的自定义展示内容
+ * @param {string} steamid
+ * @returns {Promise<{
+ *   customizations?: {
+ *     customization_type: number,
+ *     large: boolean,
+ *     slots: {
+ *       slot: number,
+ *       appid?: number,
+ *       publishedfileid?: string,
+ *     }[]
+ *     active: boolean,
+ *     customization_style: number,
+ *     purchaseid: string,
+ *     level: number,
+ *   }
+ *   slots_available?: number,
+ *   profile_theme: {
+ *     theme_id: string,
+ *     title: string,
+ *   },
+ *   purchased_customizations?: [
+ *     purchaseid: string,
+ *     customization_type: number,
+ *     level: number,
+ *   ]
+ *   profile_preferences: {
+ *     hide_profile_awards: boolean,
+ *   }
+* }>}
+*/
+export async function GetProfileCustomization (steamid) {
+  const start = Date.now()
+  logger.info(`开始获取${steamid}的自定义展示内容`)
+  return utils.request.get('IPlayerService/GetProfileCustomization/v1', {
+    params: {
+      steamid
+    }
+  }).then(res => {
+    const data = res.data.response
+    logger.info(`获取${steamid}的自定义展示内容成功，耗时${Date.now() - start}ms`)
     return data
   })
 }
