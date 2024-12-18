@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.7.4](https://github.com/XasYer/steam-plugin/compare/v1.7.3...v1.7.4) (2024-12-18)
+
+
+### Bug Fixes
+
+* #steam不能at & 库存没有要查询的成就的游戏 ([953f678](https://github.com/XasYer/steam-plugin/commit/953f6780f185d773490746b800cc5bced51b38a5))
+* #steam有概率加载不出头像 ([d9b7cb2](https://github.com/XasYer/steam-plugin/commit/d9b7cb255bf42e64f01dac586fe7738e745eb170))
+* 历史记录统计有误 ([8b6c967](https://github.com/XasYer/steam-plugin/commit/8b6c967f2d6aad8364697ab4664f49e34f3ff86c))
+* 成就统计的错误输出 ([80b643f](https://github.com/XasYer/steam-plugin/commit/80b643f155834f6c08d8ad82cddf0dcb2d08f76e))
+* 数组类型的参数 ([d84ba74](https://github.com/XasYer/steam-plugin/commit/d84ba743efbffe40d0bf2fc81c877f3c3bd3b457))
+* 还是数组 ([8d83d4b](https://github.com/XasYer/steam-plugin/commit/8d83d4bb37047f7f67e1df58ba3445f928ad1755))
+
+
+### Performance Improvements
+
+* steamdev ([9f72645](https://github.com/XasYer/steam-plugin/commit/9f7264559390bd55874fda564dcd4171714c98db))
+* 优化解绑发送的消息 ([bf39bad](https://github.com/XasYer/steam-plugin/commit/bf39bad313d55004d87c90dcaea245af03dc850e))
+* 将schinese添加到所有请求 ([f4aacf5](https://github.com/XasYer/steam-plugin/commit/f4aacf5b64f68e08fd0c8ad253500aadfda95969))
+
 ## [1.7.3](https://github.com/XasYer/steam-plugin/compare/v1.7.2...v1.7.3) (2024-12-15)
 
 
