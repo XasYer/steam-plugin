@@ -229,8 +229,8 @@ export async function GetGameAchievements (appid) {
  */
 export async function GetPlayerLinkDetails (steamids) {
   steamids = Array.isArray(steamids) ? steamids : [steamids]
-  const params = steamids.reduce((acc, steamid) => {
-    acc[`steamids[${acc.length}]`] = steamid
+  const params = steamids.reduce((acc, steamid, index) => {
+    acc[`steamids[${index}]`] = steamid
     return acc
   }, {})
   const start = Date.now()
@@ -238,7 +238,7 @@ export async function GetPlayerLinkDetails (steamids) {
   return utils.request.get('IPlayerService/GetPlayerLinkDetails/v1', {
     params
   }).then(res => {
-    const data = res.data.response.account
+    const data = res.data.response.accounts
     logger.info(`获取${steamids.length}个用户的信息成功，耗时${Date.now() - start}ms`)
     return data
   })

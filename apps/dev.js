@@ -39,7 +39,14 @@ export const rule = {
       const methodParams = getParams(method)
       const uid = utils.getAtUid(e.at, e.user_id)
       const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
-      const params = args.map(i => i.replace(/{steamid}/ig, steamId))
+      const replaceParams = (text) => {
+        if (Array.isArray(text)) {
+          return text.map(replaceParams)
+        } else {
+          return text.replace(/{steamid}/ig, steamId)
+        }
+      }
+      const params = args.map(replaceParams)
       const start = Date.now()
       const result = await method(...params)
       const end = Date.now()
