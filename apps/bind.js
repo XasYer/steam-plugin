@@ -1,5 +1,6 @@
 import { utils, db, bind } from '#models'
 import { App } from '#components'
+import { segment } from '#lib'
 
 const app = {
   id: 'bind',
@@ -65,9 +66,14 @@ export const rule = {
       if (bindInfo) {
         if (bindInfo.userId == uid || isForce) {
           const id = isForce ? bindInfo.userId : uid
-          await db.UserTableDelSteamIdByUserId(id, steamId)
-          const text = await bind.getBindSteamIdsImg(e.self_id, id, e.group_id)
-          await e.reply(text)
+          await db.UserTableDelSteamIdByUserId(id, steamId).then(() => {
+            const text = [segment.at(id), `\n已解除绑定${steamId}`]
+            e.reply(text)
+          }).catch(err => {
+            console.error(err)
+            e.reply('解绑失败了, 请稍后再试\n', err.message)
+          })
+          // const text = await bind.getBindSteamIdsImg(e.self_id, id, e.group_id)
         } else {
           await e.reply('只能解绑自己绑定的steamId哦')
         }
