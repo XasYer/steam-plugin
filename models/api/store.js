@@ -110,9 +110,7 @@ export async function appdetails (appid) {
   return utils.request.get('api/appdetails', {
     baseURL: getBaseURL(),
     params: {
-      appids: appid,
-      l: 'schinese',
-      cc: 'CN'
+      appids: appid
     }
   }).then(res => {
     if (res.data[appid].success) {
@@ -138,9 +136,7 @@ export async function search (name) {
     params: {
       term: name,
       f: 'games',
-      cc: 'CN',
-      realm: 1,
-      l: 'schinese'
+      realm: 1
     },
     responseType: 'text'
   }).then(res => {
@@ -199,11 +195,7 @@ export async function featuredcategories () {
   const start = Date.now()
   logger.info('开始获取优惠信息')
   return utils.request.get('api/featuredcategories', {
-    baseURL: getBaseURL(),
-    params: {
-      l: 'schinese',
-      cc: 'CN'
-    }
+    baseURL: getBaseURL()
   }).then(res => {
     logger.info(`获取优惠信息成功，耗时${Date.now() - start}ms`)
     return res.data
@@ -232,8 +224,6 @@ export async function appreviews (appid, count = 30, recent = false) {
   return utils.request.get(`appreviews/${appid}`, {
     baseURL: getBaseURL(),
     params: {
-      l: 'schinese',
-      language: 'schinese',
       filter: recent ? 'recent' : 'all',
       num_per_page: count
     }

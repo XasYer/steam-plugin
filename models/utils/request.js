@@ -29,6 +29,9 @@ export default async function request (url, options = {}) {
     ...options,
     params: {
       key: baseURL === steamApi ? Config.steam.apiKey : undefined,
+      l: 'schinese',
+      cc: 'CN',
+      language: 'schinese',
       ...options.params
     },
     timeout: Config.steam.timeout * 1000

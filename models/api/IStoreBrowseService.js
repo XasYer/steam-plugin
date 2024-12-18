@@ -44,7 +44,6 @@ export async function GetItems (appids) {
   const data = {
     ids: appids.map(appid => ({ appid })),
     context: {
-      language: 'schinese',
       country_code: 'CN'
     }
   }

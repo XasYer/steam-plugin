@@ -75,8 +75,7 @@ export async function GetSchemaForGame (appid) {
   const start = Date.now()
   return utils.request.get('ISteamUserStats/GetSchemaForGame/v2', {
     params: {
-      appid,
-      l: 'schinese'
+      appid
     }
   }).then(res => {
     const data = res.data.game || {}

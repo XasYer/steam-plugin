@@ -58,7 +58,6 @@ export async function GetOwnedGames (steamid) {
   return utils.request.get('IPlayerService/GetOwnedGames/v1', {
     params: {
       steamid,
-      language: 'schinese',
       include_appinfo: true,
       include_extended_appinfo: true
     }
@@ -160,8 +159,7 @@ export async function GetGameAchievements (appid) {
   logger.info(`开始获取${appid}的成就完成度`)
   return utils.request.get('IPlayerService/GetGameAchievements/v1', {
     params: {
-      appid,
-      language: 'schinese'
+      appid
     }
   }).then(res => {
     const data = res.data.response

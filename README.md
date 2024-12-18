@@ -22,13 +22,15 @@
 
 ## **注意**
 
-一定要填**Steam Web API Key**,否则无法使用绝大部分功能,通常会返回 401 或 403 错误,请前往[Steam API](https://steamcommunity.com/dev/apikey)申请API Key
+1. 一定要填**Steam Web API Key**,否则无法使用绝大部分功能,通常会返回 401 或 403 错误,请前往[Steam API](https://steamcommunity.com/dev/apikey)申请API Key
 
 相关链接:
 
 - [Steam Web API 说明](https://partner.steamgames.com/doc/webapi_overview/auth)
 - [申请API Key](https://steamcommunity.com/dev/apikey)
 - [Steam API 条款](https://steamcommunity.com/dev/apiterms)
+
+2. Steam 是国外网站, 所以通常需要配置代理或反代链接, 否则可能会出现连接超时, 通常会返回: `timeout of 5000ms exceeded`
 
 ## 介绍
 
@@ -39,11 +41,13 @@
 ### Yunzai使用
 
 #### 使用github
+
 ```bash
 git clone --depth=1 https://github.com/XasYer/steam-plugin.git ./plugins/steam-plugin
 ```
 
 #### 使用gitee
+
 ```bash
 git clone --depth=1 https://gitee.com/xiaoye12123/steam-plugin.git ./plugins/steam-plugin
 ```
@@ -51,16 +55,19 @@ git clone --depth=1 https://gitee.com/xiaoye12123/steam-plugin.git ./plugins/ste
 ### Karin使用
 
 #### 使用github
+
 ```bash
 git clone --depth=1 https://github.com/XasYer/steam-plugin.git ./plugins/karin-plugin-steam
 ```
 
 #### 使用gitee
+
 ```bash
 git clone --depth=1 https://gitee.com/xiaoye12123/steam-plugin.git ./plugins/karin-plugin-steam
 ```
 
 ### 安装依赖
+
 ```bash
 pnpm install --filter=steam-plugin
 ```
@@ -82,7 +89,7 @@ pnpm install --filter=steam-plugin
 - [x] steam统计
 - [x] 群友上下线通知
 - [ ] steam喜加一
-- [x] 开启/关闭推送 
+- [x] 开启/关闭推送
 - [x] steam特惠
 - [x] 推送黑/白群名单
 - [x] steam绑定渲染成图片
@@ -111,22 +118,22 @@ pnpm install --filter=steam-plugin
 2. 打开[Workers 和 Pages](https://dash.cloudflare.com/1e36e2833bb5f40af76d604e0894cb93/workers-and-pages), 点击`创建`, 然后点击`创建 Worker`
 3. 名字随意, 可参考`steam` 然后点击`部署` 再点击`编辑代码`
 4. 复制以下代码到编辑器, `覆盖`原内容, 然后点击`部署`, 出现`版本已保存`即可
-    ```js
-    export default {
-      async fetch(request) {
-        const url = new URL(request.url)
-        const path = decodeURIComponent(url.pathname.replace('/',''))
-        if (!path || !path.startsWith('http')) {
-          return new Response('Ciallo～(∠・ω< )⌒☆');
-        }
-        const target = new URL(path)
-        url.hostname = path.replace(/https?:\/\//,'')
-        url.protocol = target.protocol
-        url.pathname = target.pathname
-        return await fetch(new Request(url, request))
-      }
-    }
-    ```
+   ```js
+   export default {
+     async fetch(request) {
+       const url = new URL(request.url);
+       const path = decodeURIComponent(url.pathname.replace("/", ""));
+       if (!path || !path.startsWith("http")) {
+         return new Response("Ciallo～(∠・ω< )⌒☆");
+       }
+       const target = new URL(path);
+       url.hostname = path.replace(/https?:\/\//, "");
+       url.protocol = target.protocol;
+       url.pathname = target.pathname;
+       return await fetch(new Request(url, request));
+     },
+   };
+   ```
 5. 依次点击`左上角第3步填写的名字`, `设置`, `域和路由`右边的`添加`, `自定义域`, 然后填入你想设置的二级或多级域名, 比如`steam.example.com`, 然后点`添加域`
 6. 测试(可选): 浏览器访问`https://steam.example.com/https://api.steampowered.com/ISteamWebAPIUtil/GetServerInfo/v1/`, `steam.example.com`替换成第5步设置的域名, 如果能看到`servertime`字段, 说明配置成功
 7. 对你的Bot发送`#steam设置通用反代https://steam.example.com/{{url}}`, 域名替换成第5步设置的域名

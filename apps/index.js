@@ -30,6 +30,6 @@ for (const i of files) {
 
 export { apps }
 
-logger.info('-----------------')
-logger.info(`${Version.pluginName} v${Version.pluginVersion} 加载成功~ 耗时: ${Date.now() - startTime}ms`)
-logger.info('-------^_^-------')
+logger.infoLog('-----------------')
+logger.infoLog(`${Version.pluginName} v${Version.pluginVersion} 加载成功~ 耗时: ${Date.now() - startTime}ms`)
+logger.infoLog('-------^_^-------')
