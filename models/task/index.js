@@ -34,13 +34,14 @@ export function startTimer () {
         if (lastPlay) {
           lastPlay = JSON.parse(lastPlay)
         } else {
-          lastPlay = { name: '', time: 0, appid: 0, state: 0 }
+          lastPlay = { name: '', appid: 0, state: 0, playTime: 0, onlineTime: 0 }
         }
         const state = {
           name: player.gameextrainfo,
           appid: player.gameid,
-          time: lastPlay.time,
-          state: player.personastate
+          state: player.personastate,
+          playTime: lastPlay.time || lastPlay.playTime,
+          onlineTime: lastPlay.time || lastPlay.onlineTime
         }
         // 如果这一次和上一次的状态不一样
         if (lastPlay.appid != player.gameid || lastPlay.state != player.personastate) {
@@ -68,20 +69,21 @@ export function startTimer () {
                 state: []
               }
             }
-            const time = now - lastPlay.time
             if (Config.push.enable && player.gameid && player.gameid != lastPlay.appid) {
-              state.time = now
+              const time = now - lastPlay.playTime
+              state.playTime = now
               userList[i.groupId][i.botId].start.push({
                 name: player.gameextrainfo,
                 appid: `${nickname}(${player.personaname})`,
-                desc: lastPlay.time ? `距离上次 ${utils.formatDuration(time)}` : '',
+                desc: lastPlay.playTime ? `距离上次 ${utils.formatDuration(time)}` : '',
                 header_image: iconUrl
               })
               db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新统计数据失败', e))
               db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now, null, player.gameid, player.gameextrainfo).catch(e => logger.error('添加历史记录失败', e))
             }
             if (Config.push.enable && lastPlay.name && lastPlay.name != player.gameextrainfo) {
-              state.time = now
+              const time = now - lastPlay.playTime
+              state.playTime = now
               userList[i.groupId][i.botId].end.push({
                 name: lastPlay.name,
                 appid: `${nickname}(${player.personaname})`,
@@ -89,15 +91,16 @@ export function startTimer () {
                 header_image: utils.getHeaderImgUrlByAppid(lastPlay.appid)
               })
               db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新统计数据失败', e))
-              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.time, now, lastPlay.appid, lastPlay.name).catch(e => logger.error('添加历史记录失败', e))
+              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.playTime, now, lastPlay.appid, lastPlay.name).catch(e => logger.error('添加历史记录失败', e))
             }
             // 在线状态改变
             if (Config.push.stateChange && player.personastate != lastPlay.state) {
+              const time = now - lastPlay.onlineTime
               if ([0, 1].includes(player.personastate)) {
-                state.time = now
+                state.onlineTime = now
                 userList[i.groupId][i.botId].state.push({
                   name: `${nickname}(${player.personaname})`,
-                  appid: lastPlay.time ? `距离上次 ${utils.formatDuration(time)}` : '',
+                  appid: lastPlay.onlineTime ? `距离上次 ${utils.formatDuration(time)}` : '',
                   desc: `已${utils.getPersonaState(player.personastate)}`,
                   header_image: await utils.getUserAvatar(i.botId, i.userId, i.groupId) || (Config.other.steamAvatar ? i.avatarfull : ''),
                   header_image_class: 'square',
@@ -105,7 +108,7 @@ export function startTimer () {
                 })
                 if (player.personastate === 0) {
                   db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e))
-                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.time, now).catch(e => logger.error('添加历史记录失败', e))
+                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.onlineTime, now).catch(e => logger.error('添加历史记录失败', e))
                 } else {
                   db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新统计数据失败', e))
                   db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now).catch(e => logger.error('添加历史记录失败', e))
