@@ -228,6 +228,7 @@ export async function GetGameAchievements (appid) {
  * }[]>}
  */
 export async function GetPlayerLinkDetails (steamids) {
+  steamids = Array.isArray(steamids) ? steamids : [steamids]
   const params = steamids.reduce((acc, steamid) => {
     acc[`steamids[${acc.length}]`] = steamid
     return acc

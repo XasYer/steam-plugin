@@ -3,22 +3,22 @@ import { logger } from '#lib'
 
 /**
  * 获取指定游戏的全局成就百分比
- * @param {string} gameid
+ * @param {string} appid
  * @returns {Promise<{
  *     name: string,
  *     percent: number
  * }[]>}
  */
-export async function GetGlobalAchievementPercentagesForApp (gameid) {
-  logger.info(`开始获取${gameid}全局成就百分比`)
+export async function GetGlobalAchievementPercentagesForApp (appid) {
+  logger.info(`开始获取${appid}全局成就百分比`)
   const start = Date.now()
   return utils.request.get('ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2', {
     params: {
-      gameid
+      gameid: appid
     }
   }).then(res => {
     const data = res.data.achievementpercentages?.achievements || []
-    logger.info(`获取${gameid}全局成就百分比成功: 成就数量${data.length}，耗时${Date.now() - start}ms`)
+    logger.info(`获取${appid}全局成就百分比成功: 成就数量${data.length}，耗时${Date.now() - start}ms`)
     return data
   })
 }

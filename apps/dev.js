@@ -21,6 +21,7 @@ export const rule = {
         const msg = [
           '使用方法: ',
           '#steamdev 接口名.方法名 参数1 参数2...',
+          '带s的参数为数组',
           '参数可使用{steamid}占位符，表示当前绑定的SteamID',
           '接口名和方法名可使用数字索引，例如: 0.0 1.1 2.2',
           '可使用的接口名和方法名如下:',
@@ -29,7 +30,7 @@ export const rule = {
         await utils.makeForwardMsg(e, msg)
         return true
       }
-      const [cmd, ...args] = text.split(' ')
+      const [cmd, ...args] = split(text)
       const [interfaceKey, methodKey] = cmd.split('.')
       const interfaceName = keys[interfaceKey] || interfaceKey
       const methods = Object.keys(api[interfaceName])
@@ -60,6 +61,18 @@ function getParams (fn) {
   const fnStr = fn.toString()
   const params = fnStr.match(/\(([^)]*)\)/)[1]
   return params.split(',').map(param => param.trim()).filter(Boolean)
+}
+
+function split (text) {
+  const reg = /\[.*?\]|\S+/g
+  const matches = text.match(reg)
+
+  return matches.map(match => {
+    if (match.startsWith('[') && match.endsWith(']')) {
+      return match.slice(1, -1).split(' ')
+    }
+    return match
+  })
 }
 
 export const devApp = new App(app).create()
