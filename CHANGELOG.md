@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.8.0](https://github.com/XasYer/steam-plugin/compare/v1.7.4...v1.8.0) (2024-12-19)
+
+
+### Features
+
+* steam年度回顾分享图片 ([dc20839](https://github.com/XasYer/steam-plugin/commit/dc2083951301271b0627a2f17ed9090daf089feb))
+
+
+### Bug Fixes
+
+* dev ([1b612f2](https://github.com/XasYer/steam-plugin/commit/1b612f29c82e957131304f7da74194433c5256a2))
+* 可能没有 ([d25961b](https://github.com/XasYer/steam-plugin/commit/d25961bd978d12aba837ae4423e084fa50a874af))
+
+
+### Reverts
+
+* 只能获取apiKey对应的steaamid的信息 ([6327677](https://github.com/XasYer/steam-plugin/commit/63276779d0a909dd332a9bee66be98e4988b311b))
+
 ## [1.7.4](https://github.com/XasYer/steam-plugin/compare/v1.7.3...v1.7.4) (2024-12-18)
 
 
