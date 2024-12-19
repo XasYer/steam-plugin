@@ -32,7 +32,9 @@ export async function GetPlayerSummaries (steamIds) {
         steamIds: items.join(',')
       }
     })
-    result.push(...res.data.response.players)
+    if (res.data.response?.players?.length) {
+      result.push(...res.data.response.players)
+    }
   }
   logger.info(`获取用户相关信息成功 ${result.length} 条数据，用时 ${Date.now() - start}ms`)
   return result

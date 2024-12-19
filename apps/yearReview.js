@@ -35,6 +35,10 @@ export const rule = {
           }
         }
       })()
+      if (!steamId) {
+        await e.reply('未绑定SteamId, 请先绑定SteamId')
+        return true
+      }
       const images = await api.ISaleFeatureService.GetUserYearInReviewShareImage(steamId, year)
       const i = _.sample(images)
       if (!i) {
