@@ -232,13 +232,18 @@ export function getHeaderImgUrlByAppid (appid) {
 }
 
 /**
- * 获取静态资源url items/xxx
+ * 获取静态资源url
+ * items/xxx
+ * replayxxx
  * @param {string} path
  */
 export function getStaticUrl (path) {
-  if (path?.startsWith('items')) {
+  if (!path) return ''
+  if (path.startsWith('items')) {
     // return `https://cdn.fastly.steamstatic.com/steamcommunity/public/images/${path}`
     return `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/${path}`
+  } else if (path.startsWith('replay')) {
+    return `https://shared.cloudflare.steamstatic.com/social_sharing/${path}`
   }
   return ''
 }

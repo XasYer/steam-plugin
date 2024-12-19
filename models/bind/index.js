@@ -3,9 +3,10 @@ import { Config, Render } from '#components'
 
 /**
  * 获得已绑定的steamId的图片
+ * @param {string} bid
  * @param {string} uid
  * @param {string} gid
- * @param {UserColumns[]?} userBindAll
+ * @param {import('models/db').UserColumns[]?} userBindAll
  * @returns {Promise<Object>}
  */
 export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {

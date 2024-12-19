@@ -6,8 +6,8 @@ import { HttpsProxyAgent } from 'https-proxy-agent'
 /**
  * 通用请求方法
  * @param {string} url
- * @param {AxiosRequestConfig} options
- * @returns {Promise<AxiosResponse<any>>}
+ * @param {import('axios').AxiosRequestConfig} options
+ * @returns {Promise<import('axios').AxiosResponse<any>>}
  */
 export default async function request (url, options = {}) {
   const steamApi = (() => {
@@ -41,8 +41,8 @@ export default async function request (url, options = {}) {
 /**
  * get 请求方法
  * @param {string} url
- * @param {AxiosRequestConfig} options
- * @returns {Promise<AxiosResponse<any>>}
+ * @param {import('axios').AxiosRequestConfig} options
+ * @returns {Promise<import('axios').AxiosResponse<any>>}
  */
 export async function get (url, options = {}) {
   return await request(url, {
@@ -54,8 +54,8 @@ export async function get (url, options = {}) {
 /**
  * post 请求方法
  * @param {string} url
- * @param {AxiosRequestConfig} options
- * @returns {Promise<AxiosResponse<any>>}
+ * @param {import('axios').AxiosRequestConfig} options
+ * @returns {Promise<import('axios').AxiosResponse<any>>}
  */
 export async function post (url, options = {}) {
   return await request(url, {

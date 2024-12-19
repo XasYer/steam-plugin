@@ -390,7 +390,7 @@ export async function GetMiniProfileBackground (steamid) {
  *   appid: number,
  *   item_type: number,
  *   item_class: number,
- * }}
+ * }>}
  */
 export async function GetProfileBackground (steamid) {
   const start = Date.now()

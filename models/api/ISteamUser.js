@@ -40,7 +40,7 @@ export async function GetPlayerSummaries (steamIds) {
 
 /**
  * 获取好友列表
- * @param {string} steamId
+ * @param {string} steamid
  * @returns {Promise<{
  *   steamid: string,
  *   relationship: string,
@@ -63,7 +63,7 @@ export async function GetFriendList (steamid) {
 
 /**
  * 获取群组列表
- * @param {string} steamId
+ * @param {string} steamid
  * @returns {Promise<{
  *   gid: string,
  * }[]>}
@@ -84,7 +84,7 @@ export async function GetUserGroupList (steamid) {
 
 /**
  * 获取用户封禁信息
- * @param {string|string[]} steamId
+ * @param {string|string[]} steamIds
  * @returns {Promise<{
  *   SteamId: string,
  *   CommunityBanned: boolean,
