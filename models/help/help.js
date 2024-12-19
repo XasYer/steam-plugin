@@ -130,11 +130,6 @@ export const helpList = [
         icon: 45,
         title: '#steam最新评论',
         desc: '查看某个游戏的最新评论,需要appid'
-      },
-      {
-        icon: 70,
-        title: '#steam年度回顾分享图片',
-        desc: '查看steam回顾分享图片,可指定年份'
       }
     ]
   },

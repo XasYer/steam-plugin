@@ -56,7 +56,7 @@ export const rule = {
         `参数: ${params.join(' ')}`,
         `耗时: ${time}ms`,
         '结果: ',
-        JSON.stringify(result, null, 2) || 'undefined'
+        JSON.stringify(result, null, 2) ?? 'undefined'
       ]
       await utils.makeForwardMsg(e, msg)
       return true
