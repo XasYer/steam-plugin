@@ -38,7 +38,7 @@ export const rule = {
       const images = await api.ISaleFeatureService.GetUserYearInReviewShareImage(steamId, year)
       const i = _.sample(images)
       if (!i) {
-        await e.reply('没有返回年度回顾分享图片')
+        await e.reply(`年度回顾可见性未公开, 获取失败, 可前往\nhttps://store.steampowered.com/replay/${steamId}/${year}\n进行查看`)
         return true
       }
       const path = utils.getStaticUrl(i.url_path)

@@ -1,4 +1,4 @@
-// 只能获取apiKey对应的steamid的信息
+// 如果页面可见性为私密则获取不到
 
 import { utils } from '#models'
 import { logger } from '#lib'
