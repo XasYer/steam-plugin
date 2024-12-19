@@ -37,6 +37,10 @@ export const rule = {
       })()
       const images = await api.ISaleFeatureService.GetUserYearInReviewShareImage(steamId, year)
       const i = _.sample(images)
+      if (!i) {
+        await e.reply('没有返回年度回顾分享图片')
+        return true
+      }
       const path = utils.getStaticUrl(i.url_path)
       const buffer = await utils.getImgUrlBuffer(path)
       if (buffer) {
