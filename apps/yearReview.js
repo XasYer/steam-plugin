@@ -24,8 +24,8 @@ export const rule = {
             }
           } else {
             return {
-              year: new Date().getFullYear(),
-              steamId: utils.getSteamId(text)
+              year: text,
+              steamId: await db.UserTableGetBindSteamIdByUserId(uid)
             }
           }
         } else {
