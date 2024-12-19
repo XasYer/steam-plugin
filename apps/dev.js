@@ -56,7 +56,7 @@ export const rule = {
         `参数: ${params.join(' ')}`,
         `耗时: ${time}ms`,
         '结果: ',
-        JSON.stringify(result, null, 2)
+        JSON.stringify(result, null, 2) || 'undefined'
       ]
       await utils.makeForwardMsg(e, msg)
       return true
@@ -65,8 +65,8 @@ export const rule = {
 }
 
 function getParams (fn) {
-  const fnStr = fn.toString()
-  const params = fnStr.match(/\(([^)]*)\)/)[1]
+  const fnStr = fn.toString().split('\n')[0]
+  const params = fnStr.match(/\((.*)\)/)[1]
   return params.split(',').map(param => param.trim()).filter(Boolean)
 }
 
