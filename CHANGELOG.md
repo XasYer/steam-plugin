@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.8.0](https://github.com/XasYer/steam-plugin/compare/v1.7.4...v1.8.0) (2024-12-20)
+
+
+### Features
+
+* steam年度回顾分享图片 ([d700261](https://github.com/XasYer/steam-plugin/commit/d70026141b72b218d658f508774b57c94883696f))
+* steam年度回顾分享图片 ([dc20839](https://github.com/XasYer/steam-plugin/commit/dc2083951301271b0627a2f17ed9090daf089feb))
+* 销量排位 玩家人数排行 详细请看帮助 ([c6ab0c4](https://github.com/XasYer/steam-plugin/commit/c6ab0c482932fdbbc36e5b0f787e5bb479feebe5))
+
+
+### Bug Fixes
+
+* dev ([1b612f2](https://github.com/XasYer/steam-plugin/commit/1b612f29c82e957131304f7da74194433c5256a2))
+* 可能没有 ([d25961b](https://github.com/XasYer/steam-plugin/commit/d25961bd978d12aba837ae4423e084fa50a874af))
+* 指定年度有误 ([45bcf31](https://github.com/XasYer/steam-plugin/commit/45bcf31cd1af96b7ddf4182708f3fb36a3b40165))
+* 错误的steamId ([4d09068](https://github.com/XasYer/steam-plugin/commit/4d09068c575a8eb9e2991b63e2582deb8fa6d1cf))
+
+
+### Reverts
+
+* 只能获取apiKey对应的steaamid的信息 ([6327677](https://github.com/XasYer/steam-plugin/commit/63276779d0a909dd332a9bee66be98e4988b311b))
+
 ## [1.7.4](https://github.com/XasYer/steam-plugin/compare/v1.7.3...v1.7.4) (2024-12-18)
 
 
