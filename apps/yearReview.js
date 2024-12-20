@@ -2,6 +2,7 @@ import { App } from '#components'
 import { segment } from '#lib'
 import { api, db, utils } from '#models'
 import _ from 'lodash'
+import moment from 'moment'
 
 const app = {
   id: 'yearReview',
@@ -30,7 +31,7 @@ export const rule = {
           }
         } else {
           return {
-            year: new Date().getFullYear(),
+            year: getYear(),
             steamId: await db.UserTableGetBindSteamIdByUserId(uid)
           }
         }
@@ -55,6 +56,12 @@ export const rule = {
       return true
     }
   }
+}
+
+function getYear () {
+  const m = moment().month()
+  const y = moment().year()
+  return m < 11 ? y - 1 : y
 }
 
 export const yearReviewApp = new App(app, rule).create()

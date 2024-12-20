@@ -135,6 +135,31 @@ export const helpList = [
         icon: 70,
         title: '#steam年度回顾分享图片',
         desc: '查看steam回顾分享图片,可指定年份'
+      },
+      {
+        icon: 71,
+        title: '#steam当前热玩排行',
+        desc: '查看steam当前游玩人数排行'
+      },
+      {
+        icon: 72,
+        title: '#steam每日热玩排行',
+        desc: '查看steam每日玩家数排行'
+      },
+      {
+        icon: 79,
+        title: '#steam热门新品排行',
+        desc: '查看steam每月热门新品排行'
+      },
+      {
+        icon: 87,
+        title: '#steam热销排行',
+        desc: '查看steam本周热销排行'
+      },
+      {
+        icon: 90,
+        title: '#steam上周热销排行',
+        desc: '查看steam上周热销排行'
       }
     ]
   },

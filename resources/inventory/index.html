@@ -23,8 +23,9 @@
 </div>
 <div class="games">
 <% item.games.length=isHidden ? hiddenLength : item.games.length %>
-    {{each item.games i}}
-    <div class="size-{{item.size}}">
+    {{each item.games i idx}}
+    <div class="size-{{item.size}} center-y">
+        <div class="index">No. {{idx+1}}</div>
         <div class="header-img">
             {{if i.header_image}}
             <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">

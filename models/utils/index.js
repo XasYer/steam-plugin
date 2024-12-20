@@ -223,12 +223,13 @@ export async function makeForwardMsg (e, msg) {
 /**
  * 获取appid对应的header图片url
  * @param {string} appid
+ * @param {string} type
  * @returns {string}
  */
-export function getHeaderImgUrlByAppid (appid) {
+export function getHeaderImgUrlByAppid (appid, type = 'apps') {
   if (!appid) return ''
   // return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`
-  return `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/header.jpg`
+  return `https://steamcdn-a.akamaihd.net/steam/${type}/${appid}/header.jpg`
 }
 
 /**
@@ -244,8 +245,9 @@ export function getStaticUrl (path) {
     return `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/${path}`
   } else if (path.startsWith('replay')) {
     return `https://shared.cloudflare.steamstatic.com/social_sharing/${path}`
+  } else {
+    return `https://clan.fastly.steamstatic.com/images/${path}`
   }
-  return ''
 }
 
 /**

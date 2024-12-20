@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { utils } from '#models'
-import { logger } from '#lib'
 
 /**
  * 获取用户相关信息
@@ -21,8 +20,6 @@ import { logger } from '#lib'
  * }[]>}
  */
 export async function GetPlayerSummaries (steamIds) {
-  logger.info('开始获取用户相关信息')
-  const start = Date.now()
   !Array.isArray(steamIds) && (steamIds = [steamIds])
   const result = []
   // 一次只能获取100个用户信息
@@ -32,11 +29,10 @@ export async function GetPlayerSummaries (steamIds) {
         steamIds: items.join(',')
       }
     })
-    if (res.data.response?.players?.length) {
-      result.push(...res.data.response.players)
+    if (res.response?.players?.length) {
+      result.push(...res.response.players)
     }
   }
-  logger.info(`获取用户相关信息成功 ${result.length} 条数据，用时 ${Date.now() - start}ms`)
   return result
 }
 
@@ -50,17 +46,11 @@ export async function GetPlayerSummaries (steamIds) {
  * }[]>}
  */
 export async function GetFriendList (steamid) {
-  logger.info(`开始获取${steamid}的好友列表`)
-  const start = Date.now()
   return await utils.request.get('ISteamUser/GetFriendList/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.friendslist.friends
-    logger.info(`获取${steamid}的好友列表成功 共${data.length}个好友，用时 ${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.friendslist.friends)
 }
 
 /**
@@ -71,17 +61,11 @@ export async function GetFriendList (steamid) {
  * }[]>}
  */
 export async function GetUserGroupList (steamid) {
-  logger.info(`开始获取${steamid}的群组列表`)
-  const start = Date.now()
   return await utils.request.get('ISteamUser/GetUserGroupList/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response?.groups || []
-    logger.info(`获取${steamid}的群组列表成功 共${data.length}个群组，用时 ${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response?.groups || [])
 }
 
 /**
@@ -98,8 +82,6 @@ export async function GetUserGroupList (steamid) {
  * }[]>}
  */
 export async function GetPlayerBans (steamIds) {
-  logger.info(`开始获取${steamIds.length}个用户的封禁信息`)
-  const start = Date.now()
   !Array.isArray(steamIds) && (steamIds = [steamIds])
   const result = []
   for (const items of _.chunk(steamIds, 100)) {
@@ -108,8 +90,7 @@ export async function GetPlayerBans (steamIds) {
         steamIds: items.join(',')
       }
     })
-    result.push(...res.data.players)
+    result.push(...res.players)
   }
-  logger.info(`获取用户封禁信息成功 ${result.length} 条数据，用时 ${Date.now() - start}ms`)
   return result
 }

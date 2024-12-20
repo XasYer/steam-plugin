@@ -1,5 +1,4 @@
 import { utils } from '#models'
-import { logger } from '#lib'
 
 /**
  * 获取steamId最近玩过的游戏列表
@@ -17,16 +16,11 @@ import { logger } from '#lib'
  * }[]>}
  */
 export async function GetRecentlyPlayedGames (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}最近游戏列表`)
   return utils.request.get('IPlayerService/GetRecentlyPlayedGames/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    logger.info(`获取${steamid}最近游戏列表成功，共${res.data.response?.total_count}个游戏，耗时${Date.now() - start}ms`)
-    return res.data.response?.games || []
-  })
+  }).then(res => res.response?.games || [])
 }
 
 /**
@@ -53,18 +47,13 @@ export async function GetRecentlyPlayedGames (steamid) {
 * }[]>}
 */
 export async function GetOwnedGames (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}拥有的游戏列表`)
   return utils.request.get('IPlayerService/GetOwnedGames/v1', {
     params: {
       steamid,
       include_appinfo: true,
       include_extended_appinfo: true
     }
-  }).then(res => {
-    logger.info(`获取${steamid}拥有的游戏列表成功，共${res.data.response?.game_count}个游戏，耗时${Date.now() - start}ms`)
-    return res.data.response?.games || []
-  })
+  }).then(res => res.response?.games || [])
 }
 
 /**
@@ -73,17 +62,11 @@ export async function GetOwnedGames (steamid) {
  * @returns {Promise<number>}
  */
 export async function GetSteamLevel (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的Steam等级`)
   return utils.request.get('IPlayerService/GetSteamLevel/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response?.player_level
-    logger.info(`获取${steamid}的Steam等级成功，等级${res.data.response?.player_level}，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response?.player_level)
 }
 
 /**
@@ -104,17 +87,11 @@ export async function GetSteamLevel (steamid) {
  * }>}
  */
 export async function GetBadges (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的徽章信息`)
   return utils.request.get('IPlayerService/GetBadges/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response || {}
-    logger.info(`获取${steamid}的徽章信息成功，共${data.length}个徽章，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response || {})
 }
 
 /**
@@ -127,18 +104,12 @@ export async function GetBadges (steamid) {
  * }[]>}
  */
 export async function GetCommunityBadgeProgress (steamid, badgeid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的${badgeid}徽章任务`)
   return utils.request.get('IPlayerService/GetCommunityBadgeProgress/v1', {
     params: {
       steamid,
       badgeid
     }
-  }).then(res => {
-    const data = res.data.response?.quests || []
-    logger.info(`获取${steamid}的社区徽章进度成功，共${data.length}个任务，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response?.quests || [])
 }
 
 /**
@@ -154,17 +125,11 @@ export async function GetCommunityBadgeProgress (steamid, badgeid) {
  * }>}
  */
 export async function GetFavoriteBadge (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的标记为收藏的徽章`)
   return utils.request.get('IPlayerService/GetFavoriteBadge/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response
-    logger.info(`获取${steamid}的标记为收藏的徽章成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response)
 }
 
 /**
@@ -181,17 +146,11 @@ export async function GetFavoriteBadge (steamid) {
  * }>}
  */
 export async function GetGameAchievements (appid) {
-  const start = Date.now()
-  logger.info(`开始获取${appid}的成就完成度`)
   return utils.request.get('IPlayerService/GetGameAchievements/v1', {
     params: {
       appid
     }
-  }).then(res => {
-    const data = res.data.response
-    logger.info(`获取${appid}的成就列表成功，共${data.achievements?.length}个成就，耗时${Date.now() - start}ms`)
-    return data.achievements || []
-  })
+  }).then(res => res.response.achievements || [])
 }
 
 /**
@@ -233,15 +192,9 @@ export async function GetPlayerLinkDetails (steamids) {
     acc[`steamids[${index}]`] = steamid
     return acc
   }, {})
-  const start = Date.now()
-  logger.info(`开始获取${steamids.length}个用户的信息`)
   return utils.request.get('IPlayerService/GetPlayerLinkDetails/v1', {
     params
-  }).then(res => {
-    const data = res.data.response.accounts
-    logger.info(`获取${steamids.length}个用户的信息成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response.accounts)
 }
 
 /**
@@ -260,17 +213,11 @@ export async function GetPlayerLinkDetails (steamids) {
 * }>}
 */
 export async function GetAnimatedAvatar (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的动态头像`)
   return utils.request.get('IPlayerService/GetAnimatedAvatar/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response?.avatar || {}
-    logger.info(`获取${steamid}的动态头像成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response?.avatar || {})
 }
 
 /**
@@ -306,17 +253,11 @@ export async function GetAnimatedAvatar (steamid) {
 * }>}
 */
 export async function GetProfileCustomization (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的自定义展示内容`)
   return utils.request.get('IPlayerService/GetProfileCustomization/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response
-    logger.info(`获取${steamid}的自定义展示内容成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response)
 }
 
 /**
@@ -335,17 +276,11 @@ export async function GetProfileCustomization (steamid) {
  * }>}
  */
 export async function GetAvatarFrame (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的头像框`)
   return utils.request.get('IPlayerService/GetAvatarFrame/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response?.avatar_frame || {}
-    logger.info(`获取${steamid}的头像框信息成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response?.avatar_frame || {})
 }
 
 /**
@@ -365,17 +300,11 @@ export async function GetAvatarFrame (steamid) {
  * }>}
  */
 export async function GetMiniProfileBackground (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的小型头像背景信息`)
   return utils.request.get('IPlayerService/GetMiniProfileBackground/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response?.profile_background || {}
-    logger.info(`获取${steamid}的小型头像背景信息成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response?.profile_background || {})
 }
 
 /**
@@ -393,17 +322,11 @@ export async function GetMiniProfileBackground (steamid) {
  * }>}
  */
 export async function GetProfileBackground (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的背景信息`)
   return utils.request.get('IPlayerService/GetProfileBackground/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response?.profile_background || {}
-    logger.info(`获取${steamid}的小型头像背景信息成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response?.profile_background || {})
 }
 
 /**
@@ -473,15 +396,9 @@ export async function GetProfileBackground (steamid) {
 * }>}
 */
 export async function GetProfileItemsEquipped (steamid) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}头像背景信息等`)
   return utils.request.get('IPlayerService/GetProfileItemsEquipped/v1', {
     params: {
       steamid
     }
-  }).then(res => {
-    const data = res.data.response || {}
-    logger.info(`获取${steamid}头像背景信息等成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response || {})
 }

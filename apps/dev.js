@@ -39,6 +39,10 @@ export const rule = {
       const methodParams = getParams(method)
       const uid = utils.getAtUid(e.at, e.user_id)
       const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
+      if (!steamId) {
+        await e.reply('没有绑定steamId')
+        return true
+      }
       const replaceParams = (text) => {
         if (Array.isArray(text)) {
           return text.map(replaceParams)

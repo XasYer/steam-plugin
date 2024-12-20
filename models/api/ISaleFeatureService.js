@@ -1,7 +1,6 @@
 // 如果页面可见性为私密则获取不到
 
 import { utils } from '#models'
-import { logger } from '#lib'
 import _ from 'lodash'
 
 /**
@@ -26,7 +25,6 @@ import _ from 'lodash'
  * }>}
  */
 export async function GetUserYearAchievements (steamid, appids, year = new Date().getFullYear()) {
-  logger.info(`开始获取${steamid}在${year}年度成就信息`)
   !Array.isArray(appids) && (appids = [appids])
   const result = {
     game_achievements: [],
@@ -34,7 +32,6 @@ export async function GetUserYearAchievements (steamid, appids, year = new Date(
     total_rare_achievements: 0,
     total_games_with_achievements: 0
   }
-  const start = Date.now()
   for (const items of _.chunk(appids, 100)) {
     const params = items.reduce((acc, appid, index) => {
       acc[`appids[${index}]`] = appid
@@ -47,12 +44,11 @@ export async function GetUserYearAchievements (steamid, appids, year = new Date(
         ...params
       }
     })
-    result.game_achievements.push(...res.data.game_achievements)
-    result.total_achievements += res.data.total_achievements
-    result.total_rare_achievements += res.data.total_rare_achievements
-    result.total_games_with_achievements += res.data.total_games_with_achievements
+    result.game_achievements.push(...res.game_achievements)
+    result.total_achievements += res.total_achievements
+    result.total_rare_achievements += res.total_rare_achievements
+    result.total_games_with_achievements += res.total_games_with_achievements
   }
-  logger.info(`获取${steamid}在${year}年度成就信息成功，用时 ${Date.now() - start}ms`)
   return result
 }
 
@@ -208,18 +204,12 @@ export async function GetUserYearAchievements (steamid, appids, year = new Date(
  * }>}
  */
 export async function GetGameAchievements (steamid, year = new Date().getFullYear()) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的年度统计信息`)
   return utils.request.get('ISaleFeatureService/GetUserYearInReview/v1', {
     params: {
       steamid,
       year
     }
-  }).then(res => {
-    const data = res.data.response
-    logger.info(`获取${steamid}的年度统计信息成功，耗时${Date.now() - start}ms`)
-    return data
-  })
+  }).then(res => res.response)
 }
 
 /**
@@ -233,18 +223,12 @@ export async function GetGameAchievements (steamid, year = new Date().getFullYea
 * }[]>}
 */
 export async function GetUserYearInReviewShareImage (steamid, year = new Date().getFullYear()) {
-  const start = Date.now()
-  logger.info(`开始获取${steamid}的年度回顾图片链接`)
   return utils.request.get('ISaleFeatureService/GetUserYearInReviewShareImage/v1', {
     params: {
       steamid,
       year
     }
-  }).then(res => {
-    const data = res.data.response || {}
-    logger.info(`获取${steamid}的年度回顾图片链接成功，耗时${Date.now() - start}ms`)
-    return data.images
-  })
+  }).then(res => res.response?.images || [])
 }
 
 /**
@@ -255,10 +239,8 @@ export async function GetUserYearInReviewShareImage (steamid, year = new Date().
  * @returns {Promise<unknown>}
 */
 export async function GetUserYearScreenshots (steamid, appids, year = new Date().getFullYear()) {
-  logger.info(`开始获取${steamid}在${year}的年度游戏截图`)
   !Array.isArray(appids) && (appids = [appids])
   const result = []
-  const start = Date.now()
   for (const items of _.chunk(appids, 100)) {
     const params = items.reduce((acc, appid, index) => {
       acc[`appids[${index}]`] = appid
@@ -271,8 +253,7 @@ export async function GetUserYearScreenshots (steamid, appids, year = new Date()
         ...params
       }
     })
-    result.push(...res.data.response.apps)
+    result.push(...res.response.apps)
   }
-  logger.info(`获取${steamid}在${year}的年度游戏截图成功，用时 ${Date.now() - start}ms`)
   return result
 }

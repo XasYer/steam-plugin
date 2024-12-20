@@ -41,7 +41,12 @@ const Render = {
       const len = minLength === 1 ? 1.4 : minLength
       data.style = `<style>\n#container,.games{\nwidth: ${len * size}px;\n}\n</style>`
     }
-    return await puppeteer.screenshot(`${Version.pluginName}/${path}`, data)
+    const img = await puppeteer.screenshot(`${Version.pluginName}/${path}`, data)
+    if (img) {
+      return img
+    } else {
+      return '制作图片出错辣！再试一次吧'
+    }
   },
   async simpleRender (path, params) {
     path = path.replace(/.html$/, '')

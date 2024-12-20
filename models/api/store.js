@@ -1,5 +1,4 @@
 import { utils } from '#models'
-import { logger } from '#lib'
 import { Config } from '#components'
 
 const getBaseURL = () => {
@@ -105,22 +104,12 @@ const getBaseURL = () => {
 * }>}
 */
 export async function appdetails (appid) {
-  const start = Date.now()
-  logger.info(`开始获取${appid}游戏详情`)
   return utils.request.get('api/appdetails', {
     baseURL: getBaseURL(),
     params: {
       appids: appid
     }
-  }).then(res => {
-    if (res.data[appid].success) {
-      logger.info(`获取${appid}游戏详情成功: ${res.data[appid].data.name}，耗时${Date.now() - start}ms`)
-      return res.data[appid].data
-    } else {
-      logger.error(`获取${appid}游戏详情失败，耗时${Date.now() - start}ms`)
-      return {}
-    }
-  })
+  }).then(res => res?.[appid]?.data || {})
 }
 
 /**
@@ -129,8 +118,6 @@ export async function appdetails (appid) {
 * @returns {Promise<string>}
 */
 export async function search (name) {
-  const start = Date.now()
-  logger.info(`开始搜索${name}游戏`)
   return utils.request.get('search/suggest', {
     baseURL: getBaseURL(),
     params: {
@@ -139,10 +126,7 @@ export async function search (name) {
       realm: 1
     },
     responseType: 'text'
-  }).then(res => {
-    logger.info(`搜索${name}成功，耗时${Date.now() - start}ms`)
-    return res.data.replace?.(/\n/g, '')
-  })
+  }).then(res => res.replace?.(/\n/g, ''))
 }
 
 /**
@@ -192,14 +176,36 @@ export async function search (name) {
 * }>}
 */
 export async function featuredcategories () {
-  const start = Date.now()
-  logger.info('开始获取优惠信息')
   return utils.request.get('api/featuredcategories', {
     baseURL: getBaseURL()
-  }).then(res => {
-    logger.info(`获取优惠信息成功，耗时${Date.now() - start}ms`)
-    return res.data
   })
+}
+
+/**
+* 获取优惠信息
+* @returns {Promise<{
+*   id: number,
+*   type: number,
+*   name: string,
+*   discounted: boolean,
+*   discount_percent: number,
+*   original_price: number,
+*   final_price: number,
+*   currency: string,
+*   large_capsule_image: string,
+*   small_capsule_image: string,
+*   windows_available: boolean,
+*   mac_available: boolean,
+*   linux_available: boolean,
+*   streamingvideo_available: boolean,
+*   discount_expiration: number,
+*   header_image: string
+* }[]>}
+*/
+export async function featured () {
+  return utils.request.get('api/featured', {
+    baseURL: getBaseURL()
+  }).then(res => res.featured_win || [])
 }
 
 /**
@@ -219,16 +225,11 @@ export async function featuredcategories () {
 * }>}
 */
 export async function appreviews (appid, count = 30, recent = false) {
-  const start = Date.now()
-  logger.info(`开始获取${appid}${recent ? '最新' : '热门'}评论`)
   return utils.request.get(`appreviews/${appid}`, {
     baseURL: getBaseURL(),
     params: {
       filter: recent ? 'recent' : 'all',
       num_per_page: count
     }
-  }).then(res => {
-    logger.info(`获取${appid}${recent ? '最新' : '热门'}评论成功，耗时${Date.now() - start}ms`)
-    return res.data
   })
 }
