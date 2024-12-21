@@ -1,14 +1,14 @@
 import { App } from '#components'
 import { api, db, utils } from '#models'
 
-const app = {
+const appInfo = {
   id: 'dev',
   name: '接口测试'
 }
 
-export const rule = {
+const rule = {
   dev: {
-    reg: /^#?steamdev\s*(.*)$/i,
+    reg: App.getReg('dev\\s*(.*)'),
     fnc: async e => {
       const keys = Object.keys(api)
       const text = rule.dev.reg.exec(e.msg)[1]
@@ -86,4 +86,4 @@ function split (text) {
   })
 }
 
-export const devApp = new App(app).create()
+export const app = new App(appInfo, rule).create()

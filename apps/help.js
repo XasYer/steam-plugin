@@ -2,14 +2,14 @@ import { App, Render, Version } from '#components'
 import lodash from 'lodash'
 import { help as helpUtil } from '#models'
 
-const app = {
+const appInfo = {
   id: 'help',
   name: '帮助'
 }
 
-export const rule = {
+const rule = {
   help: {
-    reg: /^#?steam(插件|plugin)?(帮助|菜单|help)$/i,
+    reg: App.getReg('(插件|plugin)?(帮助|菜单|help)'),
     fnc: help
   }
   // version: {
@@ -17,8 +17,6 @@ export const rule = {
   //   fnc: version
   // }
 }
-
-export const helpApp = new App(app, rule).create()
 
 async function help (e) {
   const helpGroup = []
@@ -65,3 +63,5 @@ async function version (e) {
   })
   return await e.reply(img)
 }
+
+export const app = new App(appInfo, rule).create()

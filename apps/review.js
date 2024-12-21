@@ -1,14 +1,14 @@
 import { App, Render } from '#components'
 import { api } from '#models'
 
-const app = {
+const appInfo = {
   id: 'review',
   name: '评论'
 }
 
-export const rule = {
+const rule = {
   review: {
-    reg: /^#?steam(?:最新|热门)?评论\s*(\d+)?$/i,
+    reg: App.getReg('(?:最新|热门)?评论\\s*(\\d*)'),
     fnc: async e => {
       const appid = rule.review.reg.exec(e.msg)[1]?.trim()
       if (!appid) {
@@ -29,4 +29,4 @@ export const rule = {
   }
 }
 
-export const reviewApp = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

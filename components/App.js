@@ -22,6 +22,10 @@ export default class {
     this.rule(rule)
   }
 
+  static getReg (text = '') {
+    return new RegExp(`^#${Config.other.requireHashTag ? '' : '?'}steam${text}$`, 'i')
+  }
+
   rule (name, reg, fnc, cfg = {}) {
     if (!name) return false
     if (lodash.isPlainObject(name)) {

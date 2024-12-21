@@ -4,14 +4,14 @@ import { api, db, utils } from '#models'
 import _ from 'lodash'
 import moment from 'moment'
 
-const app = {
+const appInfo = {
   id: 'yearReview',
   name: '年度回顾'
 }
 
-export const rule = {
+const rule = {
   shareImage: {
-    reg: /^#?steam年度回顾分享图片\s*(\d+|\d+[-:\s]\d+)?$/,
+    reg: App.getReg('年度回顾分享图片\\s*(\\d+|\\d+[-:\\s]\\d+)?'),
     fnc: async e => {
       const text = rule.shareImage.reg.exec(e.msg)[1]
       const uid = utils.getAtUid(e.at, e.user_id)
@@ -64,4 +64,4 @@ function getYear () {
   return m < 11 ? y - 1 : y
 }
 
-export const yearReviewApp = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

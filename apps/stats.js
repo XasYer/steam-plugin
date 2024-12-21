@@ -1,14 +1,14 @@
 import { Render, App, Config } from '#components'
 import { db, utils } from '#models'
 
-const app = {
+const appInfo = {
   id: 'stats',
   name: '统计数据'
 }
 
-export const rule = {
+const rule = {
   stats: {
-    reg: /^#?steam群统计$/i,
+    reg: App.getReg('群统计'),
     fnc: async e => {
       if (!checkGroup(e.group_id)) {
         return true
@@ -138,4 +138,4 @@ async function checkGroup (e) {
   return true
 }
 
-export const statsApp = new App(app).create()
+export const app = new App(appInfo, rule).create()

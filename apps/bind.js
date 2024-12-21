@@ -2,18 +2,19 @@ import { utils, db, bind } from '#models'
 import { App } from '#components'
 import { segment } from '#lib'
 
-const app = {
+const appInfo = {
   id: 'bind',
   name: '绑定Steam'
 }
 
-export const rule = {
+const rule = {
   getBindImg: {
+    // 这个指令必须# 不然可能会误触发
     reg: /^#steam$/i,
     fnc: async e => await e.reply(await bind.getBindSteamIdsImg(e.self_id, utils.getAtUid(e.at, e.user_id), e.group_id))
   },
   bind: {
-    reg: /^#?steam(?:[切更]换)?(?:绑定|bind)\s*(\d+)?$/i,
+    reg: App.getReg('(?:[切更]换)?(?:绑定|bind)\\s*(\\d+)?'),
     fnc: async e => {
       // 如果是主人可以at其他用户进行绑定
       const uid = utils.getAtUid(e.isMaster ? e.at : '', e.user_id)
@@ -48,7 +49,7 @@ export const rule = {
     }
   },
   unbind: {
-    reg: /^#?steam(?:强制)?(?:解除?绑定?|unbind|取消绑定)\s*(\d+)?$/i,
+    reg: App.getReg('(?:强制)?(?:解除?绑定?|unbind|取消绑定)\\s*(\\d+)?'),
     fnc: async e => {
       const textId = rule.unbind.reg.exec(e.msg)[1]
       if (!textId) {
@@ -85,4 +86,4 @@ export const rule = {
   }
 }
 
-export const bindApp = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

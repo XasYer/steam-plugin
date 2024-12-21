@@ -2,14 +2,14 @@ import { App, Render } from '#components'
 import { api } from '#models'
 import moment from 'moment'
 
-const app = {
+const appInfo = {
   id: 'discounts',
   name: '优惠'
 }
 
-export const rule = {
+const rule = {
   discounts: {
-    reg: /^#?steam(优惠|特惠|热销|新品|即将推出)$/,
+    reg: App.getReg('(优惠|特惠|热销|新品|即将推出)'),
     fnc: async e => {
       e.reply('在查了....在查了')
       const res = await api.store.featuredcategories()
@@ -69,4 +69,4 @@ export const rule = {
   }
 }
 
-export const discounts = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

@@ -3,14 +3,14 @@ import { segment } from '#lib'
 import { App, Config, Render } from '#components'
 import { db, utils, api } from '#models'
 
-const app = {
+const appInfo = {
   id: 'info',
   name: 'Steam信息'
 }
 
-export const rule = {
+const rule = {
   info: {
-    reg: /^#?steam(?:信息|状态|info|status)\s*(\d+)?$/i,
+    reg: App.getReg('(?:信息|状态|info|status)\\s*(\\d*)'),
     fnc: async e => {
       const textId = rule.info.reg.exec(e.msg)?.[1]
       const uid = utils.getAtUid(e.at, e.user_id)
@@ -95,7 +95,7 @@ export const rule = {
   }
 }
 
-export const info = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()
 
 /**
  * 将地区码转换为中文

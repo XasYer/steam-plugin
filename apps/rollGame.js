@@ -3,14 +3,14 @@ import { segment } from '#lib'
 import { Render, App, Config } from '#components'
 import _ from 'lodash'
 
-const app = {
+const appInfo = {
   id: 'rollGame',
   name: 'roll游戏'
 }
 
-export const rule = {
+const rule = {
   rollGame: {
-    reg: /^#?steam(玩什么|玩啥|roll)(游戏)?\s*(\d+)?$/i,
+    reg: App.getReg('(玩什么|玩啥|roll)(游戏)?\\s*(\\d*)'),
     fnc: async e => {
       const textId = rule.rollGame.reg.exec(e.msg)?.[3]
       const uid = utils.getAtUid(e.at, e.user_id)
@@ -66,4 +66,4 @@ function getTime (time) {
   return (time / 60).toFixed(1) + 'h'
 }
 
-export const rollGame = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

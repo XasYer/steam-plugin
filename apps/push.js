@@ -5,14 +5,14 @@ import _ from 'lodash'
 
 task.startTimer()
 
-const app = {
+const appInfo = {
   id: 'push',
   name: '推送'
 }
 
-export const rule = {
+const rule = {
   push: {
-    reg: /^#?steam(?:开启|关闭)推送\s*(\d+)?$/i,
+    reg: App.getReg('(?:开启|关闭)推送\\s*(\\d*)'),
     fnc: async e => {
       if (!await checkGroup(e)) {
         return true
@@ -61,7 +61,7 @@ export const rule = {
     }
   },
   list: {
-    reg: /^#?steam(本群)?推送列表$/i,
+    reg: App.getReg('(本群)?推送列表'),
     fnc: async e => {
       if (!await checkGroup(e)) {
         return true
@@ -97,7 +97,7 @@ export const rule = {
     }
   },
   now: {
-    reg: /^#?(steam)?(全部)?群友(在玩什么呢?|状态)[?？]?$/i,
+    reg: App.getReg('(全部)?群友(在玩什么呢?|状态)[?？]?'),
     fnc: async e => {
       if (!e.group_id) {
         return false
@@ -183,7 +183,7 @@ export const rule = {
   }
 }
 
-export const pushApp = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()
 
 async function checkGroup (e) {
   if (!e.group_id) {

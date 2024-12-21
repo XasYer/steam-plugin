@@ -27,3 +27,6 @@ statsCount: 10
 
 # 插件优先级 数值越小优先级越高
 priority: 5
+
+# 是否必须携带#号开头才会触发命令 重启后生效
+requireHashTag: false

@@ -245,6 +245,13 @@ export const cfgSchema = {
         def: 5,
         input: (n) => Number(n) || 5,
         desc: '数值越小优先级越高, 可以为负数, 重启后生效'
+      },
+      requireHashTag: {
+        title: '必须携带#',
+        key: '指令匹配',
+        type: 'boolean',
+        def: false,
+        desc: '是否必须携带#指令才能触发对应功能, 重启后生效'
       }
     }
   },

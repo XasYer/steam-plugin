@@ -114,6 +114,7 @@ class Config {
    *  rollGameCount: number,
    *  statsCount: number,
    *  priority: number,
+   *  requireHashTag: boolean,
    * }}
    */
   get other () {

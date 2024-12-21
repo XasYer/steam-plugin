@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { logger } from '#lib'
 import { join } from 'node:path'
-import { App, Version } from '#components'
+import { Version } from '#components'
 
 const startTime = Date.now()
 
@@ -14,15 +14,16 @@ for (const i of files) {
   if (i === 'index.js') continue
   try {
     const exp = await import(`file://${join(path, i)}`)
-    const app = new App(exp.app || {
-      id: i.replace('.js', ''),
-      name: i.replace('.js', '')
-    })
-    for (const key in exp.rule) {
-      const rule = exp.rule[key]
-      app.rule(key, rule.reg, rule.fnc, rule.cfg)
-    }
-    apps[app.id] = app.create()
+    const id = i.replace('.js', '')
+    // const app = new App(exp.app || {
+    //   id: i.replace('.js', ''),
+    //   name: i.replace('.js', '')
+    // })
+    // for (const key in exp.rule) {
+    //   const rule = exp.rule[key]
+    //   app.rule(key, rule.reg, rule.fnc, rule.cfg)
+    // }
+    apps[id] = exp.app
   } catch (error) {
     logger.error(`[${Version.pluginName}]加载js: apps/${i}错误\n`, error)
   }

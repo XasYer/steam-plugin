@@ -1,14 +1,14 @@
 import { api } from '#models'
 import { App, Render } from '#components'
 
-const app = {
+const appInfo = {
   id: 'search',
   name: '搜索'
 }
 
-export const rule = {
+const rule = {
   search: {
-    reg: /^#?steam(?:搜索|search|查找|find)\s*(.*)$/i,
+    reg: App.getReg('(?:搜索|search|查找|find)\\s*(.*)'),
     fnc: async e => {
       const name = rule.search.reg.exec(e.msg)[1].trim()
       if (!name) {
@@ -52,4 +52,4 @@ export const rule = {
   }
 }
 
-export const search = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

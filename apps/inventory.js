@@ -4,14 +4,14 @@ import { Render, App, Config } from '#components'
 import moment from 'moment'
 import _ from 'lodash'
 
-const app = {
+const appInfo = {
   id: 'inventory',
   name: '库存'
 }
 
-export const rule = {
+const rule = {
   inventory: {
-    reg: /^#?steam(?:库存|游戏列表|(?:最近|近期)(?:游?玩|运行|启动)|愿望单)\s*(\d+)?$/i,
+    reg: App.getReg('(?:库存|游戏列表|(?:最近|近期)(?:游?玩|运行|启动)|愿望单)\\s*(\\d*)'),
     fnc: async e => {
       const textId = rule.inventory.reg.exec(e.msg)?.[1]
       const uid = utils.getAtUid(e.at, e.user_id)
@@ -116,4 +116,4 @@ function getTime (time) {
   return (time / 60).toFixed(1) + 'h'
 }
 
-export const inventory = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

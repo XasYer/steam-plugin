@@ -7,14 +7,14 @@ const keys = lodash.chain(setting.getCfgSchemaMap())
   .sortBy(str => -str.length)
   .value()
 
-const app = {
+const appInfo = {
   id: 'setting',
   name: '设置'
 }
 
-export const rule = {
+const rule = {
   setting: {
-    reg: new RegExp(`^#steam设置\\s*(${keys.join('|')})?[\\s+]*(.*)$`, 'i'),
+    reg: App.getReg(`设置\\s*(${keys.join('|')})?[\\s+]*(.*)`),
     fnc: async e => {
       if (!e.isMaster) {
         await e.reply('只有主人才可以设置哦~')
@@ -85,7 +85,7 @@ export const rule = {
     }
   },
   push: {
-    reg: /^#steam(添加|删除)?推送((?:bot)?[黑白])名单(列表)?\s*(.*)?$/,
+    reg: App.getReg('(添加|删除)?推送((?:bot)?[黑白])名单(列表)?\\s*(.*)'),
     fnc: async e => {
       if (!e.isMaster) {
         await e.reply('只有主人才可以设置哦~')
@@ -130,4 +130,4 @@ export const rule = {
   }
 }
 
-export const settingApp = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()

@@ -3,14 +3,14 @@ import { utils, db, api } from '#models'
 import { segment } from '#lib'
 import _ from 'lodash'
 
-const app = {
+const appInfo = {
   id: 'achievement',
   name: '成就统计'
 }
 
-export const rule = {
+const rule = {
   achievements: {
-    reg: /^#?steam(成就|统计)\s*(\d+|\d+[-:\s]\d+)?$/i,
+    reg: App.getReg('(成就|统计)\\s*(\\d+|\\d+[-:\\s]\\d+)?'),
     fnc: async e => {
       const regRet = rule.achievements.reg.exec(e.msg)
       const textId = regRet[2]?.trim()
@@ -184,4 +184,4 @@ export const rule = {
   }
 }
 
-export const achievementApp = new App(app).create()
+export const app = new App(appInfo, rule).create()

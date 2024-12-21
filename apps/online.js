@@ -2,14 +2,14 @@ import { App } from '#components'
 import { segment } from '#lib'
 import { api, utils } from '#models'
 
-const app = {
+const appInfo = {
   id: 'online',
   name: 'Online'
 }
 
-export const rule = {
+const rule = {
   online: {
-    reg: /^#?steam在线(?:统计|数据|人数)?\s*(\d+)?$/i,
+    reg: App.getReg('在线(?:统计|数据|人数)?\\s*(\\d*)'),
     fnc: async e => {
       const appid = rule.online.reg.exec(e.msg)[1]
       if (!appid) {
@@ -34,4 +34,4 @@ export const rule = {
   }
 }
 
-export const onlineApp = new App(app, rule).create()
+export const app = new App(appInfo, rule).create()
