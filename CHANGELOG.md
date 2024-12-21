@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.8.1](https://github.com/XasYer/steam-plugin/compare/v1.8.0...v1.8.1) (2024-12-21)
+
+
+### Bug Fixes
+
+* 头像显示 ([fcbb112](https://github.com/XasYer/steam-plugin/commit/fcbb11223e1e9b9a444efb6a5c749321f56c8bfb))
+
+
+### Performance Improvements
+
+* 优化样式 ([1b15e14](https://github.com/XasYer/steam-plugin/commit/1b15e14976637ac9e2195afdcd84784577ac1d0c))
+* 可配置必须由#触发指令 ([dc21e02](https://github.com/XasYer/steam-plugin/commit/dc21e02146fd77bc18d2c94794cf382c568b9056))
+* 可配置某些提示词, 可自行查看config/tips.yaml ([12e8bf0](https://github.com/XasYer/steam-plugin/commit/12e8bf0b6691d25d1a29fde4277db7beece6e562))
+
 ## [1.8.0](https://github.com/XasYer/steam-plugin/compare/v1.7.4...v1.8.0) (2024-12-20)
 
 
