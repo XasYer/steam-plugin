@@ -1,4 +1,4 @@
-import { App } from '#components'
+import { App, Config } from '#components'
 import { segment } from '#lib'
 import { api, db, utils } from '#models'
 import _ from 'lodash'
@@ -37,7 +37,7 @@ const rule = {
         }
       })()
       if (!steamId) {
-        await e.reply('未绑定SteamId, 请先绑定SteamId')
+        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
       const images = await api.ISaleFeatureService.GetUserYearInReviewShareImage(steamId, year)

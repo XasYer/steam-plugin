@@ -46,11 +46,7 @@ async function help (e) {
     ...themeData,
     scale: 1.4
   })
-  if (img) {
-    await e.reply(img)
-  } else {
-    await e.reply('截图失败辣! 再试一次叭')
-  }
+  await e.reply(img)
   return true
 }
 

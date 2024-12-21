@@ -11,12 +11,15 @@ const appInfo = {
 const rule = {
   info: {
     reg: App.getReg('(?:信息|状态|info|status)\\s*(\\d*)'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const textId = rule.info.reg.exec(e.msg)?.[1]
       const uid = utils.getAtUid(e.at, e.user_id)
       const steamId = textId ? utils.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
       if (!steamId) {
-        await e.reply([segment.at(uid), '\n还没有绑定steamId哦, 先绑定steamId吧'])
+        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
       // TODO: 先获取https://steamcommunity.com/profiles/${steamId}/
@@ -53,24 +56,9 @@ const rule = {
         }
 
         const target = Config.gif.infoGif ? 'renderGif' : 'render'
-        if (target === 'renderGif') {
-          e.reply([segment.at(uid), '\n制作gif中, 请稍稍稍稍稍后...']).then(res => {
-            setTimeout(() => {
-              if (e.group) {
-                e.group.recallMsg(res.message_id)
-              } else if (e.friend) {
-                e.friend.recallMsg(res.message_id)
-              }
-            }, 1000 * 10)
-          })
-        }
 
         const img = await Render[target]('info/index', options)
-        if (img) {
-          await e.reply(img)
-        } else {
-          await e.reply([segment.at(uid), '\n截图失败了, 重试一下吧'])
-        }
+        await e.reply(img)
       } else {
         const avatarBuffer = Config.other.steamAvatar ? await utils.getImgUrlBuffer(info.avatarfull) : ''
         const msg = []

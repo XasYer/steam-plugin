@@ -5,7 +5,7 @@ import Config from './Config.js'
 
 const throttle = {}
 
-export default class {
+export default class App {
   constructor ({
     id,
     name,
@@ -24,6 +24,24 @@ export default class {
 
   static getReg (text = '') {
     return new RegExp(`^#${Config.other.requireHashTag ? '' : '?'}steam${text}$`, 'i')
+  }
+
+  static reply (e, msg, options = { recallMsg: 0, quote: false, at: false }) {
+    if (Version.BotName === 'Karin') {
+      return e.reply(msg, { recallMsg: options.recallMsg, at: options.at, reply: options.quote }).catch(() => {})
+    } else {
+      return e.reply(msg, options.quote, { at: options.at }).then(res => {
+        if (options.recallMsg) {
+          setTimeout(() => {
+            if (e.group?.recallMsg) {
+              e.group.recallMsg(res.message_id).catch(() => {})
+            } else if (e.friend?.recallMsg) {
+              e.friend.recallMsg(res.message_id).catch(() => {})
+            }
+          }, options.recallMsg * 1000)
+        }
+      }).catch(() => {})
+    }
   }
 
   rule (name, reg, fnc, cfg = {}) {
@@ -65,17 +83,15 @@ export default class {
         }
         const key = `${name}:${e.user_id}`
         if (throttle[key]) {
-          await e.reply('太快辣! 要受不了了🥵')
+          App.reply(e, Config.tips.repeatTips, { recallMsg: 5, at: true })
           return true
         } else {
           throttle[key] = setTimeout(() => {
             delete throttle[key]
           }, 1000 * 60)
         }
-        let res = true
-        try {
-          res = await fnc(e)
-        } catch (error) {
+        App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
+        const res = await fnc(e).catch(error => {
           logger.error(error)
           let message = error.message
           const keyMap = [
@@ -92,8 +108,9 @@ export default class {
               } catch (error) { }
             }
           }
-          await e.reply(`出错辣! ${message}`)
-        }
+          e.reply(`出错辣! ${message}`).catch(() => {})
+          return true
+        })
         clearTimeout(throttle[key])
         delete throttle[key]
         return res ?? true

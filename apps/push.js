@@ -54,7 +54,7 @@ const rule = {
             await e.reply([segment.at(uid), `已关闭推送${steamId}到${e.group_id}`])
           }
         } else {
-          await e.reply('你还没有steamId哦')
+          await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         }
       }
       return true
@@ -98,6 +98,9 @@ const rule = {
   },
   now: {
     reg: App.getReg('(全部)?群友(在玩什么呢?|状态)[?？]?'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       if (!e.group_id) {
         return false
@@ -107,7 +110,7 @@ const rule = {
       if (isAll) {
         list = await db.PushTableGetAllData(false)
         if (!list.length) {
-          await e.reply('还没有人绑定steamId哦')
+          await e.reply([Config.tips.noSteamIdTips])
           return true
         }
       } else {
@@ -116,7 +119,7 @@ const rule = {
           ? await db.PushTableGetDataByUserList(memberList, false)
           : await db.PushTableGetDataByGroupId(e.group_id, false)
         if (!list.length) {
-          await e.reply('本群还没有用户绑定steamId哦')
+          await e.reply([Config.tips.noSteamIdTips])
           return true
         }
       }
@@ -173,11 +176,7 @@ const rule = {
         }
       ]
       const img = await Render.render('inventory/index', { data })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('制作图片出错辣! 再试一次吧')
-      }
+      await e.reply(img)
       return true
     }
   }

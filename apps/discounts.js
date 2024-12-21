@@ -10,8 +10,10 @@ const appInfo = {
 const rule = {
   discounts: {
     reg: App.getReg('(优惠|特惠|热销|新品|即将推出)'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
-      e.reply('在查了....在查了')
       const res = await api.store.featuredcategories()
       const items = [
         {
@@ -59,11 +61,7 @@ const rule = {
         data.push(key)
       }
       const img = await Render.render('inventory/index', { data })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('制作图片出错辣! 再试一次吧')
-      }
+      await e.reply(img)
       return true
     }
   }

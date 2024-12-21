@@ -1,0 +1,22 @@
+# 若未配置则使用默认配置
+
+# 重复触发指令时的提示语
+repeatTips: "太快辣! 要受不了了🥵"
+
+# 正在查询的提示语
+loadingTips: "在查了...在查了..."
+
+# 未绑定steamId时的提示语
+noSteamIdTips: "还没有绑定steamId哦, 先绑定steamId吧"
+
+# 重复绑定steamId时的提示语
+repeatBindTips: "这个steamId已经被绑定了, 要不要换一个?"
+
+# 库存为空或未公开时的提示语
+inventoryEmptyTips: "获得成就: 没有给G胖一分钱"
+
+# 最近游玩为空或未公开时的提示语
+recentPlayEmptyTips: "最近电子阳痿了"
+
+# 愿望单为空或未公开时的提示语
+wishListEmptyTips: "愿望当场就实现了, 羡慕"

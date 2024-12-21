@@ -1,4 +1,4 @@
-import { App, Render } from '#components'
+import { App, Config, Render } from '#components'
 import { utils, db, api } from '#models'
 import { segment } from '#lib'
 import _ from 'lodash'
@@ -11,6 +11,9 @@ const appInfo = {
 const rule = {
   achievements: {
     reg: App.getReg('(成就|统计)\\s*(\\d+|\\d+[-:\\s]\\d+)?'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const regRet = rule.achievements.reg.exec(e.msg)
       const textId = regRet[2]?.trim()
@@ -28,10 +31,9 @@ const rule = {
         return { steamId, appid: textId }
       })()
       if (!steamId) {
-        await e.reply([segment.at(uid), '\n还没有绑定steamId哦, 先绑定steamId吧'])
+        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
-      e.reply(['在查了...在查了...'])
       // 先获取游戏的成就列表
       const achievementsByGame = await api.ISteamUserStats.GetSchemaForGame(appid).catch(() => {})
       if (!achievementsByGame || !achievementsByGame.availableGameStats) {
@@ -117,23 +119,21 @@ const rule = {
         )
       }
       const img = await Render.render('inventory/index', { data })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('制作图片出错辣! 再试一次吧')
-      }
+      await e.reply(img)
       return true
     }
   },
   achievementStats: {
-    reg: /^#?steam成就统计\s*(\d+)?$/i,
+    reg: App.getReg('成就统计\\s*(\\d*)'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const appid = rule.achievementStats.reg.exec(e.msg)[1]
       if (!appid) {
         await e.reply([segment.at(e.user_id), '\n需要带上游戏的appid哦'])
         return true
       }
-      e.reply(['在查了...在查了...'])
       // 先获取游戏的成就列表
       const achievementsByGame = await api.ISteamUserStats.GetSchemaForGame(appid)
       if (!achievementsByGame || !achievementsByGame.availableGameStats) {
@@ -174,11 +174,7 @@ const rule = {
         size: 'large'
       })
       const img = await Render.render('inventory/index', { data })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('制作图片出错辣! 再试一次吧')
-      }
+      await e.reply(img)
       return true
     }
   }

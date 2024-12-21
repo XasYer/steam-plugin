@@ -1,4 +1,4 @@
-import { App } from '#components'
+import { App, Config } from '#components'
 import { api, db, utils } from '#models'
 
 const appInfo = {
@@ -9,6 +9,9 @@ const appInfo = {
 const rule = {
   dev: {
     reg: App.getReg('dev\\s*(.*)'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const keys = Object.keys(api)
       const text = rule.dev.reg.exec(e.msg)[1]
@@ -40,7 +43,7 @@ const rule = {
       const uid = utils.getAtUid(e.at, e.user_id)
       const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
       if (!steamId) {
-        await e.reply('没有绑定steamId')
+        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
       const replaceParams = (text) => {

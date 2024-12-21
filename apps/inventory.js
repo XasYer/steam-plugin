@@ -12,15 +12,17 @@ const appInfo = {
 const rule = {
   inventory: {
     reg: App.getReg('(?:库存|游戏列表|(?:最近|近期)(?:游?玩|运行|启动)|愿望单)\\s*(\\d*)'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const textId = rule.inventory.reg.exec(e.msg)?.[1]
       const uid = utils.getAtUid(e.at, e.user_id)
       const steamId = textId ? utils.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
       if (!steamId) {
-        await e.reply([segment.at(uid), '\n还没有绑定steamId哦, 先绑定steamId吧'])
+        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
-      e.reply([segment.at(uid), '\n在查了...在查了...'])
       const nickname = textId || await utils.getUserName(e.self_id, uid, e.group_id)
       const screenshotOptions = {
         title: '',
@@ -31,7 +33,7 @@ const rule = {
       if (e.msg.includes('近')) {
         const games = await api.IPlayerService.GetRecentlyPlayedGames(steamId)
         if (!games.length) {
-          await e.reply([segment.at(uid), '\n最近电子阳痿了'])
+          await e.reply([segment.at(uid), '\n', Config.tips.recentPlayEmptyTips])
           return true
         }
         screenshotOptions.games = _.orderBy(games, 'playtime_2weeks', 'desc')
@@ -39,7 +41,7 @@ const rule = {
       } else if (e.msg.includes('愿')) {
         const wishlist = await api.IWishlistService.GetWishlist(steamId)
         if (!wishlist.length) {
-          await e.reply([segment.at(uid), '\n愿望当场就实现了, 羡慕'])
+          await e.reply([segment.at(uid), '\n', Config.tips.wishListEmptyTips])
           return true
         }
         if (wishlist.length > Config.other.hiddenLength) {
@@ -77,7 +79,7 @@ const rule = {
       } else {
         const games = await api.IPlayerService.GetOwnedGames(steamId)
         if (!games.length) {
-          await e.reply([segment.at(uid), '\n获得成就: 没有给G胖一分钱'])
+          await e.reply([segment.at(uid), '\n', Config.tips.inventoryEmptyTips])
           return true
         }
         screenshotOptions.games = _.orderBy(games, 'playtime_forever', 'desc')
@@ -97,11 +99,7 @@ const rule = {
       const img = await Render.render('inventory/index', {
         data: [screenshotOptions]
       })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply([segment.at(uid), '\n制作图片出错辣! 再试一次吧'])
-      }
+      await e.reply(img)
       return true
     }
   }

@@ -10,6 +10,9 @@ const appInfo = {
 const rule = {
   mostplayed: {
     reg: App.getReg('(当前|[每当][日天])?(热玩|在线人数|玩家数量?)排行榜?单?'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const isDay = e.msg.includes('日')
       const games = []
@@ -57,6 +60,9 @@ const rule = {
   },
   topnewreleases: {
     reg: App.getReg('最?热门?新品排行榜?单?'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const topNewReleases = await api.ISteamChartsService.GetTopReleasesPages()
       const appids = topNewReleases.map(i => i.item_ids).flat()
@@ -89,6 +95,9 @@ const rule = {
   },
   topsellers: {
     reg: App.getReg('([本上每]?周)?热销排行榜?单?'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const isLastWeek = e.msg.includes('上')
       const lastWeekData = await api.IStoreTopSellersService.GetWeeklyTopSellers()

@@ -9,6 +9,9 @@ const appInfo = {
 const rule = {
   search: {
     reg: App.getReg('(?:搜索|search|查找|find)\\s*(.*)'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const name = rule.search.reg.exec(e.msg)[1].trim()
       if (!name) {
@@ -42,11 +45,7 @@ const rule = {
         size: 'large'
       }
       const img = await Render.render('inventory/index', { data: [screenshotOptions] })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('制作图片出错辣! 再试一次吧')
-      }
+      await e.reply(img)
       return true
     }
   }

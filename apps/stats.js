@@ -9,6 +9,9 @@ const appInfo = {
 const rule = {
   stats: {
     reg: App.getReg('群统计'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       if (!checkGroup(e.group_id)) {
         return true
@@ -110,11 +113,8 @@ const rule = {
       }
 
       const img = await Render.render('inventory/index', { data })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('制作图片出错辣! 再试一次吧')
-      }
+      await e.reply(img)
+      return true
     }
   }
 }

@@ -136,11 +136,37 @@ class Config {
     return this.getDefOrConfig('gif')
   }
 
+  /**
+   * 获取提示配置
+   * @returns {{
+   *   repeatTips: string,
+   *   loadingTips: string,
+   *   noSteamIdTips: string,
+   *   repeatBindTips: string,
+   *   inventoryEmptyTips: string,
+   *   recentPlayEmptyTips: string,
+   *   wishListEmptyTips: string,
+   * }}
+   */
+  get tips () {
+    return this.getDefOrConfig('tips', true)
+  }
+
   /** 默认配置和用户配置 */
-  getDefOrConfig (name) {
+  getDefOrConfig (name, repeatEmpty = false) {
     const def = this.getdefSet(name)
     const config = this.getConfig(name)
-    return { ...def, ...config }
+    if (repeatEmpty) {
+      const res = {}
+      for (const key of Object.keys(def)) {
+        res[key] = ['boolean', 'number'].includes(typeof def[key])
+          ? config[key]
+          : config[key] || def[key]
+      }
+      return res
+    } else {
+      return { ...def, ...config }
+    }
   }
 
   /** 默认配置 */

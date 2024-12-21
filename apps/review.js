@@ -9,6 +9,9 @@ const appInfo = {
 const rule = {
   review: {
     reg: App.getReg('(?:最新|热门)?评论\\s*(\\d*)'),
+    cfg: {
+      tips: true
+    },
     fnc: async e => {
       const appid = rule.review.reg.exec(e.msg)[1]?.trim()
       if (!appid) {
