@@ -27,7 +27,8 @@
 
 .index{
     position: absolute;
-    top: -8px;
+    line-height: 0.8;
+    top: -4px;
     left: 12px;
     font-size: 12px;
     background-color: white;
@@ -46,12 +47,13 @@
 }
 
 .header-img>img {
+    height: 56px;
     border-radius: 5px;
     vertical-align: middle;
 }
 
 .square {
-    width: 60px;
+    width: 56px;
 }
 
 .rectangle {
