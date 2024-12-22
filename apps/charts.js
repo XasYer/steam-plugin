@@ -68,7 +68,8 @@ const rule = {
       const appids = topNewReleases.map(i => i.item_ids).flat()
       const appInfo = await api.IStoreBrowseService.GetItems(appids.map(i => i.appid), {
         include_release: true,
-        include_reviews: true
+        include_reviews: true,
+        include_assets: true
       })
       const data = []
       for (const i of topNewReleases) {
@@ -76,13 +77,16 @@ const rule = {
           title: `${moment.unix(i.start_of_month).format('YYYY年MM月')} 最热新品 (随机排序)`,
           size: 'large',
           games: i.item_ids.map(({ appid }) => {
-            const info = appInfo[appid] || {}
+            const info = appInfo[appid]
+            if (!info) {
+              return { appid }
+            }
             const price = info.best_purchase_option || {}
             return {
               name: info.name,
               appid: `${appid} ${info.reviews?.summary_filtered.review_score_label || ''}`,
               desc: info.release ? `${moment.unix(info.release.steam_release_date).format('YYYY年MM月DD日')}` : '',
-              header_image: utils.getHeaderImgUrlByAppid(appid),
+              header_image: utils.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
               price: getPrice(price, info.is_free)
             }
           })

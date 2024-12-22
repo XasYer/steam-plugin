@@ -49,7 +49,9 @@ const rule = {
         }
         // 愿望单没有给name, 尝试获取一下, 顺便也可以获取一下价格 获取失败超过3次就不再获取了
         // 2024年11月27日 已更新 有个api可以获取多个appid 不知道一次最多能获取多少
-        const appidsInfo = await api.IStoreBrowseService.GetItems(wishlist.map(i => i.appid))
+        const appidsInfo = await api.IStoreBrowseService.GetItems(wishlist.map(i => i.appid), {
+          include_assets: true
+        })
         for (const i in wishlist) {
           const appid = wishlist[i].appid
           const info = appidsInfo[appid]
@@ -60,6 +62,7 @@ const rule = {
             }
             continue
           }
+          wishlist[i].header_image = utils.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header)
           wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
           wishlist[i].name = info.name
           wishlist[i].price = info.is_free

@@ -223,13 +223,14 @@ export async function makeForwardMsg (e, msg) {
 /**
  * 获取appid对应的header图片url
  * @param {string} appid
- * @param {string} type
+ * @param {string?} type
+ * @param {boolean?} isSchinese
  * @returns {string}
  */
-export function getHeaderImgUrlByAppid (appid, type = 'apps') {
+export function getHeaderImgUrlByAppid (appid, type = 'apps', name = 'header.jpg') {
   if (!appid) return ''
   // return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`
-  return `https://steamcdn-a.akamaihd.net/steam/${type}/${appid}/header.jpg`
+  return `https://steamcdn-a.akamaihd.net/steam/${type}/${appid}/${name}`
 }
 
 /**
