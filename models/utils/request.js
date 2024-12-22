@@ -22,7 +22,7 @@ export default async function request (url, options = {}) {
     }
   })()
   const baseURL = options.baseURL ?? steamApi
-  logger[Config.other.log ? 'info' : 'debug'](`开始请求api: ${url}`)
+  logger.info(`开始请求api: ${url}`)
   const start = Date.now()
   return await axios.request({
     url,
@@ -39,7 +39,7 @@ export default async function request (url, options = {}) {
     },
     timeout: Config.steam.timeout * 1000
   }).then(res => {
-    logger[Config.other.log ? 'info' : 'debug'](`请求api成功: ${url}, 耗时: ${Date.now() - start}ms`)
+    logger.info(`请求api成功: ${url}, 耗时: ${Date.now() - start}ms`)
     return res.data
   })
 }

@@ -44,9 +44,7 @@ export async function GetWeeklyTopSellers (startDate) {
     page_count: 100,
     context: {
       language: 'schinese',
-      elanguage: 0,
-      country_code: 'CN',
-      steam_realm: 1
+      country_code: 'CN'
     },
     data_request: {
       include_basic_info: true

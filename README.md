@@ -12,6 +12,7 @@
 ![GitHub license](https://img.shields.io/github/license/XasYer/steam-plugin)
 ![GitHub issues](https://img.shields.io/github/issues/XasYer/steam-plugin)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/XasYer/steam-plugin)
+![GitHub repo size](https://img.shields.io/github/repo-size/XasYer/steam-plugin)
 <br/>
 
 <img src="https://count.getloli.com/get/@XasYer-steam-plugin?theme=rule34" />

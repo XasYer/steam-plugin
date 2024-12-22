@@ -39,9 +39,7 @@ export async function GetGamesByConcurrentPlayers () {
     country_code: 'CN',
     context: {
       language: 'schinese',
-      elanguage: 0,
-      country_code: 'CN',
-      steam_realm: 1
+      country_code: 'CN'
     },
     data_request: {
       include_basic_info: true
@@ -79,9 +77,7 @@ export async function GetMostPlayedGames () {
   const input = {
     context: {
       language: 'schinese',
-      elanguage: 0,
-      country_code: 'CN',
-      steam_realm: 1
+      country_code: 'CN'
     },
     data_request: {
       include_basic_info: true

@@ -169,9 +169,7 @@ export async function GetItems (appids, options = {}) {
     country_code: 'CN',
     context: {
       language: 'schinese',
-      elanguage: 0,
-      country_code: 'CN',
-      steam_realm: 1
+      country_code: 'CN'
     },
     data_request: options
   }

@@ -18,9 +18,7 @@ export async function Query () {
     query_name: 'SteamCharts Live Top Sellers',
     context: {
       language: 'schinese',
-      elanguage: 0,
-      country_code: 'CN',
-      steam_realm: 1
+      country_code: 'CN'
     },
     query: {
       start: 0,
