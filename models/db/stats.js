@@ -1,4 +1,3 @@
-import { logger } from '#lib'
 import { sequelize, DataTypes, fn, col } from './base.js'
 
 /**
@@ -117,22 +116,6 @@ const UserStatsTable = sequelize.define('userStats', {
 
 await UserStatsTable.sync()
 await GameStatsTable.sync()
-
-// 移除userStats表的列steamId的unique属性 忘记多群了
-// 七天后移除 2024年12月14日09:29:42
-try {
-  const queryInterface = sequelize.getQueryInterface()
-  const UserStatsTableDescription = await queryInterface.describeTable('userStats')
-  if (UserStatsTableDescription.steamId.unique) {
-    await queryInterface.changeColumn('userStats', 'steamId', {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: false
-    })
-  }
-} catch (error) {
-  logger.error('更新userStats表的列steamId的unique属性失败, 可能会导致不能多群统计', error)
-}
 
 /**
  * 更新游玩统计

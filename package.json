@@ -14,6 +14,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "puppeteer-screen-recorder": "^3.0.6",
+    "qrcode": "^1.5.4",
     "sequelize": "^6.37.5",
     "sqlite3": "5.1.6"
   },

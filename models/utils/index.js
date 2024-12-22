@@ -326,3 +326,32 @@ export function getPersonaState (state) {
   }
   return stateMap[state] || '其他'
 }
+
+/**
+ * 解码access_token中的jwt
+ * @param {string} jwt
+ * @returns {jwtInfo}
+ * @typedef {Object} jwtInfo
+ * @property {string} iss - 发行者（issuer）。
+ * @property {string} sub - 用户的 Steam ID。
+ * @property {string[]} aud - 接收者（audience）。
+ * @property {number} exp - Token 的过期时间（UNIX 时间戳）。
+ * @property {number} nbf - Token 的生效时间（UNIX 时间戳）。
+ * @property {number} iat - Token 的刷新时间（UNIX 时间戳）。
+ * @property {string} jti - Token 的唯一标识符（JWT ID）。
+ * @property {number} oat - Token 的生成时间（UNIX 时间戳）。
+ * @property {number} rt_exp - Refresh Token 的过期时间（UNIX 时间戳）。
+ * @property {number} per - 权限（permission level）。
+ * @property {string} ip_subject - 与 Token 关联的 IP 地址（主）。
+ * @property {string} ip_confirmer - 与 Token 关联的 IP 地址（确认者）。
+*/
+export function decodeAccessTokenJwt (jwt) {
+  const parts = jwt.split('.')
+  if (parts.length != 3) {
+    return false
+  }
+
+  const standardBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
+
+  return JSON.parse(Buffer.from(standardBase64, 'base64').toString('utf8'))
+}

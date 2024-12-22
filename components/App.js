@@ -90,7 +90,9 @@ export default class App {
             delete throttle[key]
           }, 1000 * 60)
         }
-        App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
+        if (cfg.tips) {
+          App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
+        }
         const res = await fnc(e).catch(error => {
           logger.error(error)
           let message = error.message

@@ -25,7 +25,7 @@ const rule = {
           '使用方法: ',
           '#steamdev 接口名.方法名 参数1 参数2...',
           '带s的参数为数组',
-          '参数可使用{steamid}占位符，表示当前绑定的SteamID',
+          '参数可使用{steamid}和{accesstoken}占位符，表示当前绑定的SteamID和AccessToken',
           '接口名和方法名可使用数字索引，例如: 0.0 1.1 2.2',
           '可使用的接口名和方法名如下:',
           ...methods
@@ -46,11 +46,21 @@ const rule = {
         await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
+      const accessToken = await db.TokenTableGetByUserIdAndSteamId(uid, steamId)
+      if (!accessToken?.accessToken && /{access_?token}/i.test(e.msg)) {
+        await e.reply([segment.at(uid), '\n', '没有绑定accessToken'])
+        return true
+      }
       const replaceParams = (text) => {
         if (Array.isArray(text)) {
           return text.map(replaceParams)
+        } else if (typeof text === 'object') {
+          for (const key in text) {
+            text[key] = replaceParams(text[key])
+          }
+          return text
         } else {
-          return text.replace(/{steamid}/ig, steamId)
+          return text.replace(/{steamid}/ig, steamId).replace(/{access_?token}/ig, accessToken.accessToken)
         }
       }
       const params = args.map(replaceParams)
@@ -60,7 +70,7 @@ const rule = {
       const time = end - start
       const msg = [
         `接口: ${interfaceName}.${methodName}(${methodParams.join(', ')})`,
-        `参数: ${params.join(' ')}`,
+        `参数: ${params.map(i => i.length > 17 ? i.replace(/^(.{5})(.*)(.{5})$/, '$1...$3') : i).join(' ')}`,
         `耗时: ${time}ms`,
         '结果: ',
         JSON.stringify(result, null, 2) ?? 'undefined'
@@ -78,12 +88,20 @@ function getParams (fn) {
 }
 
 function split (text) {
-  const reg = /\[.*?\]|\S+/g
+  const reg = /\[.*?\]|\{.*?\}|\S+/g
   const matches = text.match(reg)
 
   return matches.map(match => {
     if (match.startsWith('[') && match.endsWith(']')) {
       return match.slice(1, -1).split(' ')
+    } else if (match.startsWith('{') && match.endsWith('}')) {
+      const obj = {}
+      const entries = match.slice(1, -1).split(',')
+      entries.forEach(entry => {
+        const [key, value] = entry.split(':').map(str => str.trim())
+        obj[key] = value
+      })
+      return obj
     }
     return match
   })
