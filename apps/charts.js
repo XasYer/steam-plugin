@@ -27,7 +27,7 @@ const rule = {
             name: i.item.name,
             appid: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `峰值: ${i.peak_in_game}`,
-            header_image: utils.getHeaderImgUrlByAppid(i.appid),
+            image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.item.is_free)
           })
         }
@@ -40,7 +40,7 @@ const rule = {
             name: i.item.name,
             appid: `当前玩家: ${i.concurrent_in_game}`,
             desc: `峰值: ${i.peak_in_game}`,
-            header_image: utils.getHeaderImgUrlByAppid(i.appid),
+            image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.item.is_free)
           })
         }
@@ -49,7 +49,6 @@ const rule = {
         {
           title: `${isDay ? '每日' : '当前'}玩家数量最多的游戏排行榜`,
           desc: `${isDay ? '汇总' : '更新'}时间: ${moment.unix(updateTime).format('YYYY-MM-DD HH:mm:ss')}`,
-          size: 'large',
           games
         }
       ]
@@ -75,7 +74,6 @@ const rule = {
       for (const i of topNewReleases) {
         data.push({
           title: `${moment.unix(i.start_of_month).format('YYYY年MM月')} 最热新品 (随机排序)`,
-          size: 'large',
           games: i.item_ids.map(({ appid }) => {
             const info = appInfo[appid]
             if (!info) {
@@ -86,7 +84,7 @@ const rule = {
               name: info.name,
               appid: `${appid} ${info.reviews?.summary_filtered.review_score_label || ''}`,
               desc: info.release ? `${moment.unix(info.release.steam_release_date).format('YYYY年MM月DD日')}` : '',
-              header_image: utils.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
+              image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
               price: getPrice(price, info.is_free)
             }
           })
@@ -118,7 +116,7 @@ const rule = {
             name: i.item.name,
             appid: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `持续周数: ${i.consecutive_weeks}`,
-            header_image: utils.getHeaderImgUrlByAppid(i.appid),
+            image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.item.is_free)
           })
         }
@@ -133,7 +131,7 @@ const rule = {
             name: i.name,
             appid: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `持续周数: ${lastWeekInfo ? lastWeekInfo.consecutive_weeks : 1}`,
-            header_image: utils.getHeaderImgUrlByAppid(i.appid),
+            image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.is_free)
           })
         }
@@ -142,7 +140,6 @@ const rule = {
         {
           title: `${isLastWeek ? '上' : '本'}周热销游戏排行榜`,
           desc: `统计时间: ${statisticalTime}`,
-          size: 'large',
           games
         }
       ]

@@ -37,9 +37,8 @@ const Render = {
         Math.max(...params.data.map(i => i.games.length)),
         Math.max(1, Number(Config.other.itemLength) || 1)
       )
-      const size = params.data.findIndex(i => i.size === 'large') >= 0 ? 370 : 300
       const len = minLength === 1 ? 1.4 : minLength
-      data.style = `<style>\n#container,.games{\nwidth: ${len * size}px;\n}\n</style>`
+      data.style = `<style>\n#container,.games{\nwidth: ${len * 370}px;\n}\n</style>`
     }
     const img = await puppeteer.screenshot(`${Version.pluginName}/${path}`, data)
     if (img) {

@@ -51,13 +51,15 @@ await TokenTable.sync()
 /**
  * 添加steamId到userId
  * @param {string} userId
- * @param {string} steamId
+ * @param {string} accessToken
+ * @param {string?} refreshToken
+ * @param {string?} cookie
  * @returns {Promise<TokenColumns|null>}
  */
 export async function TokenTableAddData (userId, accessToken, refreshToken = '', cookie = '') {
   userId = String(userId)
 
-  const jwt = utils.decodeAccessTokenJwt(accessToken)
+  const jwt = utils.steam.decodeAccessTokenJwt(accessToken)
 
   if (!jwt) {
     throw new Error('accessToken 解码失败')

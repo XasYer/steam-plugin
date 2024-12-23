@@ -24,26 +24,25 @@
 <div class="games">
 <% item.games.length=isHidden ? hiddenLength : item.games.length %>
     {{each item.games i idx}}
-    <div class="size-{{item.size}} center-y">
+    <div class="game-content">
         <div class="index">No. {{idx+1}}</div>
         <div class="header-img">
-            {{if i.header_image}}
-            <img src="{{i.header_image}}" class="{{i.header_image_class || 'rectangle'}}">
+            {{if i.image}}
+            <img src="{{i.image}}" class="{{i.isAvatar ? 'square' : 'rectangle'}}">
             {{else if !i.noImg}}
             <img
-                src="https://steamcdn-a.akamaihd.net/steam/{{i.header_image_type || 'apps'}}/{{i.appid}}/header.jpg" class="{{i.header_image_class || 'rectangle'}}">
+                src="https://steamcdn-a.akamaihd.net/steam/apps/{{i.appid}}/header.jpg" class="{{i.isAvatar ? 'square' : 'rectangle'}}">
             {{/if}}
         </div>
-        <!-- TODO: 待重构 屎一样 -->
         <div
-            class="game-info overflow size-{{item.size}}-info{{!i.price? '-noprice' :''}} {{(!i.price && item.size === 'large' ) ? `size-full${i.noImg ? '-noimg' : ''}` : '' }} {{(i.header_image_class === 'square' && item.size === 'large' && !i.price) ? 'size-large-square' : ''}}">
+            class="game-info overflow game-info-size-{{!i.price? 'large' :'small'}}">
             <div class="game-title">
                 {{i.name || ''}}
             </div>
-            <div class="game-appid" {{@ i.appid_style}}>
+            <div class="game-appid" {{@ i.appidStyle}}>
                 {{i.appid || ''}}
             </div>
-            <div class="game-desc" {{@ i.desc_style}}>
+            <div class="game-desc" {{@ i.descStyle}}>
                 {{i.desc || ''}}
             </div>
         </div>

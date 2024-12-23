@@ -34,16 +34,9 @@
     background-color: white;
 }
 
-.center-y {
+.game-content {
     align-items: center;
-}
-
-.size-large {
     width: 360px;
-}
-
-.size-small {
-    width: 290px;
 }
 
 .header-img>img {
@@ -61,40 +54,19 @@
 }
 
 .game-info {
-    margin-left: 10px;
+    margin-left: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 60px;
 }
 
-.size-large-info {
-    width: 150px;
-    margin-right: 5px;
+.game-info-size-large {
+    width: 340px;
 }
 
-.size-small-info {
-    width: 150px;
-}
-
-.size-large-info-noprice {
-    width: 210px;
-}
-
-.size-small-info-noprice {
-    width: 200px;
-}
-
-.size-large-square {
-    width: 270px;
-}
-
-.size-full {
-    width: 300px;
-}
-
-.size-full-noimg {
-    width: 360px;
+.game-info-size-small {
+    width: 170px;
 }
 
 .overflow {

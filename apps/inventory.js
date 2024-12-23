@@ -17,17 +17,16 @@ const rule = {
     },
     fnc: async e => {
       const textId = rule.inventory.reg.exec(e.msg)?.[1]
-      const uid = utils.getAtUid(e.at, e.user_id)
-      const steamId = textId ? utils.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
+      const uid = utils.bot.getAtUid(e.at, e.user_id)
+      const steamId = textId ? utils.steam.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
       if (!steamId) {
         await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
-      const nickname = textId || await utils.getUserName(e.self_id, uid, e.group_id)
+      const nickname = textId || await utils.bot.getUserName(e.self_id, uid, e.group_id)
       const screenshotOptions = {
         title: '',
         games: [],
-        size: 'small',
         desc: ''
       }
       if (e.msg.includes('近')) {
@@ -62,7 +61,7 @@ const rule = {
             }
             continue
           }
-          wishlist[i].header_image = utils.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header)
+          wishlist[i].header_image = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header)
           wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
           wishlist[i].name = info.name
           wishlist[i].price = info.is_free

@@ -21,11 +21,11 @@ const rule = {
       const open = e.msg.includes('开启')
       // 如果附带了steamId
       if (textId) {
-        let steamId = utils.getSteamId(textId)
+        let steamId = utils.steam.getSteamId(textId)
         const user = await db.UserTableGetDataBySteamId(steamId)
         // 如果没有人绑定这个steamId则判断是否为主人,主人才能添加推送
         if (((!user && e.isMaster) || (user && user.userId == e.user_id))) {
-          const uid = e.isMaster ? utils.getAtUid(_.isEmpty(e.at) ? e.user_id : e.at, '0') : e.user_id
+          const uid = e.isMaster ? utils.bot.getAtUid(_.isEmpty(e.at) ? e.user_id : e.at, '0') : e.user_id
           if (uid != '0') {
             const userBindAll = await db.UserTableGetDataByUserId(uid)
             const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
@@ -42,7 +42,7 @@ const rule = {
           await e.reply('只能开启或关闭自己的推送哦')
         }
       } else {
-        const uid = utils.getAtUid(e.isMaster ? e.at : '', e.user_id)
+        const uid = utils.bot.getAtUid(e.isMaster ? e.at : '', e.user_id)
         // 没有附带steamId则使用绑定的steamId
         const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
         if (steamId) {
@@ -73,19 +73,18 @@ const rule = {
       }
       const userList = []
       for (const i of list) {
-        const name = i.userId == '0' ? 'N/A' : await utils.getUserName(i.botId, i.userId, i.groupId)
+        const name = i.userId == '0' ? 'N/A' : await utils.bot.getUserName(i.botId, i.userId, i.groupId)
         userList.push({
           name,
           desc: i.steamId,
-          header_image: await utils.getUserAvatar(i.botId, i.userId == '0' ? i.botId : i.userId, i.groupId),
-          header_image_class: 'square'
+          image: await utils.bot.getUserAvatar(i.botId, i.userId == '0' ? i.botId : i.userId, i.groupId),
+          isAvatar: true
         })
       }
       const data = [{
         title: `群${e.group_id}推送列表`,
         desc: `共${list.length}个推送用户`,
-        games: userList,
-        size: 'small'
+        games: userList
       }]
       const img = await Render.render('inventory/index', { data })
       if (img) {
@@ -114,7 +113,7 @@ const rule = {
           return true
         }
       } else {
-        const memberList = await utils.getGroupMemberList(e.self_id, e.group_id)
+        const memberList = await utils.bot.getGroupMemberList(e.self_id, e.group_id)
         list = memberList.length
           ? await db.PushTableGetDataByUserList(memberList, false)
           : await db.PushTableGetDataByGroupId(e.group_id, false)
@@ -142,22 +141,22 @@ const rule = {
       }
       for (const i of _.sortBy(userState, sort)) {
         const userInfo = list.find(j => j.steamId == i.steamid)
-        const nickname = isAll ? i.personaname : await utils.getUserName(userInfo.botId, userInfo.userId, e.group_id)
+        const nickname = isAll ? i.personaname : await utils.bot.getUserName(userInfo.botId, userInfo.userId, e.group_id)
         if (i.gameid) {
           playing.push({
             name: i.gameextrainfo,
             appid: nickname,
             desc: i.personaname,
-            header_image: utils.getHeaderImgUrlByAppid(i.gameid)
+            image: utils.steam.getHeaderImgUrlByAppid(i.gameid)
           })
         } else {
           notPlaying.push({
             name: nickname,
             appid: i.personaname,
-            desc: utils.getPersonaState(i.personastate),
-            header_image: await utils.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || i.avatarfull,
-            header_image_class: 'square',
-            desc_style: `style="background-color: #${getColor(i.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+            desc: utils.steam.getPersonaState(i.personastate),
+            image: await utils.bot.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || i.avatarfull,
+            isAvatar: true,
+            descStyle: `style="background-color: #${getColor(i.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
           })
         }
       }
@@ -165,14 +164,12 @@ const rule = {
         {
           title: '正在玩游戏的群友',
           desc: `共${playing.length}个`,
-          games: playing,
-          size: 'small'
+          games: playing
         },
         {
           title: '没有在玩游戏的群友',
           desc: `共${notPlaying.length}个`,
-          games: notPlaying,
-          size: 'small'
+          games: notPlaying
         }
       ]
       const img = await Render.render('inventory/index', { data })

@@ -21,7 +21,7 @@ const rule = {
         await e.reply('查询失败，可能没有这个游戏?')
         return true
       }
-      const icon = utils.getHeaderImgUrlByAppid(appid)
+      const icon = utils.steam.getHeaderImgUrlByAppid(appid)
       const iconBuffer = await utils.getImgUrlBuffer(icon)
       const msg = []
       if (iconBuffer) {

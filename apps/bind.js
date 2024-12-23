@@ -11,13 +11,13 @@ const rule = {
   getBindImg: {
     // 这个指令必须# 不然可能会误触发
     reg: /^#steam$/i,
-    fnc: async e => await e.reply(await bind.getBindSteamIdsImg(e.self_id, utils.getAtUid(e.at, e.user_id), e.group_id))
+    fnc: async e => await e.reply(await bind.getBindSteamIdsImg(e.self_id, utils.bot.getAtUid(e.at, e.user_id), e.group_id))
   },
   bind: {
     reg: App.getReg('(?:[切更]换)?(?:绑定|bind)\\s*(\\d+)?'),
     fnc: async e => {
       // 如果是主人可以at其他用户进行绑定
-      const uid = utils.getAtUid(e.isMaster ? e.at : '', e.user_id)
+      const uid = utils.bot.getAtUid(e.isMaster ? e.at : '', e.user_id)
       const textId = rule.bind.reg.exec(e.msg)[1]
       const userBindAll = await db.UserTableGetDataByUserId(uid)
       if (!textId) {
@@ -25,7 +25,7 @@ const rule = {
         return true
       }
       const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
-      const steamId = index >= 0 ? userBindAll[index].steamId : utils.getSteamId(textId)
+      const steamId = index >= 0 ? userBindAll[index].steamId : utils.steam.getSteamId(textId)
       // 检查steamId是否被绑定
       const bindInfo = await db.UserTableGetDataBySteamId(steamId)
       if (bindInfo) {
@@ -58,10 +58,10 @@ const rule = {
       }
       const isForce = e.msg.includes('强制') && e.isMaster
       // 如果是主人可以at其他用户进行绑定
-      const uid = utils.getAtUid(e.isMaster ? e.at : '', e.user_id)
+      const uid = utils.bot.getAtUid(e.isMaster ? e.at : '', e.user_id)
       const userBindAll = await db.UserTableGetDataByUserId(uid)
       const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
-      const steamId = index >= 0 ? userBindAll[index].steamId : utils.getSteamId(textId)
+      const steamId = index >= 0 ? userBindAll[index].steamId : utils.steam.getSteamId(textId)
       // 检查steamId是否被绑定
       const bindInfo = await db.UserTableGetDataBySteamId(steamId)
       if (bindInfo) {

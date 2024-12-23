@@ -37,7 +37,6 @@ const rule = {
       for (const item of items) {
         const key = {
           title: item.title,
-          size: 'large',
           games: []
         }
         for (const i of res[item.key].items) {
@@ -45,8 +44,7 @@ const rule = {
             appid: i.id,
             name: i.name,
             desc: i.discount_expiration ? moment.unix(i.discount_expiration).format('YYYY-MM-DD HH:mm:ss') : '',
-            header_image: i.header_image,
-            header_image_type: i.header_image.match(/store_item_assets\/steam\/(.+?)\//)?.[1] || 'apps',
+            image: i.header_image,
             price: i.discounted
               ? {
                   original: `¥ ${i.original_price / 100}`,

@@ -16,17 +16,16 @@ const rule = {
     },
     fnc: async e => {
       const textId = rule.rollGame.reg.exec(e.msg)?.[3]
-      const uid = utils.getAtUid(e.at, e.user_id)
-      const steamId = textId ? utils.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
+      const uid = utils.bot.getAtUid(e.at, e.user_id)
+      const steamId = textId ? utils.steam.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
       if (!steamId) {
         await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
-      const nickname = textId || await utils.getUserName(e.self_id, uid, e.group_id)
+      const nickname = textId || await utils.bot.getUserName(e.self_id, uid, e.group_id)
       const screenshotOptions = {
         title: '',
         games: [],
-        size: 'small',
         desc: ''
       }
 

@@ -14,14 +14,14 @@ const rule = {
     reg: App.getReg('年度回顾分享图片\\s*(\\d+|\\d+[-:\\s]\\d+)?'),
     fnc: async e => {
       const text = rule.shareImage.reg.exec(e.msg)[1]
-      const uid = utils.getAtUid(e.at, e.user_id)
+      const uid = utils.bot.getAtUid(e.at, e.user_id)
       const { year, steamId } = await (async () => {
         if (text) {
           if (/[-:\s]/.test(text)) {
             const [year, steamId] = text.split(/[-:\s]/)
             return {
               year,
-              steamId: utils.getSteamId(steamId)
+              steamId: utils.steam.getSteamId(steamId)
             }
           } else {
             return {
@@ -46,7 +46,7 @@ const rule = {
         await e.reply(`年度回顾可见性未公开, 获取失败, 可前往\nhttps://store.steampowered.com/replay/${steamId}/${year}\n进行查看`)
         return true
       }
-      const path = utils.getStaticUrl(i.url_path)
+      const path = utils.steam.getStaticUrl(i.url_path)
       const buffer = await utils.getImgUrlBuffer(path)
       if (buffer) {
         await e.reply(segment.image(buffer))

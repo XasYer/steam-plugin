@@ -48,12 +48,12 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
   let index = 1
   for (const item of userBindAll) {
     const i = allSteamIdInfo[item.steamId] || {}
-    const avatar = Config.other.steamAvatar ? i.avatarfull : await utils.getUserAvatar(bid, uid, gid)
+    const avatar = Config.other.steamAvatar ? i.avatarfull : await utils.bot.getUserAvatar(bid, uid, gid)
     const info = {
       steamId: item.steamId,
       isBind: item.isBind,
-      name: i.personaname || await utils.getUserName(bid, uid, gid),
-      avatar: avatar || await utils.getUserAvatar(bid, uid, gid),
+      name: i.personaname || await utils.bot.getUserName(bid, uid, gid),
+      avatar: avatar || await utils.bot.getUserAvatar(bid, uid, gid),
       index
     }
     if (enablePushSteamIdList.includes(item.steamId)) {

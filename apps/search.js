@@ -41,8 +41,8 @@ const rule = {
       }
       const screenshotOptions = {
         title: `${name} 搜索结果`,
-        games,
-        size: 'large'
+        games
+
       }
       const img = await Render.render('inventory/index', { data: [screenshotOptions] })
       await e.reply(img)

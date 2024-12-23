@@ -30,7 +30,7 @@ const rule = {
           '可使用的接口名和方法名如下:',
           ...methods
         ]
-        await utils.makeForwardMsg(e, msg)
+        await utils.bot.makeForwardMsg(e, msg)
         return true
       }
       const [cmd, ...args] = split(text)
@@ -40,14 +40,15 @@ const rule = {
       const methodName = methods[methodKey] || methodKey
       const method = api[interfaceName][methodName]
       const methodParams = getParams(method)
-      const uid = utils.getAtUid(e.at, e.user_id)
+      const uid = utils.bot.getAtUid(e.at, e.user_id)
       const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
       if (!steamId) {
         await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
-      const accessToken = await db.TokenTableGetByUserIdAndSteamId(uid, steamId)
-      if (!accessToken?.accessToken && /{access_?token}/i.test(e.msg)) {
+      const hasAccessToken = /{access_?token}/i.test(e.msg)
+      const accessToken = hasAccessToken && await utils.steam.getAccessToken(uid, steamId)
+      if (hasAccessToken && !accessToken) {
         await e.reply([segment.at(uid), '\n', '没有绑定accessToken'])
         return true
       }
@@ -60,7 +61,7 @@ const rule = {
           }
           return text
         } else {
-          return text.replace(/{steamid}/ig, steamId).replace(/{access_?token}/ig, accessToken.accessToken)
+          return text.replace(/{steamid}/ig, steamId).replace(/{access_?token}/ig, accessToken)
         }
       }
       const params = args.map(replaceParams)
@@ -75,7 +76,7 @@ const rule = {
         '结果: ',
         JSON.stringify(result, null, 2) ?? 'undefined'
       ]
-      await utils.makeForwardMsg(e, msg)
+      await utils.bot.makeForwardMsg(e, msg)
       return true
     }
   }

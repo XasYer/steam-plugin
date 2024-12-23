@@ -23,87 +23,81 @@ const rule = {
       if (stats.gamePlayTotal.length) {
         data.push({
           title: '本群游玩次数最多的游戏',
-          games: stats.gamePlayTotal.map(i => ({ ...i, desc: `共 ${i.playTotal} 次` })),
-          size: 'small'
+          games: stats.gamePlayTotal.map(i => ({ ...i, desc: `共 ${i.playTotal} 次` }))
         })
       }
       if (stats.gamePlayTime.length) {
         data.push({
           title: '本群游玩时长最多的游戏',
-          games: stats.gamePlayTime.map(i => ({ ...i, desc: `共 ${utils.formatDuration(i.playTime) || '正在游玩中'}` })),
-          size: 'small'
+          games: stats.gamePlayTime.map(i => ({ ...i, desc: `共 ${utils.formatDuration(i.playTime) || '正在游玩中'}` }))
         })
       }
 
       const userPlayTotal = []
       for (const i of stats.userPlayTotal) {
         userPlayTotal.push({
-          name: await utils.getUserName(i.botId, i.userId, e.group_id),
+          name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
           appid: i.steamId,
           desc: `共 ${i.playTotal} 次`,
-          header_image: await utils.getUserAvatar(i.botId, i.userId, e.group_id),
-          header_image_class: 'square'
+          image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
+          isAvatar: true
         })
       }
       if (userPlayTotal.length) {
         data.push({
           title: '本群游玩次数最多的用户',
-          games: userPlayTotal,
-          size: 'small'
+          games: userPlayTotal
         })
       }
 
       const userPlayTime = []
       for (const i of stats.userPlayTime) {
         userPlayTime.push({
-          name: await utils.getUserName(i.botId, i.userId, e.group_id),
+          name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
           appid: i.steamId,
           desc: `共 ${utils.formatDuration(i.playTime) || '正在游玩中'}`,
-          header_image: await utils.getUserAvatar(i.botId, i.userId, e.group_id),
-          header_image_class: 'square'
+          image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
+          isAvatar: true
         })
       }
       if (userPlayTime.length) {
         data.push({
           title: '本群游玩时长最多的用户',
-          games: userPlayTime,
-          size: 'small'
+          games: userPlayTime
         })
       }
 
       const userOnlineTotal = []
       for (const i of stats.userOnlineTotal) {
         userOnlineTotal.push({
-          name: await utils.getUserName(i.botId, i.userId, e.group_id),
+          name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
           appid: i.steamId,
           desc: `共 ${i.onlineTotal} 次`,
-          header_image: await utils.getUserAvatar(i.botId, i.userId, e.group_id),
-          header_image_class: 'square'
+          image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
+          isAvatar: true
         })
       }
       if (userOnlineTotal.length) {
         data.push({
           title: '本群上线次数最多的用户',
-          games: userOnlineTotal,
-          size: 'small'
+          games: userOnlineTotal
         })
       }
 
       const userOnlineTime = []
       for (const i of stats.userOnlineTime) {
         userOnlineTime.push({
-          name: await utils.getUserName(i.botId, i.userId, e.group_id),
+          name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
           appid: i.steamId,
           desc: `共 ${utils.formatDuration(i.onlineTime) || '正在游玩中'}`,
-          header_image: await utils.getUserAvatar(i.botId, i.userId, e.group_id),
-          header_image_class: 'square'
+          image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
+          isAvatar: true
         })
       }
       if (userOnlineTime.length) {
         data.push({
           title: '本群在线时长最多的用户',
-          games: userOnlineTime,
-          size: 'small'
+          games: userOnlineTime
         })
       }
 

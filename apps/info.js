@@ -16,8 +16,8 @@ const rule = {
     },
     fnc: async e => {
       const textId = rule.info.reg.exec(e.msg)?.[1]
-      const uid = utils.getAtUid(e.at, e.user_id)
-      const steamId = textId ? utils.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
+      const uid = utils.bot.getAtUid(e.at, e.user_id)
+      const steamId = textId ? utils.steam.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
       if (!steamId) {
         await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
@@ -32,16 +32,16 @@ const rule = {
       if (Config.other.infoMode == 2) {
         const color = info.gameid ? 1 : info.personastate === 0 ? 3 : 2
         const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
-        const avatar = utils.getStaticUrl(bg.animated_avatar.image_small) || info.avatarfull
+        const avatar = utils.steam.getStaticUrl(bg.animated_avatar.image_small) || info.avatarfull
         const options = {
-          background: utils.getStaticUrl(bg.mini_profile_background.image_large),
-          frame: utils.getStaticUrl(bg.avatar_frame.image_small),
-          avatar: Config.other.steamAvatar ? avatar : await utils.getUserAvatar(e.self_id, uid, e.group_id),
+          background: utils.steam.getStaticUrl(bg.mini_profile_background.image_large),
+          frame: utils.steam.getStaticUrl(bg.avatar_frame.image_small),
+          avatar: Config.other.steamAvatar ? avatar : await utils.bot.getUserAvatar(e.self_id, uid, e.group_id),
           name: info.personaname,
-          status: utils.getPersonaState(info.personastate),
+          status: utils.steam.getPersonaState(info.personastate),
           gameId: info.gameid,
           gameName: info.gameextrainfo,
-          friendCode: utils.getFriendCode(info.steamid),
+          friendCode: utils.steam.getFriendCode(info.steamid),
           createTime: moment.unix(info.timecreated).format('YYYY-MM-DD HH:mm:ss'),
           lastTime: (info.lastlogoff && info.personastate === 0) ? moment.unix(info.lastlogoff).format('YYYY-MM-DD HH:mm:ss') : '',
           country: info.loccountrycode ? getLoccountryCode(info.loccountrycode) : '',
@@ -51,7 +51,7 @@ const rule = {
             waitUntil: 'load'
           },
           tempName: steamId,
-          backgroundWebm: utils.getStaticUrl(bg.mini_profile_background.movie_webm),
+          backgroundWebm: utils.steam.getStaticUrl(bg.mini_profile_background.movie_webm),
           toGif: Config.gif.infoGif
         }
 
@@ -64,16 +64,16 @@ const rule = {
         const msg = []
         avatarBuffer && msg.push(segment.image(avatarBuffer), '\n')
         msg.push([
-          `好友代码: ${utils.getFriendCode(info.steamid)}`,
+          `好友代码: ${utils.steam.getFriendCode(info.steamid)}`,
           `steamId: ${info.steamid}`,
           `用户名称: ${info.personaname}`,
-          `当前状态: ${utils.getPersonaState(info.personastate)}`,
+          `当前状态: ${utils.steam.getPersonaState(info.personastate)}`,
           info.lastlogoff ? `最后下线: ${moment.unix(info.lastlogoff).format('YYYY-MM-DD HH:mm:ss')}` : '',
           `注册时间: ${moment.unix(info.timecreated).format('YYYY-MM-DD HH:mm:ss')}`,
           info.loccountrycode ? `账号地区: ${getLoccountryCode(info.loccountrycode)}` : ''
         ].filter(Boolean).join('\n'))
         if (info.gameid) {
-          const icon = utils.getHeaderImgUrlByAppid(info.gameid)
+          const icon = utils.steam.getHeaderImgUrlByAppid(info.gameid)
           msg.push('\n', segment.image(icon), `\n正在游玩: ${info.gameextrainfo}`)
         }
         await e.reply(msg)
