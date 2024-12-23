@@ -182,3 +182,20 @@ export async function GetItems (appids, options = {}) {
     return data.reduce((acc, cur) => (acc[cur.appid] = cur) && acc, {})
   })
 }
+
+/**
+ * Get category definitions for store. This is a public-facing API (as compared to StoreCatalog.GetCategories, which is intended for PHP)
+ * @returns {Promise<{
+ *   categoryid: number
+ *   type: number
+ *   internal_name: string
+ *   display_name: string
+ *   image_url: string
+ *   computed: boolean
+ *   edit_url: string
+ *   edit_sort_order: number
+ * }[]>}
+ */
+export async function GetStoreCategories () {
+  return utils.request.get('IStoreBrowseService/GetStoreCategories/v1').then(res => res.response.categories)
+}

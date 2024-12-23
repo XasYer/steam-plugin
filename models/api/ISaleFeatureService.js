@@ -4,6 +4,50 @@ import { utils } from '#models'
 import _ from 'lodash'
 
 /**
+ * 获得好友年度统计可见性
+ * @param {string} accessToken
+ * @param {string} steamid
+ * @param {number} year
+ * @returns {Promise<{
+ *   steamid: string
+ *   privacy_state: number
+ *   rt_privacy_updated: number
+ *   privacy_override: boolean
+ * }[]>}
+ */
+export async function GetFriendsSharedYearInReview (accessToken, steamid, year = new Date().getFullYear()) {
+  return utils.request.get('ISaleFeatureService/GetFriendsSharedYearInReview/v1', {
+    params: {
+      access_token: accessToken,
+      steamid,
+      year
+    }
+  }).then(res => res.response?.friend_shares || [])
+}
+
+/**
+ * 获得好友年度统计可见性
+ * @param {string} accessToken
+ * @param {string} steamid
+ * @param {number} year
+ * @returns {Promise<{
+ *   privacy_state: number
+ *   generated_value: boolean
+ *   steamid: string
+ *   rt_privacy_updated: number
+ * }|undefined>}
+ */
+export async function GetUserSharingPermissions (accessToken, steamid, year = new Date().getFullYear()) {
+  return utils.request.post('ISaleFeatureService/GetUserSharingPermissions/v1', {
+    params: {
+      access_token: accessToken,
+      steamid,
+      year
+    }
+  }).then(res => _.isEmpty(res.response) ? undefined : res.response)
+}
+
+/**
  * 获取steamId在指定年份的指定游戏的年度成就信息
  * @param {string} steamid
  * @param {string[]} appids
@@ -203,7 +247,7 @@ export async function GetUserYearAchievements (steamid, appids, year = new Date(
  *   }
  * }>}
  */
-export async function GetGameAchievements (steamid, year = new Date().getFullYear()) {
+export async function GetUserYearInReview (steamid, year = new Date().getFullYear()) {
   return utils.request.get('ISaleFeatureService/GetUserYearInReview/v1', {
     params: {
       steamid,
@@ -256,4 +300,23 @@ export async function GetUserYearScreenshots (steamid, appids, year = new Date()
     result.push(...res.response.apps)
   }
   return result
+}
+
+/**
+ * 获得好友年度统计可见性
+ * @param {string} accessToken
+ * @param {string} steamid
+ * @param {1|2|3} privacyState 1:私密, 2:好友可见, 3:公开
+ * @param {number} year
+ * @returns {Promise<unknown>}
+*/
+export async function SetUserSharingPermissions (accessToken, steamid, privacyState, year = new Date().getFullYear()) {
+  return utils.request.post('ISaleFeatureService/SetUserSharingPermissions/v1', {
+    params: {
+      access_token: accessToken,
+      steamid,
+      year,
+      privacy_state: privacyState
+    }
+  })
 }
