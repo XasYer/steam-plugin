@@ -54,7 +54,7 @@ export async function getImgUrlBuffer (url, retry = 3) {
       const buffer = await request.get(path.pathname + path.search, {
         responseType: 'arraybuffer',
         baseURL: path.origin
-      }).then(res => res.data)
+      })
       if (Version.BotName === 'Karin') {
         return `base64://${buffer.toString('base64')}`
       } else {
@@ -85,7 +85,7 @@ export async function saveImg (url, retry = 3) {
         baseURL: path.origin
       }).then(res => {
         ext = res.headers['content-type']?.split('/')?.pop() || 'png'
-        return res.data
+        return res
       })
       const filename = `${Date.now()}.${ext}`
       const filepath = join(tempDir, filename)
