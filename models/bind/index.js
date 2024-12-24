@@ -16,6 +16,7 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
   if (!userBindAll.length) {
     return '没有绑定任何steamId, 请使用#steam绑定steamId或好友码 进行绑定'
   }
+  const accessTokenList = await db.TokenTableGetByUserId(uid)
   const enablePush = (() => {
     if (!Config.push.enable) {
       return false
@@ -47,6 +48,7 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
   } catch { }
   let index = 1
   for (const item of userBindAll) {
+    const accessToken = accessTokenList.find(i => i.steamId == item.steamId)
     const i = allSteamIdInfo[item.steamId] || {}
     const avatar = Config.other.steamAvatar ? i.avatarfull : await utils.bot.getUserAvatar(bid, uid, gid)
     const info = {
@@ -54,7 +56,8 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
       isBind: item.isBind,
       name: i.personaname || await utils.bot.getUserName(bid, uid, gid),
       avatar: avatar || await utils.bot.getUserAvatar(bid, uid, gid),
-      index
+      index,
+      type: accessToken ? 'ck' : 'reg'
     }
     if (enablePushSteamIdList.includes(item.steamId)) {
       pushSteamId.push(info)

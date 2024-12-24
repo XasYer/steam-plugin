@@ -52,17 +52,6 @@ const HistoryTable = sequelize.define('history', {
 
 await HistoryTable.sync()
 
-HistoryTable.findAll().then(res => {
-  if (res.length) {
-    // 在这之前统计的记录有误差 全部删除重新统计
-    const time = 1734495420
-    const data = res[0].dataValues
-    if (data.start < time && data.end < time) {
-      HistoryTable.truncate().catch(() => {})
-    }
-  }
-}).catch(() => {})
-
 /**
  * 添加一条记录
  * @param {string} userId

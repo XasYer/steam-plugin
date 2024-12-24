@@ -49,7 +49,7 @@ const TokenTable = sequelize.define('token', {
 await TokenTable.sync()
 
 /**
- * 添加steamId到userId
+ * 添加accessToken到userId
  * @param {string} userId
  * @param {string} accessToken
  * @param {string?} refreshToken
@@ -110,6 +110,20 @@ export async function TokenTableGetByUserIdAndSteamId (userId, steamId) {
       steamId
     }
   }).then(res => res?.dataValues)
+}
+
+/**
+ * 根据userId查询所有信息
+ * @param {string} userId
+ * @returns {Promise<TokenColumns[]|null>}
+ */
+export async function TokenTableGetByUserId (userId) {
+  userId = String(userId)
+  return await TokenTable.findAll({
+    where: {
+      userId
+    }
+  }).then(res => res.map(item => item.dataValues))
 }
 
 /**

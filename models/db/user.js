@@ -64,19 +64,21 @@ export async function UserTableBindSteamIdByUserId (userId, steamId, isBind = tr
   // 开启一个事务
   const transaction = await sequelize.transaction()
   try {
-    // 先将之前绑定的steamId解除绑定
-    const data = await UserTableGetDataByUserId(userId)
-    const bind = data.find(item => item.isBind)
-    if (bind) {
-      await UserTable.update({
-        isBind: false
-      }, {
-        transaction,
-        where: {
-          userId: bind.userId,
-          steamId: bind.steamId
-        }
-      })
+    if (isBind) {
+      // 先将之前绑定的steamId解除绑定
+      const data = await UserTableGetDataByUserId(userId)
+      const bind = data.find(item => item.isBind)
+      if (bind) {
+        await UserTable.update({
+          isBind: false
+        }, {
+          transaction,
+          where: {
+            userId: bind.userId,
+            steamId: bind.steamId
+          }
+        })
+      }
     }
     const res = await UserTable.update({
       isBind

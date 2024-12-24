@@ -1,5 +1,5 @@
 .container {
-  width: 450px;
+  width: 475px;
 }
 nobr {
   font-size: 12px;
@@ -67,7 +67,7 @@ nobr {
   border-radius: 33px;
   background: right top no-repeat #f0ece4;
   background-size: auto 100%;
-  width: 375px;
+  width: 400px;
   position: relative;
 }
 .uid-list .game-inner {
@@ -115,6 +115,28 @@ nobr {
   display: flex;
   margin-top: 5px;
 }
+.uid-list .game-inner .info .uid-info .type {
+  width: 35px;
+  font-size: 12px;
+  font-weight: normal;
+  background: #4a5366;
+  height: 18px;
+  display: block;
+  text-align: center;
+  border-radius: 4px;
+  color: #fff;
+  transform: scale(0.9);
+}
+.uid-list .game-inner .info .uid-info .type.ck {
+  background: #adff2f;
+  color: #3a2702;
+  font-weight: bold;
+  box-shadow: 0 0 3px 0 #000;
+  border-radius: 3px;
+}
+.uid-list .game-inner .info .uid-info .type.reg {
+  background: #666;
+}
 .uid-list .game-inner .info .uid-info .uid {
   font-weight: normal;
   display: block;
@@ -123,7 +145,7 @@ nobr {
 .uid-list .game-inner .info .detail {
   font-size: 14px;
   text-shadow: 0 0 2px #fff;
-  width: 240px;
+  width: 275px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

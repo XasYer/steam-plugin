@@ -14,7 +14,7 @@ const rule = {
   QRLoginTips: {
     reg: App.getReg(baseReg),
     fnc: async (e) => {
-      const tips = '将使用steamApp扫码二维码进行登录, 登录完成后机器人可获得对应账号的access_token并保存, 不会同时绑定对应的steamId, 拥有access_token后可执行各种隐私操作, 请在**特别信任**的机器人上进行扫码登录, 如果确认需要扫码登录, 请先打开steamApp进入扫码界面并继续发送\n#steam确认扫码登录'
+      const tips = '将使用steamApp扫码二维码进行登录, 登录完成后机器人可获得对应账号的access_token并保存, 拥有access_token后可执行各种隐私操作, 请在**特别信任**的机器人上进行扫码登录, 如果确认需要扫码登录, 请先打开steamApp进入扫码界面并继续发送(不支持扫描相册二维码)\n#steam确认扫码登录'
       await e.reply(tips)
       verify[e.user_id] = true
       return true
@@ -35,6 +35,17 @@ const rule = {
         const qrcodeRes = await api.IAuthenticationService.PollAuthSessionStatus(session.client_id, session.request_id).catch(() => {})
         if (qrcodeRes.access_token) {
           const dbRes = await db.TokenTableAddData(e.user_id, qrcodeRes.access_token, qrcodeRes.refresh_token)
+          const user = await db.UserTableGetDataBySteamId(dbRes.steamId)
+          if (user.userId) {
+            if (user.userId != e.user_id) {
+              await db.UserTableDelSteamIdByUserId(user.userId, dbRes.steamId)
+              await db.UserTableAddSteamIdByUserId(e.user_id, dbRes.steamId)
+            } else {
+              await db.UserTableBindSteamIdByUserId(e.user_id, dbRes.steamId, true)
+            }
+          } else {
+            await db.UserTableAddSteamIdByUserId(e.user_id, dbRes.steamId)
+          }
           await e.reply(`登录成功\nsteamId: ${dbRes.steamId}\n登录名: ${qrcodeRes.account_name.replace(/^(.)(.*)(.)$/, '$1***$3')}\n需要切换到对应的steamId才会生效`)
           return true
         }
