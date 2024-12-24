@@ -3,6 +3,7 @@ import { Config } from '#components'
 import { HttpProxyAgent } from 'http-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { logger } from '#lib'
+import _ from 'lodash'
 
 /**
  * 通用请求方法
@@ -31,7 +32,7 @@ export default async function request (url, options = {}) {
     httpsAgent: Config.steam.proxy ? new HttpsProxyAgent(Config.steam.proxy) : undefined,
     ...options,
     params: {
-      key: (baseURL === steamApi && !options.params?.access_token) ? Config.steam.apiKey : undefined,
+      key: (baseURL === steamApi && !options.params?.access_token) ? _.sample(Config.steam.apiKey) : undefined,
       l: 'schinese',
       cc: 'CN',
       language: 'schinese',

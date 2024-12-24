@@ -14,7 +14,7 @@ export function startTimer () {
   }
   clearInterval(timer)
   timer = setInterval(async () => {
-    if (!Config.steam.apiKey) {
+    if (!Config.steam.apiKey.length) {
       return
     }
     logger.info('开始检查Steam游戏信息')

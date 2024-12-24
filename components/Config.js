@@ -40,10 +40,19 @@ class Config {
           for (const key of defKeys) {
             switch (typeof defValue[key]) {
               case 'object':
-                if (!Array.isArray(defValue[key]) && !ignore.includes(`${file.replace('.yaml', '')}.${key}`)) {
+                // 其他情况有了再说
+                if (Array.isArray(defValue[key])) {
+                  if (!Array.isArray(value[key])) {
+                    isChange = true
+                    defValue[key] = value[key] ? [value[key]] : defValue[key]
+                  } else {
+                    defValue[key] = value[key]
+                  }
+                  saveKeys.push(`${prefix}${key}`)
+                } else if (!ignore.includes(`${file.replace('.yaml', '')}.${key}`)) {
                   defValue[key] = merge(defValue[key], value[key], key + '.')
-                  break
                 }
+                break
               // eslint-disable-next-line no-fallthrough
               default:
                 if (!configKeys.includes(key)) {
@@ -71,7 +80,7 @@ class Config {
   /**
    * 获取steam配置
    * @returns {{
-   *  apiKey: string,
+   *  apiKey: string[],
    *  proxy: string,
    *  timeout: number,
    *  commonProxy: string,

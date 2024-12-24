@@ -7,8 +7,8 @@ export const cfgSchema = {
       apiKey: {
         title: 'Steam Web API Key',
         key: 'apiKey',
-        type: 'string',
-        def: '',
+        type: 'array',
+        def: [],
         desc: 'Steamworks Web API key'
       },
       proxy: {
