@@ -53,7 +53,7 @@ export function startTimer () {
               if (!Bot.getBot(i.botId)) {
                 continue
               }
-            } else if (!Bot[i.botId]) {
+            } else if (!Bot[i.botId] && !Config.push.randomBot) {
               continue
             }
             // 0 就是没有人绑定
