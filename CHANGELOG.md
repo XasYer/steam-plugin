@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.9.0](https://github.com/XasYer/steam-plugin/compare/v1.8.1...v1.9.0) (2024-12-24)
+
+
+### Features
+
+* steam扫码登录获取accesstoken 暂时无用处 ([e95d058](https://github.com/XasYer/steam-plugin/commit/e95d0588d9e22b5b062a5f94c91194c2b217c5ed))
+* 添加若干api可用于dev ([f03271b](https://github.com/XasYer/steam-plugin/commit/f03271ba7c5e80c8d05a037f88b23494cdce0d2c))
+
+
+### Bug Fixes
+
+* 年度回顾分享图片获取失败 ([b9a6dd7](https://github.com/XasYer/steam-plugin/commit/b9a6dd7b945420df5731229031488f9c45b9e7ec))
+* 开启随机Bot时不判断在线 ([f76cd96](https://github.com/XasYer/steam-plugin/commit/f76cd9675d9b081c5fa6e96466f73eb7c32985e3))
+
+
+### Performance Improvements
+
+* apiKey修改为数组, 可配置多个apiKey, 随机选择一个进行请求 ([7bf8716](https://github.com/XasYer/steam-plugin/commit/7bf8716ea49019b93f8bcb2be8e45965acc40994))
+* 优化扫码登录 ([f018be2](https://github.com/XasYer/steam-plugin/commit/f018be25be2b35b50f4c4c5a326ced519e905744))
+* 优化扫码登录 ([c6009fc](https://github.com/XasYer/steam-plugin/commit/c6009fc935478e91042a8576293730322bb6c19b))
+* 优化样式 ([67698b1](https://github.com/XasYer/steam-plugin/commit/67698b1cfdb846b5c93eea021672e5f1b8e807bf))
+* 部分中文header ([c1edd07](https://github.com/XasYer/steam-plugin/commit/c1edd07a6b9fa1e549c6f96dbe20e09741f318c3))
+* 部分接口返回中文游戏名 ([1de8cc0](https://github.com/XasYer/steam-plugin/commit/1de8cc094569b8c0fb5c90eb586d779640a7aa8a))
+
 ## [1.8.1](https://github.com/XasYer/steam-plugin/compare/v1.8.0...v1.8.1) (2024-12-21)
 
 
