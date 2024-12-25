@@ -32,7 +32,7 @@ const rule = {
       })
       for (let i = 0; i < 6; i++) {
         await new Promise(resolve => setTimeout(resolve, 1000 * 5))
-        const qrcodeRes = await api.IAuthenticationService.PollAuthSessionStatus(session.client_id, session.request_id).catch(() => {})
+        const qrcodeRes = await api.IAuthenticationService.PollAuthSessionStatus(session.client_id, session.request_id).catch(() => ({}))
         if (qrcodeRes.access_token) {
           const dbRes = await db.TokenTableAddData(e.user_id, qrcodeRes.access_token, qrcodeRes.refresh_token)
           const user = await db.UserTableGetDataBySteamId(dbRes.steamId)
