@@ -9,7 +9,8 @@ export const cfgSchema = {
         key: 'apiKey',
         type: 'array',
         def: [],
-        desc: 'Steamworks Web API key'
+        desc: 'Steamworks Web API key',
+        component: 'GTags'
       },
       proxy: {
         title: 'proxy代理',
