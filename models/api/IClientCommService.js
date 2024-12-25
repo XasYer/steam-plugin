@@ -28,7 +28,7 @@ export async function GetAllClientLogonInfo (accessToken) {
 /**
  * 获得客户端的游戏列表 需要有已登录的客户端实例
  * @param {string} accessToken
- * @param {number} clientInstanceid 第几个客户端 默认1
+ * @param {number} clientInstanceid 客户端id
  * @returns {Promise<{
  *  bytes_available: string,
  *  apps: {
@@ -64,7 +64,7 @@ export async function GetAllClientLogonInfo (accessToken) {
  *  refetch_interval_sec_updating: number,
  * }|undefined>}
  */
-export async function GetClientAppList (accessToken, clientInstanceid = 1) {
+export async function GetClientAppList (accessToken, clientInstanceid) {
   return utils.request.get('IClientCommService/GetClientAppList/v1', {
     params: {
       access_token: accessToken,
@@ -79,7 +79,7 @@ export async function GetClientAppList (accessToken, clientInstanceid = 1) {
 /**
  * 获得客户端的信息 需要有已登录的客户端实例
  * @param {string} accessToken
- * @param {number} clientInstanceid 第几个客户端 默认1
+ * @param {number} clientInstanceid 客户端id
  * @returns {Promise<{
  *  package_version: number
  *  os: string
@@ -92,7 +92,7 @@ export async function GetClientAppList (accessToken, clientInstanceid = 1) {
  *  local_users: number[],
  * }|undefined>}
  */
-export async function GetClientInfo (accessToken, clientInstanceid = 1) {
+export async function GetClientInfo (accessToken, clientInstanceid) {
   return utils.request.get('IClientCommService/GetClientInfo/v1', {
     params: {
       access_token: accessToken,
@@ -104,14 +104,14 @@ export async function GetClientInfo (accessToken, clientInstanceid = 1) {
 /**
  * 获得客户端的信息 需要有已登录的客户端实例
  * @param {string} accessToken
- * @param {number} clientInstanceid 第几个客户端 默认1
+ * @param {number} clientInstanceid 客户端id
  * @returns {Promise<{
  *  package_version: number
  *  os: string
  *  machine_name: string
  * }>}
  */
-export async function GetClientLogonInfo (accessToken, clientInstanceid = 1) {
+export async function GetClientLogonInfo (accessToken, clientInstanceid) {
   return utils.request.get('IClientCommService/GetClientInfo/v1', {
     params: {
       access_token: accessToken,
@@ -124,10 +124,10 @@ export async function GetClientLogonInfo (accessToken, clientInstanceid = 1) {
  * 让客户端直接下载游戏
  * @param {string} accessToken
  * @param {number} appid
- * @param {number} clientInstanceid 第几个客户端 默认1
+ * @param {number} clientInstanceid 客户端id
  * @returns {Promise<undefined>}
  */
-export async function InstallClientApp (accessToken, appid, clientInstanceid = 1) {
+export async function InstallClientApp (accessToken, appid, clientInstanceid) {
   return utils.request.post('IClientCommService/InstallClientApp/v1', {
     params: {
       access_token: accessToken,
@@ -141,10 +141,10 @@ export async function InstallClientApp (accessToken, appid, clientInstanceid = 1
  * 让客户端启动游戏
  * @param {string} accessToken
  * @param {number} appid
- * @param {number} clientInstanceid 第几个客户端 默认1
+ * @param {number} clientInstanceid 客户端id
  * @returns {Promise<undefined>}
  */
-export async function LaunchClientApp (accessToken, appid, clientInstanceid = 1) {
+export async function LaunchClientApp (accessToken, appid, clientInstanceid) {
   return utils.request.post('IClientCommService/LaunchClientApp/v1', {
     params: {
       access_token: accessToken,
@@ -159,10 +159,10 @@ export async function LaunchClientApp (accessToken, appid, clientInstanceid = 1)
  * @param {string} accessToken
  * @param {number} appid
  * @param {boolean} download true: 恢复下载 false: 暂停下载 默认true
- * @param {number} clientInstanceid 第几个客户端 默认1
+ * @param {number} clientInstanceid 客户端id
  * @returns {Promise<undefined>}
  */
-export async function SetClientAppUpdateState (accessToken, appid, download = true, clientInstanceid = 1) {
+export async function SetClientAppUpdateState (accessToken, appid, download = true, clientInstanceid) {
   return utils.request.post('IClientCommService/SetClientAppUpdateState/v1', {
     params: {
       access_token: accessToken,
@@ -177,10 +177,10 @@ export async function SetClientAppUpdateState (accessToken, appid, download = tr
  * 让客户端删除指定的游戏
  * @param {string} accessToken
  * @param {number} appid
- * @param {number} clientInstanceid 第几个客户端 默认1
+ * @param {number} clientInstanceid 客户端id
  * @returns {Promise<undefined>}
  */
-export async function UninstallClientApp (accessToken, appid, clientInstanceid = 1) {
+export async function UninstallClientApp (accessToken, appid, clientInstanceid) {
   return utils.request.post('IClientCommService/UninstallClientApp/v1', {
     params: {
       access_token: accessToken,
