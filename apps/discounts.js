@@ -44,7 +44,7 @@ const rule = {
             appid: i.id,
             name: i.name,
             desc: i.discount_expiration ? moment.unix(i.discount_expiration).format('YYYY-MM-DD HH:mm:ss') : '',
-            image: i.header_image,
+            image: i.image,
             price: i.discounted
               ? {
                   original: `¥ ${i.original_price / 100}`,

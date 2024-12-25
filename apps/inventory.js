@@ -61,7 +61,7 @@ const rule = {
             }
             continue
           }
-          wishlist[i].header_image = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header)
+          wishlist[i].image = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header)
           wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
           wishlist[i].name = info.name
           wishlist[i].price = info.is_free
@@ -77,7 +77,6 @@ const rule = {
         }
         screenshotOptions.title = `${nickname} 愿望单共有 ${wishlist.length} 个游戏`
         screenshotOptions.games = _.orderBy(wishlist, 'date_added', 'desc')
-        screenshotOptions.size = 'large'
       } else {
         const games = await api.IPlayerService.GetOwnedGames(steamId)
         if (!games.length) {
@@ -87,7 +86,7 @@ const rule = {
         screenshotOptions.games = _.orderBy(games, 'playtime_forever', 'desc')
         screenshotOptions.title = `${nickname} 库存共有 ${games.length} 个游戏`
       }
-      if (screenshotOptions.size === 'small') {
+      if (!e.msg.includes('愿')) {
         let playtimeForever = 0
         let playtime2weeks = 0
         screenshotOptions.games.map(i => {
