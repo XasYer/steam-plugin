@@ -2,8 +2,10 @@ import axios from 'axios'
 import { Config } from '#components'
 import { HttpProxyAgent } from 'http-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
-import { logger } from '#lib'
+import { logger, redis } from '#lib'
 import _ from 'lodash'
+
+const redisKey = 'steam-plugin:429key:'
 
 /**
  * 通用请求方法
@@ -11,7 +13,7 @@ import _ from 'lodash'
  * @param {import('axios').AxiosRequestConfig} options
  * @returns {Promise<import('axios').AxiosResponse<any>>}
  */
-export default async function request (url, options = {}) {
+export default async function request (url, options = {}, retry = { count: 0, keys: Config.steam.apiKey }) {
   const steamApi = (() => {
     const url = 'https://api.steampowered.com'
     if (Config.steam.commonProxy) {
@@ -25,6 +27,7 @@ export default async function request (url, options = {}) {
   const baseURL = options.baseURL ?? steamApi
   logger.info(`开始请求api: ${url}`)
   const start = Date.now()
+  const { key, keys } = await getKey(retry.keys)
   return await axios.request({
     url,
     baseURL,
@@ -32,7 +35,7 @@ export default async function request (url, options = {}) {
     httpsAgent: Config.steam.proxy ? new HttpsProxyAgent(Config.steam.proxy) : undefined,
     ...options,
     params: {
-      key: (baseURL === steamApi && !options.params?.access_token) ? _.sample(Config.steam.apiKey) : undefined,
+      key: (baseURL === steamApi && !options.params?.access_token) ? key : undefined,
       l: 'schinese',
       cc: 'CN',
       language: 'schinese',
@@ -42,6 +45,16 @@ export default async function request (url, options = {}) {
   }).then(res => {
     logger.info(`请求api成功: ${url}, 耗时: ${Date.now() - start}ms`)
     return res.data
+  }).catch(err => {
+    if (err.status === 429 && keys.length > 1) {
+      // 十分钟内不使用相同的key
+      redis.set(redisKey + key, 1, { EX: 60 * 10 })
+      retry.count++
+      retry.keys = keys.filter(k => k !== key)
+      logger.error(`请求api失败: ${url}, 状态码: ${err.status}, 更换apiKey开始重试第${retry.count}次`)
+      return request(url, options, retry)
+    }
+    throw err
   })
 }
 
@@ -69,4 +82,21 @@ export async function post (url, options = {}) {
     ...options,
     method: 'POST'
   })
+}
+
+async function getKey (keys = Config.steam.apiKey) {
+  const i = []
+  if (keys.length > 1) {
+    for (const key of keys) {
+      if (!await redis.get(redisKey + key)) {
+        i.push(key)
+      }
+    }
+  } else {
+    i.push(...keys)
+  }
+  return {
+    keys: i,
+    key: _.sample(i)
+  }
 }

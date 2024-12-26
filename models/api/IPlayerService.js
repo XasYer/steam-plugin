@@ -709,6 +709,19 @@ export async function GetSteamLevel (steamid) {
 }
 
 /**
+ * 返回给定Steam级别与广大用户基础的比较
+ * @param {number} playerLevel
+ * @returns {Promise<number>}
+ */
+export async function GetSteamLevelDistribution (playerLevel) {
+  return utils.request.get('IPlayerService/GetSteamLevelDistribution/v1', {
+    params: {
+      player_level: playerLevel
+    }
+  }).then(res => res.response?.player_level_percentile)
+}
+
+/**
  * 获取用户在指定应用列表中获得的最佳成就。
  * @param {string} steamid
  * @param {number[]} appids
@@ -718,7 +731,7 @@ export async function GetSteamLevel (steamid) {
  *   total_achievements: number,
  * }>}
  */
-export async function GetSteamLevelDistribution (steamid, appids, maxAchievements = 8) {
+export async function GetTopAchievementsForGames (steamid, appids, maxAchievements = 8) {
   !Array.isArray(appids) && (appids = [appids])
   const result = []
   for (const items of _.chunk(appids, 100)) {

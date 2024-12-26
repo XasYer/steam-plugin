@@ -22,7 +22,8 @@ const rule = {
         await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
-      // TODO: 先获取https://steamcommunity.com/profiles/${steamId}/
+      // https://steamcommunity.com/profiles/${steamId}/
+      // https://steamcommunity.com/miniprofile/${utils.steam.getFriendCode(steamId)}
       const data = await api.ISteamUser.GetPlayerSummaries(steamId)
       if (!data.length) {
         await e.reply([segment.at(uid), `\n没有获取到${steamId}的信息, 看看有没有输错?`])
