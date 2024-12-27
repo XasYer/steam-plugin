@@ -4,8 +4,9 @@ import { HttpProxyAgent } from 'http-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { logger, redis } from '#lib'
 import _ from 'lodash'
+import moment from 'moment'
 
-const redisKey = 'steam-plugin:429key:'
+const redisKey = 'steam-plugin'
 
 /**
  * 通用请求方法
@@ -26,6 +27,7 @@ export default async function request (url, options = {}, retry = { count: 0, ke
   })()
   const baseURL = options.baseURL ?? steamApi
   logger.info(`开始请求api: ${url}`)
+  incr(url)
   const start = Date.now()
   const { key, keys } = await getKey(retry.keys)
   return await axios.request({
@@ -48,7 +50,7 @@ export default async function request (url, options = {}, retry = { count: 0, ke
   }).catch(err => {
     if (err.status === 429 && keys.length > 1) {
       // 十分钟内不使用相同的key
-      redis.set(redisKey + key, 1, { EX: 60 * 10 })
+      redis.set(`${redisKey}:429key:${key}`, 1, { EX: 60 * 10 })
       retry.count++
       retry.keys = keys.filter(k => k !== key)
       logger.error(`请求api失败: ${url}, 状态码: ${err.status}, 更换apiKey开始重试第${retry.count}次`)
@@ -88,7 +90,7 @@ async function getKey (keys = Config.steam.apiKey) {
   const i = []
   if (keys.length > 1) {
     for (const key of keys) {
-      if (!await redis.get(redisKey + key)) {
+      if (!await redis.exists(`${redisKey}:429key:${key}`)) {
         i.push(key)
       }
     }
@@ -99,4 +101,14 @@ async function getKey (keys = Config.steam.apiKey) {
     keys: i,
     key: _.sample(i)
   }
+}
+
+function incr (url, day = 3) {
+  const now = moment().format('YYYY-MM-DD')
+  const key = `${redisKey}:api:${now}:${url}`
+  redis.incr(key).then((i) => {
+    if (i == 1 && day > 0) {
+      redis.expire(key, 60 * 60 * 24 * day).catch(() => {})
+    }
+  }).catch(() => {})
 }

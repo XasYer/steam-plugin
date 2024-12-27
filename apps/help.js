@@ -1,6 +1,8 @@
-import { App, Render, Version } from '#components'
-import lodash from 'lodash'
+import _ from 'lodash'
+import { redis } from '#lib'
 import { help as helpUtil } from '#models'
+import { App, Render, Version } from '#components'
+import moment from 'moment'
 
 const appInfo = {
   id: 'help',
@@ -11,6 +13,49 @@ const rule = {
   help: {
     reg: App.getReg('(插件|plugin)?(帮助|菜单|help)'),
     fnc: help
+  },
+  apiStats: {
+    reg: App.getReg('api(调用)?统计'),
+    fnc: async e => {
+      const data = []
+      for (let i = 0; i >= -1; i--) {
+        const now = moment().add(i, 'days').format('YYYY-MM-DD')
+        const apis = []
+        let cursor = 0
+        do {
+          const res = await redis.scan(cursor, { MATCH: `steam-plugin:api:${now}:*`, COUNT: 10000 })
+          cursor = res.cursor
+          for (const key of res.keys) {
+            const v = Number(await redis.get(key))
+            apis.push({ name: key.split(':').pop(), v })
+          }
+        } while (cursor != 0)
+        if (apis.length) {
+          const total = _.sumBy(apis, 'v')
+          data.push({
+            title: `${now} api调用统计`,
+            desc: `共${total}次`,
+            games: _.orderBy(apis, 'v', 'desc').map(i => {
+              const percent = (i.v / total * 100).toFixed(0) + '%'
+              return {
+                name: i.name,
+                appid: percent,
+                appidStyle: `style="background-color: #999999; width: ${percent};"`,
+                desc: `${i.v}次`,
+                noImg: true
+              }
+            })
+          })
+        }
+      }
+      if (!data.length) {
+        await e.reply('还没有api调用统计数据哦')
+        return true
+      }
+      const img = await Render.render('inventory/index', { data })
+      await e.reply(img)
+      return true
+    }
   }
   // version: {
   //   reg: /^#?steam(插件|plugin)?(版本|version)$/i,
@@ -21,12 +66,12 @@ const rule = {
 async function help (e) {
   const helpGroup = []
 
-  lodash.forEach(helpUtil.helpList, (group) => {
+  _.forEach(helpUtil.helpList, (group) => {
     if (group.auth && group.auth === 'master' && !e.isMaster) {
       return true
     }
 
-    lodash.forEach(group.list, (help) => {
+    _.forEach(group.list, (help) => {
       const icon = help.icon * 1
       if (!icon) {
         help.css = 'display:none'

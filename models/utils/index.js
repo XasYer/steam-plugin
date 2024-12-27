@@ -1,13 +1,13 @@
 import fs from 'fs'
+import axios from 'axios'
 import moment from 'moment'
 import { join } from 'path'
 import { logger } from '#lib'
 import { Version } from '#components'
-import * as request from './request.js'
 
-export { request }
 export * as bot from './bot.js'
 export * as steam from './steam.js'
+export * as request from './request.js'
 
 const tempDir = join(Version.pluginPath, 'temp')
 
@@ -47,14 +47,12 @@ export function formatDuration (inp, unit = 'seconds') {
  */
 export async function getImgUrlBuffer (url, retry = 3) {
   if (!url) return null
-  const path = new URL(url)
   retry = Number(retry) || 3
   for (let i = 0; i < retry; i++) {
     try {
-      const buffer = await request.get(path.pathname + path.search, {
-        responseType: 'arraybuffer',
-        baseURL: path.origin
-      })
+      const buffer = await axios.get(url, {
+        responseType: 'arraybuffer'
+      }).then(res => res.data)
       if (Version.BotName === 'Karin') {
         return `base64://${buffer.toString('base64')}`
       } else {
@@ -75,17 +73,15 @@ export async function getImgUrlBuffer (url, retry = 3) {
  */
 export async function saveImg (url, retry = 3) {
   if (!url) return ''
-  const path = new URL(url)
   retry = Number(retry) || 3
   for (let i = 0; i < retry; i++) {
     try {
       let ext = ''
-      const buffer = await request.get(path.pathname + path.search, {
-        responseType: 'arraybuffer',
-        baseURL: path.origin
+      const buffer = await axios.get(url, {
+        responseType: 'arraybuffer'
       }).then(res => {
         ext = res.headers['content-type']?.split('/')?.pop() || 'png'
-        return res
+        return res.data
       })
       const filename = `${Date.now()}.${ext}`
       const filepath = join(tempDir, filename)
