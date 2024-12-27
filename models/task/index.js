@@ -132,7 +132,7 @@ export function startTimer () {
                 games: i.start
               })
             } else {
-              data.push(...i.start.map(item => [segment.image(item.header_image), `[Steam] ${item.appid} 正在玩 ${item.name}\n${item.desc}`]))
+              data.push(...i.start.map(item => [segment.image(item.image), `[Steam] ${item.appid} 正在玩 ${item.name}\n${item.desc}`]))
             }
           }
           if (i.end.length) {
@@ -142,7 +142,7 @@ export function startTimer () {
                 games: i.end
               })
             } else {
-              data.push(...i.end.map(item => [segment.image(item.header_image), `[Steam] ${item.appid} 已结束游玩 ${item.name}\n${item.desc}`]))
+              data.push(...i.end.map(item => [segment.image(item.image), `[Steam] ${item.appid} 已结束游玩 ${item.name}\n${item.desc}`]))
             }
           }
           if (i.state.length) {
@@ -153,7 +153,7 @@ export function startTimer () {
               })
             } else {
               data.push(...i.state.map(item => [
-                item.header_image ? segment.image(item.header_image) : '',
+                item.image ? segment.image(item.image) : '',
                 `[Steam] ${item.name} ${item.desc} \n${item.appid}`
               ]))
             }
