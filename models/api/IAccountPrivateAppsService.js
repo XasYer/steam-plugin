@@ -1,5 +1,4 @@
 import { utils } from '#models'
-import _ from 'lodash'
 
 /**
  * 获得私密应用列表
@@ -23,17 +22,14 @@ export async function GetPrivateAppList (accessToken) {
  */
 export async function ToggleAppPrivacy (accessToken, appids, flag = true) {
   !Array.isArray(appids) && (appids = [appids])
-  for (const items of _.chunk(appids, 100)) {
-    const params = items.reduce((acc, appid, index) => {
-      acc[`appids[${index}]`] = appid
-      return acc
-    }, {})
-    await utils.request.post('IAccountPrivateAppsService/ToggleAppPrivacy/v1', {
-      params: {
-        access_token: accessToken,
-        private: flag,
-        ...params
-      }
-    })
+  const input = {
+    private: flag,
+    appids
   }
+  await utils.request.post('IAccountPrivateAppsService/ToggleAppPrivacy/v1', {
+    params: {
+      access_token: accessToken,
+      input_json: JSON.stringify(input)
+    }
+  })
 }

@@ -1,5 +1,4 @@
 import { utils } from '#models'
-import _ from 'lodash'
 
 /**
  * 添加好友
@@ -66,22 +65,16 @@ export async function ClientGetLastPlayedTimes (accessToken, minLastPlayed = 0) 
 */
 export async function GetAchievementsProgress (accessToken, steamid, appids) {
   !Array.isArray(appids) && (appids = [appids])
-  const result = []
-  for (const items of _.chunk(appids, 100)) {
-    const params = items.reduce((acc, appid, index) => {
-      acc[`appids[${index}]`] = appid
-      return acc
-    }, {})
-    const res = await utils.request.post('IPlayerService/GetAchievementsProgress/v1', {
-      params: {
-        access_token: accessToken,
-        steamid,
-        ...params
-      }
-    })
-    result.push(...res.response?.achievement_progress || [])
+  const input = {
+    steamid,
+    appids
   }
-  return result
+  return await utils.request.post('IPlayerService/GetAchievementsProgress/v1', {
+    params: {
+      access_token: accessToken,
+      input_json: JSON.stringify(input)
+    }
+  }).then(res => res.response?.achievement_progress || [])
 }
 
 /**
@@ -376,12 +369,13 @@ export async function GetOwnedGames (steamid) {
 */
 export async function GetPlayerLinkDetails (steamids) {
   steamids = Array.isArray(steamids) ? steamids : [steamids]
-  const params = steamids.reduce((acc, steamid, index) => {
-    acc[`steamids[${index}]`] = steamid
-    return acc
-  }, {})
+  const input = {
+    steamids
+  }
   return utils.request.get('IPlayerService/GetPlayerLinkDetails/v1', {
-    params
+    params: {
+      input_json: JSON.stringify(input)
+    }
   }).then(res => res.response.accounts)
 }
 
@@ -733,22 +727,16 @@ export async function GetSteamLevelDistribution (playerLevel) {
  */
 export async function GetTopAchievementsForGames (steamid, appids, maxAchievements = 8) {
   !Array.isArray(appids) && (appids = [appids])
-  const result = []
-  for (const items of _.chunk(appids, 100)) {
-    const params = items.reduce((acc, appid, index) => {
-      acc[`appids[${index}]`] = appid
-      return acc
-    }, {})
-    const res = await utils.request.post('IPlayerService/GetTopAchievementsForGames/v1', {
-      params: {
-        steamid,
-        max_achievements: maxAchievements,
-        ...params
-      }
-    })
-    result.push(...res.response?.games || [])
+  const input = {
+    steamid,
+    appids,
+    max_achievements: maxAchievements
   }
-  return result
+  return await utils.request.post('IPlayerService/GetTopAchievementsForGames/v1', {
+    params: {
+      input_json: JSON.stringify(input)
+    }
+  }).then(res => res.response?.games || [])
 }
 
 /**

@@ -1,5 +1,4 @@
 import { utils } from '#models'
-import _ from 'lodash'
 
 /**
  * 获取社区信息
@@ -16,23 +15,15 @@ import _ from 'lodash'
  */
 export async function GetApps (appids) {
   !Array.isArray(appids) && (appids = [appids])
-  const result = []
-  for (const items of _.chunk(appids, 100)) {
-    const params = items.reduce((acc, appid, index) => {
-      acc[`appids[${index}]`] = appid
-      return acc
-    }, {})
-    const res = await utils.request.get('ICommunityService/GetApps/v1', {
-      params: {
-        language: 6,
-        ...params
-      }
-    })
-    if (res.response.apps?.length) {
-      result.push(...res.response.apps)
-    }
+  const input = {
+    language: 6,
+    appids
   }
-  return result
+  return await utils.request.get('ICommunityService/GetApps/v1', {
+    params: {
+      input_json: JSON.stringify(input)
+    }
+  }).then(res => res.response.apps || [])
 }
 
 /**

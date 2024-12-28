@@ -70,30 +70,16 @@ export async function GetUserSharingPermissions (accessToken, steamid, year = ne
  */
 export async function GetUserYearAchievements (steamid, appids, year = new Date().getFullYear()) {
   !Array.isArray(appids) && (appids = [appids])
-  const result = {
-    game_achievements: [],
-    total_achievements: 0,
-    total_rare_achievements: 0,
-    total_games_with_achievements: 0
+  const input = {
+    steamid,
+    appids,
+    year
   }
-  for (const items of _.chunk(appids, 100)) {
-    const params = items.reduce((acc, appid, index) => {
-      acc[`appids[${index}]`] = appid
-      return acc
-    }, {})
-    const res = await utils.request.get('ISaleFeatureService/GetUserYearAchievements/v1', {
-      params: {
-        steamid,
-        year,
-        ...params
-      }
-    })
-    result.game_achievements.push(...res.game_achievements)
-    result.total_achievements += res.total_achievements
-    result.total_rare_achievements += res.total_rare_achievements
-    result.total_games_with_achievements += res.total_games_with_achievements
-  }
-  return result
+  return await utils.request.get('ISaleFeatureService/GetUserYearAchievements/v1', {
+    params: {
+      input_json: JSON.stringify(input)
+    }
+  })
 }
 
 /**
@@ -284,22 +270,16 @@ export async function GetUserYearInReviewShareImage (steamid, year = new Date().
 */
 export async function GetUserYearScreenshots (steamid, appids, year = new Date().getFullYear()) {
   !Array.isArray(appids) && (appids = [appids])
-  const result = []
-  for (const items of _.chunk(appids, 100)) {
-    const params = items.reduce((acc, appid, index) => {
-      acc[`appids[${index}]`] = appid
-      return acc
-    }, {})
-    const res = await utils.request.get('ISaleFeatureService/GetUserYearScreenshots/v1', {
-      params: {
-        steamid,
-        year,
-        ...params
-      }
-    })
-    result.push(...res.response.apps)
+  const input = {
+    steamid,
+    appids,
+    year
   }
-  return result
+  return await utils.request.get('ISaleFeatureService/GetUserYearScreenshots/v1', {
+    params: {
+      input_json: JSON.stringify(input)
+    }
+  }).then(res => res.response.apps)
 }
 
 /**
