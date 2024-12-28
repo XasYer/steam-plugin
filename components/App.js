@@ -94,7 +94,7 @@ export default class App {
           App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
         }
         const res = await fnc(e).catch(error => {
-          logger.error(error)
+          logger.error(error.message)
           let message = error.message
           const keyMap = [
             { key: 'apiProxy', title: 'api反代' },

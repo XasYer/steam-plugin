@@ -78,8 +78,8 @@ export function startTimer () {
                 desc: lastPlay.playTime ? `距离上次 ${utils.formatDuration(time)}` : '',
                 image: iconUrl
               })
-              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新统计数据失败', e))
-              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now, null, player.gameid, player.gameextrainfo).catch(e => logger.error('添加历史记录失败', e))
+              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新统计数据失败', e.message))
+              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now, null, player.gameid, player.gameextrainfo).catch(e => logger.error('添加历史记录失败', e.message))
             }
             if (Config.push.enable && lastPlay.name && lastPlay.name != player.gameextrainfo) {
               const time = now - lastPlay.playTime
@@ -90,8 +90,8 @@ export function startTimer () {
                 desc: `时长: ${utils.formatDuration(time)}`,
                 image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid)
               })
-              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新统计数据失败', e))
-              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.playTime, now, lastPlay.appid, lastPlay.name).catch(e => logger.error('添加历史记录失败', e))
+              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新统计数据失败', e.message))
+              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.playTime, now, lastPlay.appid, lastPlay.name).catch(e => logger.error('添加历史记录失败', e.message))
             }
             // 在线状态改变
             if (Config.push.stateChange && player.personastate != lastPlay.state) {
@@ -107,11 +107,11 @@ export function startTimer () {
                   descStyle: `style="background-color: #${getColor(player.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
                 })
                 if (player.personastate === 0) {
-                  db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e))
-                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.onlineTime, now).catch(e => logger.error('添加历史记录失败', e))
+                  db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))
+                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.onlineTime, now).catch(e => logger.error('添加历史记录失败', e.message))
                 } else {
                   db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新统计数据失败', e))
-                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now).catch(e => logger.error('添加历史记录失败', e))
+                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now).catch(e => logger.error('添加历史记录失败', e.message))
                 }
               } else {
                 state.state = player.personastate === 0 ? 0 : 1
@@ -172,7 +172,7 @@ export function startTimer () {
         }
       }
     } catch (error) {
-      logger.error('检查Steam游戏信息出现错误', error)
+      logger.error('检查Steam游戏信息出现错误', error.message)
     }
   }, 1000 * 60 * Config.push.time)
 }

@@ -30,6 +30,10 @@ const rule = {
         return true
       }
       const info = data.pop()
+      if (info.communityvisibilitystate !== 3) {
+        await e.reply([segment.at(uid), `\n${info.personaname}个人资料未公开`])
+        return true
+      }
       if (Config.other.infoMode == 2) {
         const color = info.gameid ? 1 : info.personastate === 0 ? 3 : 2
         const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)

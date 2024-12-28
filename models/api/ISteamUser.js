@@ -6,6 +6,7 @@ import { utils } from '#models'
  * @param {string|string[]} steamIds
  * @returns {Promise<{
  *   steamid: string,
+ *   communityvisibilitystate: number,
  *   profilestate: number,
  *   personaname: string,
  *   profileurl: string,

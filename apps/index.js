@@ -25,12 +25,12 @@ for (const i of files) {
     // }
     apps[id] = exp.app
   } catch (error) {
-    logger.error(`[${Version.pluginName}]加载js: apps/${i}错误\n`, error)
+    logger.error('error', `[${Version.pluginName}]加载js: apps/${i}错误\n`, error)
   }
 }
 
 export { apps }
 
-logger.log('-----------------')
-logger.log(`${Version.pluginName} v${Version.pluginVersion} 加载成功~ 耗时: ${Date.now() - startTime}ms`)
-logger.log('-------^_^-------')
+logger.log('info', '-----------------')
+logger.log('info', `${Version.pluginName} v${Version.pluginVersion} 加载成功~ 耗时: ${Date.now() - startTime}ms`)
+logger.log('info', '-------^_^-------')
