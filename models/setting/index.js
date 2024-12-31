@@ -2,7 +2,7 @@ import _ from 'lodash'
 
 export const cfgSchema = {
   steam: {
-    title: 'api设置',
+    title: 'API设置',
     cfg: {
       apiKey: {
         title: 'Steam Web API Key',
@@ -257,7 +257,7 @@ export const cfgSchema = {
     }
   },
   gif: {
-    title: '渲染成gif !谨慎开启! 会短时间内截图多次, 可能导致服务器压力过大',
+    title: '渲染GIF',
     cfg: {
       gifMode: {
         title: '渲染gif模式',
@@ -321,7 +321,7 @@ export const cfgSchema = {
         key: '状态gif',
         type: 'boolean',
         def: false,
-        desc: '是否将#steam状态发送为gif图片'
+        desc: '是否将#steam状态发送为gif图片,谨慎开启! 会短时间内截图多次, 可能导致服务器压力过大'
       }
     }
   },
@@ -359,8 +359,8 @@ export function getGuobasChemas () {
     }
     const item = []
     item.push({
-      component: 'Divider',
-      label: cfgGroup.title
+      label: cfgGroup.title,
+      component: 'SOFT_GROUP_BEGIN'
     })
     _.forEach(cfgGroup.cfg, (cfgItem, cfgKey) => {
       item.push({
