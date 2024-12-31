@@ -158,6 +158,21 @@ export const cfgSchema = {
   other: {
     title: '其他设置',
     cfg: {
+      renderType: {
+        title: '渲染图片方式',
+        key: '图片',
+        type: 'number',
+        def: 1,
+        min: 1,
+        max: 2,
+        input: (n) => Math.max(1, n * 1 || 2),
+        component: 'RadioGroup',
+        options: [
+          { label: 'puppeteer', value: 1 },
+          { label: 'canvas', value: 2 }
+        ],
+        desc: '生成图片方式 1: puppeteer 2: canvas (暂时只支持游戏列表)'
+      },
       renderScale: {
         title: '渲染精度',
         key: '渲染',

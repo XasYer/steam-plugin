@@ -7,22 +7,16 @@
 
 {{block 'main'}}
 {{each data item}}
-<!-- TODO: 放到Render中处理 -->
-<% const isHidden=item.games.length> hiddenLength %>
 
 <div class="header">
     <h2>{{item.title}}</h2>
+    {{each item.desc desc}}
     <h4 class="header-desc">
-        {{item.desc}}
-        {{if isHidden}}
-        <br />
-        <% const len=item.games.length - hiddenLength %>
-            太多辣 ! 已隐藏{{len}}个项目
-            {{/if}}
+        {{desc}}
     </h4>
+    {{/each}}
 </div>
 <div class="games">
-<% item.games.length=isHidden ? hiddenLength : item.games.length %>
     {{each item.games i idx}}
     <div class="game-content">
         <div class="index">No. {{idx+1}}</div>
@@ -30,19 +24,22 @@
             {{if i.image}}
             <img src="{{i.image}}" class="{{i.isAvatar ? 'square' : 'rectangle'}}">
             {{else if !i.noImg}}
-            <img
-                src="https://steamcdn-a.akamaihd.net/steam/apps/{{i.appid}}/header.jpg" class="{{i.isAvatar ? 'square' : 'rectangle'}}">
+            <img src="https://steamcdn-a.akamaihd.net/steam/apps/{{i.appid}}/header.jpg"
+                class="{{i.isAvatar ? 'square' : 'rectangle'}}">
             {{/if}}
         </div>
-        <div
-            class="game-info overflow game-info-size-{{!i.price? 'large' :'small'}}">
+        <div class="game-info overflow game-info-size-{{!i.price? 'large' :'small'}}">
             <div class="game-title">
                 {{i.name || ''}}
             </div>
-            <div class="game-appid" {{@ i.appidStyle}}>
+            <div class="game-appid" {{@i.appidPercent 
+                ? `style="width: ${i.appidPercent}%;background-color: #999999;"` 
+                : '' }}>
                 {{i.appid || ''}}
             </div>
-            <div class="game-desc" {{@ i.descStyle}}>
+            <div class="game-desc" {{@i.descBgColor 
+                ? `style="background-color: ${i.descBgColor};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+                : ''}}>
                 {{i.desc || ''}}
             </div>
         </div>

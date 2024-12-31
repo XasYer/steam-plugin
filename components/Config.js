@@ -115,6 +115,7 @@ class Config {
    * 获取其他配置
    * @returns {{
    *  renderScale: number,
+   *  renderType: number,
    *  hiddenLength: number,
    *  itemLength: number,
    *  steamAvatar: boolean,

@@ -1,6 +1,11 @@
 # 图片渲染精度
 renderScale: 130
 
+# 生成图片方式
+# 1: puppeteer
+# 2: canvas
+renderType: 1
+
 # 截图时数量达到多少时隐藏剩余项目
 # 比如库存有几千个游戏，截图时只截取游玩最多的前99个，那么后面的游戏就隐藏了
 hiddenLength: 99

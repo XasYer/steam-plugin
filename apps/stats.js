@@ -136,11 +136,11 @@ const rule = {
             title: `${now} api调用统计`,
             desc: `共${total}次`,
             games: _.orderBy(apis, 'v', 'desc').map(i => {
-              const percent = (i.v / total * 100).toFixed(0) + '%'
+              const percent = (i.v / total * 100).toFixed(0)
               return {
                 name: i.name,
-                appid: percent,
-                appidStyle: `style="background-color: #999999; width: ${percent};"`,
+                appid: percent + '%',
+                appidPercent: percent,
                 desc: `${i.v}次`,
                 noImg: true
               }

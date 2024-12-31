@@ -150,15 +150,14 @@ const rule = {
       const games = []
       achievementsByGame.availableGameStats.achievements.forEach(all => {
         const i = achievements.find(i => i.name === all.name)
-        const percent = `${i.percent.toFixed(0)}%`
+        const percent = i.percent.toFixed(0)
         const info = {
           name: all.displayName,
           desc: all.hidden ? '已隐藏' : all.description,
           image: i ? all.icon : all.icongray,
           isAvatar: true,
-          appid: percent,
-          appidStyle: `style="background-color: #999999; width: ${percent};"`,
-          percent: i.percent
+          appid: `${percent}%`,
+          appidPercent: percent
         }
         games.push(info)
       })

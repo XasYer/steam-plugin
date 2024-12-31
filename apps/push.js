@@ -156,7 +156,7 @@ const rule = {
             desc: utils.steam.getPersonaState(i.personastate),
             image: await utils.bot.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || i.avatarfull,
             isAvatar: true,
-            descStyle: `style="background-color: #${getColor(i.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+            descBgColor: getColor(i.personastate)
           })
         }
       }
@@ -203,10 +203,10 @@ async function checkGroup (e) {
 function getColor (state) {
   switch (Number(state)) {
     case 1:
-      return 'beee11'
+      return '#beee11'
     case 0:
-      return '999999'
+      return '#999999'
     default:
-      return '8fbc8b'
+      return '#8fbc8b'
   }
 }

@@ -66,6 +66,7 @@ export async function ClientGetLastPlayedTimes (accessToken, minLastPlayed = 0) 
 export async function GetAchievementsProgress (accessToken, steamid, appids) {
   !Array.isArray(appids) && (appids = [appids])
   const input = {
+    language: 'schinese',
     steamid,
     appids
   }
@@ -728,6 +729,7 @@ export async function GetSteamLevelDistribution (playerLevel) {
 export async function GetTopAchievementsForGames (steamid, appids, maxAchievements = 8) {
   !Array.isArray(appids) && (appids = [appids])
   const input = {
+    language: 'schinese',
     steamid,
     appids,
     max_achievements: maxAchievements
