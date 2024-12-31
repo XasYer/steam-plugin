@@ -15,7 +15,7 @@ const canvasPKG = await (async () => {
     GlobalFonts.registerFromPath(fontPath, 'MiSans')
     return pkg
   } catch (error) {
-    return {}
+    return null
   }
 })()
 
