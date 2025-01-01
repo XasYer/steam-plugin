@@ -104,7 +104,7 @@ export function startTimer () {
                   desc: `已${utils.steam.getPersonaState(player.personastate)}`,
                   image: await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId) || (Config.other.steamAvatar ? i.avatarfull : ''),
                   isAvatar: true,
-                  descStyle: `style="background-color: #${getColor(player.personastate)};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`
+                  descBgColor: getColor(i.personastate)
                 })
                 if (player.personastate === 0) {
                   db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))
@@ -181,10 +181,10 @@ export function startTimer () {
 function getColor (state) {
   switch (Number(state)) {
     case 1:
-      return 'beee11'
+      return '#beee11'
     case 0:
-      return '999999'
+      return '#999999'
     default:
-      return '8fbc8b'
+      return '#8fbc8b'
   }
 }
