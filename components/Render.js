@@ -424,9 +424,11 @@ async function renderCanvas (data, minLength) {
 
         if (i.descBgColor) {
           drawBackgroundColor(ctx, i.descBgColor, currentX, descY, ctx.measureText(i.desc).width + 10, 20, 10)
+          ctx.fillStyle = '#ffffff'
+        } else {
+          ctx.fillStyle = '#999'
         }
 
-        ctx.fillStyle = '#999'
         ctx.fillText(i.desc, currentX, descY)
 
         // 序号
