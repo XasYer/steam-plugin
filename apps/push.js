@@ -1,6 +1,6 @@
 import { App, Config, Render } from '#components'
 import { segment } from '#lib'
-import { db, utils, task, api } from '#models'
+import { db, utils, task } from '#models'
 import _ from 'lodash'
 
 task.startTimer()
@@ -123,7 +123,7 @@ const rule = {
         }
       }
       list = _.uniqBy(list, 'steamId')
-      const userState = await api.ISteamUser.GetPlayerSummaries(list.map(i => i.steamId))
+      const userState = await utils.steam.getUserSummaries(list.map(i => i.steamId))
       if (!userState.length) {
         await e.reply('获取玩家状态失败, 再试一次叭')
         return true
