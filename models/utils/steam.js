@@ -209,7 +209,7 @@ export async function getUserSummaries (steamIds) {
   }
   return await api.IPlayerService.GetPlayerLinkDetails(steamIds).then(async res => {
     const appids = res.map(i => i.private_data.game_id).filter(Boolean)
-    const appInfo = await api.IStoreBrowseService.GetItems(appids)
+    const appInfo = appids.length ? await api.IStoreBrowseService.GetItems(appids) : {}
     return res.map(i => {
       const avatarhash = Buffer.from(i.public_data.sha_digest_avatar, 'base64').toString('hex')
       const gameid = i.private_data.game_id
@@ -225,7 +225,8 @@ export async function getUserSummaries (steamIds) {
         personastate: i.private_data.persona_state ?? 0,
         timecreated: i.private_data.time_created,
         gameid,
-        gameextrainfo: appInfo[gameid]?.name
+        gameextrainfo: appInfo[gameid]?.name,
+        lastlogoff: i.private_data.last_logoff_time
       }
     })
   })
