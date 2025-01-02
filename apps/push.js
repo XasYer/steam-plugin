@@ -101,9 +101,6 @@ const rule = {
       tips: true
     },
     fnc: async e => {
-      if (!e.group_id) {
-        return false
-      }
       const isAll = e.msg.includes('全部')
       let list = []
       if (isAll) {
@@ -112,6 +109,9 @@ const rule = {
           await e.reply([Config.tips.noSteamIdTips])
           return true
         }
+      } else if (!e.group_id) {
+        await e.reply('请在群内使用')
+        return true
       } else {
         const memberList = await utils.bot.getGroupMemberList(e.self_id, e.group_id)
         list = memberList.length
@@ -154,7 +154,7 @@ const rule = {
             name: nickname,
             appid: i.personaname,
             desc: utils.steam.getPersonaState(i.personastate),
-            image: await utils.bot.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || i.avatarfull,
+            image: await utils.bot.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || (Config.other.steamAvatar ? i.avatarfull : `https://q.qlogo.cn/g?b=qq&s=100&nk=${userInfo.userId}`),
             isAvatar: true,
             descBgColor: getColor(i.personastate)
           })

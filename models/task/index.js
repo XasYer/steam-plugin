@@ -1,6 +1,6 @@
 import { Config, Version, Render } from '#components'
 import { Bot, logger, redis, segment } from '#lib'
-import { api, db, utils } from '#models'
+import { db, utils } from '#models'
 import _ from 'lodash'
 
 let timer = null
@@ -26,7 +26,7 @@ export function startTimer () {
       // 所有的steamId
       const steamIds = _.uniq(PushData.map(i => i.steamId))
       // 获取所有steamId现在的状态
-      const result = await api.ISteamUser.GetPlayerSummaries(steamIds)
+      const result = await utils.steam.getUserSummaries(steamIds)
       const userList = {}
       for (const player of result) {
         // 获取上一次的状态
@@ -104,7 +104,7 @@ export function startTimer () {
                   desc: `已${utils.steam.getPersonaState(player.personastate)}`,
                   image: await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId) || (Config.other.steamAvatar ? i.avatarfull : ''),
                   isAvatar: true,
-                  descBgColor: getColor(i.personastate)
+                  descBgColor: getColor(player.personastate)
                 })
                 if (player.personastate === 0) {
                   db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))

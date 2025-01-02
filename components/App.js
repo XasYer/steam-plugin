@@ -34,9 +34,9 @@ export default class App {
         if (options.recallMsg) {
           setTimeout(() => {
             if (e.group?.recallMsg) {
-              e.group.recallMsg(res.message_id).catch(() => {})
+              e.group.recallMsg(res.message_id)?.catch?.(() => {})
             } else if (e.friend?.recallMsg) {
-              e.friend.recallMsg(res.message_id).catch(() => {})
+              e.friend.recallMsg(res.message_id)?.catch?.(() => {})
             }
           }, options.recallMsg * 1000)
         }
@@ -94,7 +94,11 @@ export default class App {
           App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
         }
         const res = await fnc(e).catch(error => {
-          logger.error(error.message)
+          if (error.isAxiosError) {
+            logger.error(error.message)
+          } else {
+            logger.error(error)
+          }
           let message = error.message
           const keyMap = [
             { key: 'apiProxy', title: 'api反代' },

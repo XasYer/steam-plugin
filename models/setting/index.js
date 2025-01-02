@@ -82,6 +82,29 @@ export const cfgSchema = {
         def: true,
         desc: '是否推送游戏状态改变 比如上线 下线等'
       },
+      pushApi: {
+        title: '推送请求api',
+        key: '推送api',
+        type: 'number',
+        def: 2,
+        min: 1,
+        max: 4,
+        input: (n) => {
+          if (n >= 1 && n <= 4) {
+            return n * 1
+          } else {
+            return 2
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '需要access_token', value: 1 },
+          { label: '默认 可能会出现429', value: 2 },
+          { label: '需要请求两个接口', value: 3 },
+          { label: '随机', value: 4 }
+        ],
+        desc: '推送消息的api 请查看default_config/push.yaml的注释'
+      },
       pushMode: {
         title: '推送模式',
         key: '推送模式',

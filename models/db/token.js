@@ -142,3 +142,11 @@ export async function TokenTableDeleteByUserIdAndSteamId (userId, steamId) {
     }
   })
 }
+
+/**
+ * 查询所有accessToken
+ * @returns {Promise<TokenColumns[]>}
+ */
+export async function TokenTableGetAll () {
+  return await TokenTable.findAll().then(res => res.map(item => item.dataValues))
+}

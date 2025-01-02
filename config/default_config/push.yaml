@@ -4,6 +4,28 @@ enable: true
 # 是否开启状态改变推送功能 比如上线 下线等
 stateChange: true
 
+# 设置每次检查时请求的api
+
+# 1: ISteamUserOAuth/GetUserSummaries/v2
+# 此接口需要access_token 429情况未知
+# 和2接口参数返回值一样, 但是使用access_token鉴权
+# 需要有人扫码登录获取access_token后才可以调用
+
+# 2: ISteamUser/GetPlayerSummaries/v2
+# 此接口会有429限制, 经测试 40+steamid 3min 会出现 steamid越多越容易出现
+# 429 是根据apiKey进行限制, 可配置多个apiKey
+
+# 3: IPlayerService/GetPlayerLinkDetails/v1
+# 429情况暂时未知, 但是这个接口只会返回正在玩的appid不会返回name, 所以需要再请求一个接口获得游戏名
+
+# 4: 随机
+
+# tips: 依次进行获取 如果选择1出现429则尝试使用2 2出现429则尝试使用3 3出现429则停止尝试
+# 1如果没有access_token则跳过
+
+# more api please wait or issue/pr...
+pushApi: 2
+
 # 推送模式
 # 1: 文字推送 一条消息就是一个群友 xxx正在玩xxx
 # 2: 图片推送 一张图片展示所有群友

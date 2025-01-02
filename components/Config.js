@@ -97,6 +97,7 @@ class Config {
    * @returns {{
    *  enable: boolean,
    *  stateChange: boolean,
+   *  pushApi: number,
    *  pushMode: number,
    *  time: number,
    *  defaultPush: boolean,

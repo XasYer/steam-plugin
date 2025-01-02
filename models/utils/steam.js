@@ -1,5 +1,7 @@
-import { api, db } from '#models'
+import _ from 'lodash'
 import moment from 'moment'
+import { api, db } from '#models'
+import { Config } from '#components'
 
 const steamIdOffset = 76561197960265728n
 /**
@@ -110,25 +112,121 @@ export function decodeAccessTokenJwt (jwt) {
 
 /**
  * 获取对应用户的access_token
- * @param {*} userId
- * @param {*} steamId
+ * @param {string} userId
+ * @param {string} steamId
  * @returns {Promise<string>}
  */
 export async function getAccessToken (userId, steamId) {
   if (!userId || !steamId) return ''
   const token = await db.TokenTableGetByUserIdAndSteamId(userId, steamId)
+  return await refreshAccessToken(token)
+}
+
+/**
+ * 刷新access_token
+ * @param {import('models/db').TokenColumns} token
+ * @returns
+ */
+export async function refreshAccessToken (token) {
   if (!token) return ''
-  const now = moment.unix()
+  const now = moment().unix()
   // 提前30分钟刷新access_token
   const exp = token.accessTokenExpires - 60 * 30
   if (exp > now) return token.accessToken
   // 判断refresh_token是否过期
   const rtExp = token.refreshTokenExpires - 60 * 30
   if (rtExp < now) {
+    await db.TokenTableDeleteByUserIdAndSteamId(token.userId, token.steamId)
     throw new Error('refresh_token已过期, 请重新登录')
   }
   const accessToken = (await api.IAuthenticationService.GenerateAccessTokenForApp(token.refreshToken, token.steamId)).access_token
   if (!accessToken) throw new Error('刷新access_token失败')
-  await db.TokenTableAddData(token.userId, token.accessToken)
+  await db.TokenTableAddData(token.userId, accessToken)
   return accessToken
+}
+
+/**
+ * 获取用户相关信息
+ * @param {string|string[]} steamIds
+ * @returns {Promise<{
+*   steamid: string,
+*   communityvisibilitystate: number,
+*   profilestate: number,
+*   personaname: string,
+*   avatar: string,
+*   avatarmedium: string,
+*   avatarfull: string,
+*   lastlogoff?: number,
+*   personastate: number,
+*   timecreated: string,
+*   gameid?: string,
+*   gameextrainfo?: string,
+* }[]>}
+*/
+export async function getUserSummaries (steamIds) {
+  if (_.isEmpty(steamIds)) return []
+  let type = Math.floor(Number(Config.push.pushApi)) || 2
+  if (type > 4 || type < 1) type = 2
+  if (type === 4) {
+    type = _.random(1, 3)
+  }
+  if (type === 1) {
+    let accessToken = null
+    const tokenList = await db.TokenTableGetAll()
+    while (!accessToken) {
+      const token = _.sample(tokenList)
+      if (!token) {
+        break
+      }
+      _.pull(tokenList, token)
+      accessToken = await refreshAccessToken(token)
+    }
+    if (accessToken) {
+      const data = await api.ISteamUserOAuth.GetUserSummaries(accessToken, steamIds).catch(err => {
+        if ([429, 401, 403].includes(err.status)) {
+          logger.info(`请求 ISteamUserOAuth.GetUserSummaries/v2 失败: ${err.status} 尝试使用 ISteamUser.GetPlayerSummaries/v2`)
+          return false
+        }
+        throw err
+      })
+      if (data !== false) {
+        return data
+      }
+    }
+    type = 2
+  }
+  if (type === 2) {
+    const data = await api.ISteamUser.GetPlayerSummaries(steamIds).catch(err => {
+      if (err.status === 429) {
+        logger.info('请求 ISteamUser/GetPlayerSummaries/v2 失败: 429 尝试使用 IPlayerService.GetPlayerLinkDetails 接口不同返回的参数会有不同')
+        return false
+      }
+      throw err
+    })
+    if (data !== false) {
+      return data
+    }
+  }
+  return await api.IPlayerService.GetPlayerLinkDetails(steamIds).then(async res => {
+    const appids = res.map(i => i.private_data.game_id).filter(Boolean)
+    const appInfo = await api.IStoreBrowseService.GetItems(appids)
+    return res.map(i => {
+      const avatarhash = Buffer.from(i.public_data.sha_digest_avatar, 'base64').toString('hex')
+      const gameid = i.private_data.game_id
+      return {
+        steamid: i.public_data.steamid,
+        communityvisibilitystate: i.public_data.visibility_state,
+        profilestate: i.public_data.profile_state,
+        personaname: i.public_data.persona_name,
+        avatar: `https://avatars.steamstatic.com/${avatarhash}.jpg`,
+        avatarmedium: `https://avatars.steamstatic.com/${avatarhash}_medium.jpg`,
+        avatarfull: `https://avatars.steamstatic.com/${avatarhash}_full.jpg`,
+        avatarhash,
+        personastate: i.private_data.persona_state ?? 0,
+        timecreated: i.private_data.time_created,
+        gameid,
+        gameextrainfo: appInfo[gameid]?.name
+      }
+    })
+  })
 }

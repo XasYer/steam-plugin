@@ -23,7 +23,7 @@
 
 ## **注意**
 
-1. 一定要填**Steam Web API Key**,否则无法使用绝大部分功能,通常会返回 401 或 403 错误,请前往[Steam API](https://steamcommunity.com/dev/apikey)申请API Key
+1. 一定要填**Steam Web API Key**,否则无法使用绝大部分功能,通常会返回 401 或 403 错误,请前往[Steam API](https://steamcommunity.com/dev/apikey)申请API Key, 域名随意填写
 
 相关链接:
 

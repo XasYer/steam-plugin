@@ -35,12 +35,17 @@ const rule = {
           return false
         }
 
+        const toggleKeys = [
+          '随机Bot',
+          '推送api'
+        ]
         const key = (() => {
-          if (/随机Bot/i.test(regRet[1])) {
-            return '随机Bot'
-          } else {
-            return regRet[1]
+          for (const i of toggleKeys) {
+            if (new RegExp(i, 'i').test(regRet[1])) {
+              return i
+            }
           }
+          return regRet[1]
         })()
 
         if (key == '全部') {
