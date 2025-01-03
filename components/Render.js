@@ -251,7 +251,7 @@ async function renderCanvas (data, minLength) {
   // 异步加载图片
   const imgs = await Promise.all(data.map(i => i.games).flat().map(async i => {
     if (i.noImg) {
-      return null
+      return {}
     }
     const Image = await loadImage(i.image || utils.steam.getHeaderImgUrlByAppid(i.appid)).catch(() => null)
     return {
@@ -259,7 +259,7 @@ async function renderCanvas (data, minLength) {
       Image
     }
   })).then(imgs => imgs.reduce((acc, cur) => {
-    if (cur.Image) {
+    if (cur?.Image) {
       acc[`${cur.name}${cur.appid}${cur.desc}`] = cur.Image
     }
     return acc
