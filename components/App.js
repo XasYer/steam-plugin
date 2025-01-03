@@ -77,7 +77,7 @@ export default class App {
         ...cfg
       })
       cls.prototype[name] = async (e) => {
-        if (!Config.steam.apiKey.length && !/帮助|设置/.test(e.msg)) {
+        if (!Config.steam.apiKey.length && !/帮助|设置|添加|删除/.test(e.msg)) {
           await e.reply('没有配置apiKey不能调用Steam Web API哦\n先到https://steamcommunity.com/dev/apikey 申请一下apiKey\n然后使用 #steam添加apiKey + 申请到的apiKey\n之后再使用吧')
           return true
         }
