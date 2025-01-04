@@ -30,6 +30,9 @@ export default async function request (url, options = {}, retry = { count: 0, ke
       return url
     }
   })()
+  // 最大重试次数
+  const maxRetry = Math.max(Math.ceil(Config.steam.apiKey.length * 1.5), 3)
+
   const baseURL = options.baseURL ?? steamApi
   logger.info(`开始请求api: ${url}`)
 
@@ -66,7 +69,7 @@ export default async function request (url, options = {}, retry = { count: 0, ke
     if (key) { incr(`${redisUseKey}${now}:${key}`, 7) }
     return res.data
   }).catch(err => {
-    if (err.status === 429 && keys.length > 1 && key) {
+    if (err.status === 429 && keys.length > 1 && key && retry.count < maxRetry) {
       // 十分钟内不使用相同的key
       redis.set(`${redis429Key}${key}`, 1, { EX: 60 * 10 })
       retry.count++
