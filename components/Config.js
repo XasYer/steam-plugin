@@ -1,16 +1,21 @@
 import YAML from 'yaml'
 import fs from 'node:fs'
 import { logger } from '#lib'
+import { task } from '#models'
 import chokidar from 'chokidar'
 import Version from './Version.js'
 import YamlReader from './YamlReader.js'
-import { task } from '#models'
+import { basename, dirname } from 'path'
+
+const watcher = new chokidar.FSWatcher({
+  persistent: true,
+  ignoreInitial: true,
+  usePolling: true
+})
 
 class Config {
   constructor () {
     this.config = {}
-    /** 监听文件 */
-    this.watcher = { config: {}, defSet: {} }
 
     this.initCfg()
   }
@@ -75,6 +80,16 @@ class Config {
       }
       this.watch(`${path}${file}`, file.replace('.yaml', ''), 'config')
     }
+    watcher.on('change', async path => {
+      const name = basename(path).replace('.yaml', '')
+      const type = basename(dirname(path))
+      const key = `${type}.${name}`
+      delete this.config[key]
+      logger.mark(`[${Version.pluginName}][修改配置文件][${type}][${name}]`)
+      if (type === 'config' && name === 'push') {
+        task.startTimer()
+      }
+    })
   }
 
   /**
@@ -192,8 +207,8 @@ class Config {
 
   /**
    * 获取配置yaml
-   * @param type 默认跑配置-defSet，用户配置-config
-   * @param name 名称
+   * @param {'config'|'default_config'} type
+   * @param {String} name 文件名
    */
   getYaml (type, name) {
     const file = `${Version.pluginPath}/config/${type}/${name}.yaml`
@@ -204,8 +219,6 @@ class Config {
     this.config[key] = YAML.parse(
       fs.readFileSync(file, 'utf8')
     )
-
-    this.watch(file, name, type)
 
     return this.config[key]
   }
@@ -220,20 +233,8 @@ class Config {
   }
 
   /** 监听配置文件 */
-  watch (file, name, type = 'default_config') {
-    const key = `${type}.${name}`
-    if (this.watcher[key]) return
-
-    const watcher = chokidar.watch(file)
-    watcher.on('change', async path => {
-      delete this.config[key]
-      logger.mark(`[${Version.pluginName}][修改配置文件][${type}][${name}]`)
-      if (type === 'config' && name === 'push') {
-        task.startTimer()
-      }
-    })
-
-    this.watcher[key] = watcher
+  watch (file) {
+    watcher.add(file)
   }
 
   /**
