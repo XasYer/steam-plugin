@@ -221,9 +221,13 @@ class Config {
 
     if (this.config[key]) return this.config[key]
 
-    this.config[key] = YAML.parse(
-      fs.readFileSync(file, 'utf8')
-    )
+    try {
+      this.config[key] = YAML.parse(
+        fs.readFileSync(file, 'utf8')
+      )
+    } catch (error) {
+      this.config[key] = {}
+    }
 
     return this.config[key]
   }
