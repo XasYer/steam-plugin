@@ -126,15 +126,26 @@ async function getKey (keys = Config.steam.apiKey) {
   if (i.length === 1) {
     return { retKeys: i, retKey: key }
   }
-  let count = await redis.get(`${redisUseKey}${now}:${key}`) || 0
+  const keyNowUses = await redis.keys(`${redisUseKey}${now}:*`)
+  if (keyNowUses.length === 0) {
+    return { retKeys: i, retKey: key }
+  }
+  const keyUses = await redis.mGet(keyNowUses)
+  const keyUseMap = new Map()
+  for (let i = 0; i < keyNowUses.length; i++) {
+    keyUseMap.set(keyNowUses[i].split(':').pop(), Number(keyUses[i]))
+  }
+  let count = 0
+  // 获取使用次数最少的key
   for (const k of i) {
-    if (k === key) {
-      continue
-    }
-    const c = await redis.get(`${redisUseKey}${now}:${k}`) || 0
-    if (c < count) {
+    const use = keyUseMap.get(`${k}`)
+    if (!use) {
       key = k
-      count = c
+      break
+    }
+    if (use < count) {
+      count = use
+      key = k
     }
   }
   return { retKeys: i, retKey: key }
