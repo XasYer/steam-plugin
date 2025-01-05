@@ -2,10 +2,11 @@ import YAML from 'yaml'
 import fs from 'node:fs'
 import { logger } from '#lib'
 import { task } from '#models'
-import chokidar from 'chokidar'
 import Version from './Version.js'
 import YamlReader from './YamlReader.js'
 import { basename, dirname } from 'path'
+
+const chokidar = await import('chokidar')
 
 const watcher = new chokidar.FSWatcher({
   persistent: true,
@@ -80,13 +81,13 @@ class Config {
       }
       this.watch(`${path}${file}`, file.replace('.yaml', ''), 'config')
     }
-    watcher.on('change', async path => {
+    watcher.on('change', path => {
       const name = basename(path).replace('.yaml', '')
       const type = basename(dirname(path))
       const key = `${type}.${name}`
       delete this.config[key]
       logger.mark(`[${Version.pluginName}][修改配置文件][${type}][${name}]`)
-      if (type === 'config' && name === 'push') {
+      if (key === 'config.push') {
         task.startTimer()
       }
     })
