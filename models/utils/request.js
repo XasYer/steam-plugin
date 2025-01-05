@@ -117,7 +117,7 @@ async function getKey (keys = Config.steam.apiKey) {
       }
     }
     if (i.length === 0) {
-      i.push(...keys[0])
+      i.push(keys[0])
     }
   } else {
     i.push(...keys)
