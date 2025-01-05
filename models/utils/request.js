@@ -108,47 +108,33 @@ export async function post (url, options = {}) {
 }
 
 async function getKey (keys = Config.steam.apiKey) {
-  const i = []
+  const retKeys = []
   const now = moment().format('YYYY-MM-DD')
   if (keys.length > 1) {
     for (const key of keys) {
       if (!await redis.exists(`${redis429Key}${key}`)) {
-        i.push(key)
+        retKeys.push(key)
       }
     }
-    if (i.length === 0) {
-      i.push(keys[0])
+    if (retKeys.length === 0) {
+      retKeys.push(keys[0])
     }
   } else {
-    i.push(...keys)
+    retKeys.push(...keys)
   }
-  let key = i[0]
-  if (i.length === 1) {
-    return { retKeys: i, retKey: key }
+
+  if (retKeys.length <= 1) {
+    return { retKeys, retKey: retKeys[0] }
   }
-  const keyNowUses = await redis.keys(`${redisUseKey}${now}:*`)
-  if (keyNowUses.length === 0) {
-    return { retKeys: i, retKey: key }
-  }
+  let key = retKeys[0]
+  const keyNowUses = retKeys.map(k => `${redisUseKey}${now}:${k}`)
   const keyUses = await redis.mGet(keyNowUses)
-  const keyUseMap = new Map()
-  for (let i = 0; i < keyNowUses.length; i++) {
-    keyUseMap.set(keyNowUses[i].split(':').pop(), Number(keyUses[i]))
+  let count = Math.min(...keyUses.map(i => i || 0))
+  if (count > 0) {
+    const keyIndex = keyUses.findIndex(k => Number(k) === count) || 0
+    key = retKeys[keyIndex]
   }
-  let count = 0
-  // 获取使用次数最少的key
-  for (const k of i) {
-    const use = keyUseMap.get(`${k}`)
-    if (!use) {
-      key = k
-      break
-    }
-    if (use < count) {
-      count = use
-      key = k
-    }
-  }
-  return { retKeys: i, retKey: key }
+  return { retKeys, retKey: key }
 }
 
 function incr (key, day = 3) {
