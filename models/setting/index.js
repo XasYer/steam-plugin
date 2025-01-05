@@ -291,6 +291,13 @@ export const cfgSchema = {
         type: 'boolean',
         def: false,
         desc: '是否必须携带#指令才能触发对应功能, 重启后生效'
+      },
+      watchFile: {
+        title: '监听文件变化',
+        key: '监听文件',
+        type: 'boolean',
+        def: true,
+        desc: '如果不监听文件变化则每次改动和设置都需要重启后才会生效'
       }
     }
   },

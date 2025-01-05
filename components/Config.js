@@ -8,16 +8,19 @@ import { basename, dirname } from 'path'
 
 const chokidar = await import('chokidar')
 
-const watcher = new chokidar.FSWatcher({
-  persistent: true,
-  ignoreInitial: true,
-  usePolling: true
-})
-
 class Config {
   constructor () {
     this.config = {}
-
+    this.watcher = this.other.watchFile
+      ? new chokidar.FSWatcher({
+        persistent: true,
+        ignoreInitial: true,
+        usePolling: true
+      })
+      : {
+          add: () => {},
+          on: () => {}
+        }
     this.initCfg()
   }
 
@@ -81,7 +84,7 @@ class Config {
       }
       this.watch(`${path}${file}`, file.replace('.yaml', ''), 'config')
     }
-    watcher.on('change', path => {
+    this.watcher.on('change', path => {
       const name = basename(path).replace('.yaml', '')
       const type = basename(dirname(path))
       const key = `${type}.${name}`
@@ -142,6 +145,7 @@ class Config {
    *  statsCount: number,
    *  priority: number,
    *  requireHashTag: boolean,
+   *  watchFile: boolean,
    * }}
    */
   get other () {
@@ -235,7 +239,7 @@ class Config {
 
   /** 监听配置文件 */
   watch (file) {
-    watcher.add(file)
+    this.watcher.add(file)
   }
 
   /**
