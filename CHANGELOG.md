@@ -1,5 +1,57 @@
 # Changelog
 
+## [1.9.0](https://github.com/XasYer/steam-plugin/compare/v1.8.1...v1.9.0) (2025-01-06)
+
+
+### Features
+
+* steamapi调用统计 ([10a0941](https://github.com/XasYer/steam-plugin/commit/10a094140dd17f099669902c63c866e7d73ba77b))
+* steam扫码登录获取accesstoken 暂时无用处 ([e95d058](https://github.com/XasYer/steam-plugin/commit/e95d0588d9e22b5b062a5f94c91194c2b217c5ed))
+* 添加若干api可用于dev ([f03271b](https://github.com/XasYer/steam-plugin/commit/f03271ba7c5e80c8d05a037f88b23494cdce0d2c))
+
+
+### Bug Fixes
+
+* fix:  ([231a2d6](https://github.com/XasYer/steam-plugin/commit/231a2d6688c62c1cb8d5dc72285377cbeca54127))
+* ... ([d9edc27](https://github.com/XasYer/steam-plugin/commit/d9edc277f95d3ce5ee4066afc4e79459b5b68ce7))
+* apiKey的锅巴组件 ([410c604](https://github.com/XasYer/steam-plugin/commit/410c60462097dee95c698546d56bb21ab71305e4))
+* canvas没有img时报错 ([ae3ea6a](https://github.com/XasYer/steam-plugin/commit/ae3ea6a89cdfa9cddbfaafa9bf72ea2e9a14faea))
+* null ([1673774](https://github.com/XasYer/steam-plugin/commit/1673774e3106cb617fe4d088ecad9a741698fb94))
+* 主动查询群友状态 ([fa3f01a](https://github.com/XasYer/steam-plugin/commit/fa3f01a32b7e7adc4f5b6ceab4f623f8821a42da))
+* 优化请求 ([38e2452](https://github.com/XasYer/steam-plugin/commit/38e24529eacf83ae3e514e715aaa26f234be53d4))
+* 最近游戏时长丢失 ([c9b2fb1](https://github.com/XasYer/steam-plugin/commit/c9b2fb1347a173c21ed2a79052b87d677a87e289))
+* 在线状态字体颜色 ([dadeda3](https://github.com/XasYer/steam-plugin/commit/dadeda34fa46732522e7499a93e78f8125313c3a))
+* 字体 ([1d7ea23](https://github.com/XasYer/steam-plugin/commit/1d7ea2338242987344acf7adb6760ce5f67f9b1e))
+* 客户端id不能默认1 ([7066b3b](https://github.com/XasYer/steam-plugin/commit/7066b3b3af89b2f4c39b252705eaaf5cf94af3f3))
+* 年度回顾分享图片获取失败 ([b9a6dd7](https://github.com/XasYer/steam-plugin/commit/b9a6dd7b945420df5731229031488f9c45b9e7ec))
+* 开启随机Bot时不判断在线 ([f76cd96](https://github.com/XasYer/steam-plugin/commit/f76cd9675d9b081c5fa6e96466f73eb7c32985e3))
+* 推送状态背景颜色 ([34f93e8](https://github.com/XasYer/steam-plugin/commit/34f93e8681b85c573b0ebb078fe67e61a8a7c5ea))
+* 文字推送 ([b05cb2c](https://github.com/XasYer/steam-plugin/commit/b05cb2ce1db1f27ec3e0157dabc1337f96e9ec40))
+* 添加apiKey ([3da0e30](https://github.com/XasYer/steam-plugin/commit/3da0e30c90a9c0220e7ebf64fa63d522475dbaed))
+* 访问失败的默认值 ([846e38e](https://github.com/XasYer/steam-plugin/commit/846e38ebff83930d18c5271471c06445220c749f))
+
+
+### Performance Improvements
+
+* apiKey修改为数组, 可配置多个apiKey, 随机选择一个进行请求 ([7bf8716](https://github.com/XasYer/steam-plugin/commit/7bf8716ea49019b93f8bcb2be8e45965acc40994))
+* steam状态可用canvas渲染 包括gif ([92272b1](https://github.com/XasYer/steam-plugin/commit/92272b126f2b503cc864019205aab1d0e8da88c4))
+* 优化api参数 ([a3ad0e6](https://github.com/XasYer/steam-plugin/commit/a3ad0e66cc56c58e6b2805a8a6c01e99e31bb4f6))
+* 优化扫码登录 ([f018be2](https://github.com/XasYer/steam-plugin/commit/f018be25be2b35b50f4c4c5a326ced519e905744))
+* 优化扫码登录 ([c6009fc](https://github.com/XasYer/steam-plugin/commit/c6009fc935478e91042a8576293730322bb6c19b))
+* 优化样式 ([67698b1](https://github.com/XasYer/steam-plugin/commit/67698b1cfdb846b5c93eea021672e5f1b8e807bf))
+* 优化错误日志 ([167cab0](https://github.com/XasYer/steam-plugin/commit/167cab0f1d3a841131717f4910ae1445d467ad39))
+* 可设置统计黑白名单中的群 ([63d0c05](https://github.com/XasYer/steam-plugin/commit/63d0c05b16126464f8c553d1f2c139728b052b18))
+* 可选canvas渲染图片 ([2af9b20](https://github.com/XasYer/steam-plugin/commit/2af9b20c5e924a90b990bddada58fe25d829ae00))
+* 可选是否监听文件改变 ([0c4faf1](https://github.com/XasYer/steam-plugin/commit/0c4faf16f807ebc289a60def5117170c672e8303))
+* 可选是否监听文件改变 ([0caa798](https://github.com/XasYer/steam-plugin/commit/0caa7986c5c9491aebc5348aac3b6f9abe5dcd34))
+* 定时任务429时可切换其他api查询 ([3026c3c](https://github.com/XasYer/steam-plugin/commit/3026c3c12dd757a85101e69d5106fa57555df305))
+* 推送模式3 细化推送开关 ([6ab1edc](https://github.com/XasYer/steam-plugin/commit/6ab1edcea52587fc7361a22eb7f0fcbb879473ac))
+* 监听文件 ([9ca613d](https://github.com/XasYer/steam-plugin/commit/9ca613dcc1f350f4351168304b96919b366cab1c))
+* 请求429时如果有配置多个key则使用其他key重试 ([e9d39f5](https://github.com/XasYer/steam-plugin/commit/e9d39f5fb39c5ea8652488ba98354b53328e01a0))
+* 部分中文header ([c1edd07](https://github.com/XasYer/steam-plugin/commit/c1edd07a6b9fa1e549c6f96dbe20e09741f318c3))
+* 部分接口返回中文游戏名 ([1de8cc0](https://github.com/XasYer/steam-plugin/commit/1de8cc094569b8c0fb5c90eb586d779640a7aa8a))
+* 配置多个apiKey时负载均衡 ([6870655](https://github.com/XasYer/steam-plugin/commit/68706555fe982afcba0c8a6949445258d144a64a))
+
 ## [1.8.1](https://github.com/XasYer/steam-plugin/compare/v1.8.0...v1.8.1) (2024-12-21)
 
 
