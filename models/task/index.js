@@ -5,7 +5,6 @@ import _ from 'lodash'
 
 let timer = null
 
-// TODO: 改成sqlite?
 const redisKey = 'steam-plugin:user-play:'
 
 export function startTimer () {
@@ -22,7 +21,7 @@ export function startTimer () {
       // 获取现在的时间
       const now = Math.floor(Date.now() / 1000)
       // 从推送表中获取所有数据
-      const PushData = await db.PushTableGetAllData(true)
+      const PushData = await db.PushTableGetAllData(Config.push.statusFilterGroup)
       // 所有的steamId
       const steamIds = _.uniq(PushData.map(i => i.steamId))
       // 获取所有steamId现在的状态
@@ -113,7 +112,7 @@ export function startTimer () {
                 desc: `已${utils.steam.getPersonaState(player.personastate)}`,
                 image: avatar || (Config.other.steamAvatar ? i.avatarfull : ''),
                 isAvatar: true,
-                descBgColor: getColor(player.personastate)
+                descBgColor: utils.steam.getStateColor(player.personastate)
               })
             }
           }
@@ -165,11 +164,11 @@ export function startTimer () {
             const path = Config.push.pushMode === 2 ? 'inventory/index' : 'game/game'
             const img = await Render.render(path, { data })
             if (typeof img !== 'string') {
-              await utils.bot.sendGroupMsg(botId, gid, img)
+              await sendGroupMsg(botId, gid, img)
             }
           } else {
             for (const msg of data) {
-              await utils.bot.sendGroupMsg(botId, gid, msg)
+              await sendGroupMsg(botId, gid, msg)
             }
           }
         }
@@ -180,14 +179,12 @@ export function startTimer () {
   }, 1000 * 60 * Config.push.time)
 }
 
-// TODO:
-function getColor (state) {
-  switch (Number(state)) {
-    case 1:
-      return '#beee11'
-    case 0:
-      return '#999999'
-    default:
-      return '#8fbc8b'
+async function sendGroupMsg (bid, gid, msg) {
+  if (typeof msg === 'string') {
+    return
   }
+  if (!Config.push.statusFilterGroup && !utils.bot.checkGroup(gid).success) {
+    return
+  }
+  await utils.bot.sendGroupMsg(bid, gid, msg)
 }

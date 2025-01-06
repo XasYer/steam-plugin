@@ -81,7 +81,6 @@ pnpm install --filter=steam-plugin
 
 - steam喜加一
 - steam游戏详情
-- steam用户统计
 
 ## 联系方式
 
@@ -129,7 +128,7 @@ pnpm install --filter=steam-plugin
 > 🌟 星光闪烁，你们的智慧如同璀璨的夜空。感谢所有为 **steam-plugin** 做出贡献的人！
 
 <a href="https://github.com/XasYer/steam-plugin/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=XasYer%2Fsteam-plugin" />
+  <img src="https://contrib.rocks/image?repo=XasYer/steam-plugin" />
 </a>
 
 ![Alt](https://repobeats.axiom.co/api/embed/aafe6a6a7a72df285ae3965974546314c467db8d.svg "Repobeats analytics image")

@@ -47,7 +47,9 @@ export default async function request (url, options = {}, retry = { count: 0, ke
     let { retKeys, retKey } = await getKey(retry.keys)
     key = retKey
     keys = retKeys
-    logger.info(`获取请求的key: ${key.slice(0, 5)}...${key.slice(-5)}`)
+    if (retKeys.length > 1) {
+      logger.info(`获取请求的key: ${key.slice(0, 5)}...${key.slice(-5)}`)
+    }
   }
   return await axios.request({
     url,

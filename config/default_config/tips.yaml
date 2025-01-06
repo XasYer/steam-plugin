@@ -20,3 +20,18 @@ recentPlayEmptyTips: "最近电子阳痿了"
 
 # 愿望单为空或未公开时的提示语
 wishListEmptyTips: "愿望当场就实现了, 羡慕"
+
+# 在私聊中使用群聊限定的指令时的提示语
+privateUseTips: "请在群聊中使用此功能~"
+
+# 没有开启推送功能时的提示语
+pushDisabledTips: "主人没有开启推送功能哦"
+
+# 在推送黑名单中的提示语
+blackGroupTips: "本群在推送黑名单中, 请联系主人解除~"
+
+# 不在推送白名单中的提示语
+noWhiteGroupTips: "本群没有在推送白名单中, 请联系主人添加~"
+
+# 制作图片失败时的提示语
+makeImageFailedTips: "制作图片出错辣！再试一次吧"

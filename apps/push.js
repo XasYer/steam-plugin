@@ -14,7 +14,9 @@ const rule = {
   push: {
     reg: App.getReg('(?:开启|关闭)推送\\s*(\\d*)'),
     fnc: async e => {
-      if (!await checkGroup(e)) {
+      const g = utils.bot.checkGroup(e.group_id)
+      if (!g.success) {
+        await e.reply(g.message)
         return true
       }
       const textId = rule.push.reg.exec(e.msg)[1]
@@ -63,7 +65,9 @@ const rule = {
   list: {
     reg: App.getReg('(本群)?推送列表'),
     fnc: async e => {
-      if (!await checkGroup(e)) {
+      const g = utils.bot.checkGroup(e.group_id)
+      if (!g.success) {
+        await e.reply(g.message)
         return true
       }
       const list = await db.PushTableGetDataByGroupId(e.group_id, true)
@@ -156,7 +160,7 @@ const rule = {
             desc: utils.steam.getPersonaState(i.personastate),
             image: await utils.bot.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || (Config.other.steamAvatar ? i.avatarfull : `https://q.qlogo.cn/g?b=qq&s=100&nk=${userInfo.userId}`),
             isAvatar: true,
-            descBgColor: getColor(i.personastate)
+            descBgColor: utils.steam.getStateColor(i.personastate)
           })
         }
       }
@@ -180,33 +184,3 @@ const rule = {
 }
 
 export const app = new App(appInfo, rule).create()
-
-async function checkGroup (e) {
-  if (!e.group_id) {
-    return false
-  }
-  if (!Config.push.enable) {
-    await e.reply('主人没有开启推送功能哦')
-    return false
-  }
-  if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(id => id == e.group_id)) {
-    await e.reply('本群没有在推送白名单中, 请联系主人添加~')
-    return false
-  }
-  if (Config.push.blackGroupList.length && Config.push.blackGroupList.some(id => id == e.group_id)) {
-    await e.reply('本群在推送黑名单中, 请联系主人解除~')
-    return false
-  }
-  return true
-}
-
-function getColor (state) {
-  switch (Number(state)) {
-    case 1:
-      return '#beee11'
-    case 0:
-      return '#999999'
-    default:
-      return '#8fbc8b'
-  }
-}

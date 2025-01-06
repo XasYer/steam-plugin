@@ -49,7 +49,6 @@ export async function UserTableAddSteamIdByUserId (userId, steamId) {
   }).then(result => result?.dataValues)
   // 更换绑定为新的steamId
   await UserTableBindSteamIdByUserId(userId, steamId, true)
-  // TODO: 是否默认开启推送 添加到推送表
   return res
 }
 

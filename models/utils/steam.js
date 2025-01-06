@@ -233,3 +233,19 @@ export async function getUserSummaries (steamIds) {
     })
   })
 }
+
+/**
+ * 获取状态对应的颜色
+ * @param {number} state
+ * @returns {string}
+ */
+export function getStateColor (state) {
+  switch (Number(state)) {
+    case 1:
+      return '#beee11'
+    case 0:
+      return '#999999'
+    default:
+      return '#8fbc8b'
+  }
+}

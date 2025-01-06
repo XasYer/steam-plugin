@@ -152,3 +152,38 @@ export async function makeForwardMsg (e, msg) {
     return ''
   }
 }
+
+/**
+ * 检查黑白名单 返回ture表示通过
+ * @param {string} gid
+ * @returns {{success: boolean, message?: string}}
+ */
+export function checkGroup (gid) {
+  if (!gid) {
+    return {
+      success: false,
+      message: Config.tips.privateUseTips
+    }
+  }
+  if (!Config.push.enable) {
+    return {
+      success: false,
+      message: Config.tips.pushDisabledTips
+    }
+  }
+  if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(id => id == gid)) {
+    return {
+      success: false,
+      message: Config.tips.noWhiteGroupTips
+    }
+  }
+  if (Config.push.blackGroupList.length && Config.push.blackGroupList.some(id => id == gid)) {
+    return {
+      success: false,
+      message: Config.tips.blackGroupTips
+    }
+  }
+  return {
+    success: true
+  }
+}

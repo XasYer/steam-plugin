@@ -110,6 +110,21 @@ export const cfgSchema = {
         def: true,
         desc: '是否推送下线'
       },
+      time: {
+        title: '推送间隔',
+        key: '推送间隔',
+        def: 5,
+        min: 1,
+        type: 'number',
+        input: (n) => {
+          if (n >= 0) {
+            return n * 1
+          } else {
+            return 5
+          }
+        },
+        desc: '间隔多少分钟推送一次'
+      },
       pushApi: {
         title: '推送请求api',
         key: '推送api',
@@ -160,6 +175,13 @@ export const cfgSchema = {
         def: false,
         desc: '有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)'
       },
+      statusFilterGroup: {
+        title: '统计过滤黑白名单',
+        key: '统计过滤群',
+        type: 'boolean',
+        def: true,
+        desc: '群统计是否过滤掉黑名单群和白名单群 关闭则每次都会获取所有群的状态'
+      },
       blackBotList: {
         title: '推送黑名单机器人',
         key: '推送bot黑名单',
@@ -189,21 +211,6 @@ export const cfgSchema = {
         type: 'array',
         def: [],
         desc: '只推送白名单群的状态'
-      },
-      time: {
-        title: '推送间隔',
-        key: '推送间隔',
-        def: 5,
-        min: 1,
-        type: 'number',
-        input: (n) => {
-          if (n >= 0) {
-            return n * 1
-          } else {
-            return 5
-          }
-        },
-        desc: '间隔多少分钟推送一次'
       }
     }
   },

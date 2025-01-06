@@ -125,6 +125,7 @@ class Config {
    *  time: number,
    *  defaultPush: boolean,
    *  randomBot: boolean,
+   *  statusFilterGroup: boolean,
    *  blackBotList: string[],
    *  whiteBotList: string[],
    *  blackGroupList: string[],
@@ -181,6 +182,11 @@ class Config {
    *   inventoryEmptyTips: string,
    *   recentPlayEmptyTips: string,
    *   wishListEmptyTips: string,
+   *   privateUseTips: string,
+   *   pushDisabledTips: string,
+   *   blackGroupTips: string,
+   *   noWhiteGroupTips: string,
+   *   makeImageFailedTips: string,
    * }}
    */
   get tips () {

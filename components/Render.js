@@ -66,7 +66,7 @@ const Render = {
     if (img) {
       return img
     } else {
-      return '制作图片出错辣！再试一次吧'
+      return Config.tips.makeImageFailedTips
     }
   },
   async simpleRender (path, params) {

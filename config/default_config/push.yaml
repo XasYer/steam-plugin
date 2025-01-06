@@ -56,6 +56,10 @@ defaultPush: true
 # 是否随机Bot进行推送, 有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)
 randomBot: false
 
+# 群统计是否过滤掉黑名单群和白名单群
+# 如果关闭则每次会获取忽略黑白名单的所有群 但是不会推送 仅统计
+statusFilterGroup: true
+
 # 推送的Bot黑名单, 不开启推送的Bot将不会被推送, 比如腾讯QQBot限制主动消息
 blackBotList:
   - 3889000138
@@ -65,7 +69,7 @@ whiteBotList: []
 
 # 推送黑名单群
 blackGroupList:
-  - 123456
+  - 741577559
 
 # 推送白名单群
 whiteGroupList: []

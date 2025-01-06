@@ -16,7 +16,9 @@ const rule = {
       tips: true
     },
     fnc: async e => {
-      if (!checkGroup(e.group_id)) {
+      const g = utils.bot.checkGroup(e.group_id)
+      if (!g.success) {
+        await e.reply(g.message)
         return true
       }
       const limit = Math.max(1, Number(Config.other.statsCount) || 10)
@@ -157,25 +159,6 @@ const rule = {
       return true
     }
   }
-}
-
-async function checkGroup (e) {
-  if (!e.group_id) {
-    return false
-  }
-  if (!Config.push.enable) {
-    await e.reply('主人没有开启推送功能哦')
-    return false
-  }
-  if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(id => id == e.group_id)) {
-    await e.reply('本群没有在推送白名单中, 请联系主人添加~')
-    return false
-  }
-  if (Config.push.blackGroupList.length && Config.push.blackGroupList.some(id => id == e.group_id)) {
-    await e.reply('本群在推送黑名单中, 请联系主人解除~')
-    return false
-  }
-  return true
 }
 
 export const app = new App(appInfo, rule).create()
