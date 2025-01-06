@@ -1,8 +1,20 @@
-# 是否开启游玩推送功能
+# 游玩推送总开关
 enable: true
 
-# 是否开启状态改变推送功能 比如上线 下线等
+# 开始游戏后是否推送
+playStart: true
+
+# 游玩结束后是否推送
+playEnd: true
+
+# 状态推送总开关
 stateChange: true
+
+# 上线是否推送
+stateOnline: true
+
+# 下线是否推送
+stateOffline: true
 
 # 设置每次检查时请求的api
 
@@ -28,7 +40,8 @@ pushApi: 2
 
 # 推送模式
 # 1: 文字推送 一条消息就是一个群友 xxx正在玩xxx
-# 2: 图片推送 一张图片展示所有群友
+# 2: 图片推送 一张图片展示所有群友 会展示游戏的header图片
+# 3: 仿steam风格的播报图片 只会展示头像和游戏名 不会展示游戏的header图片和时间 
 pushMode: 1
 
 # Steam Web API 使用条款

@@ -48,19 +48,19 @@ export async function getUserAvatar (botId, uid, gid) {
   try {
     if (Version.BotName === 'Karin') {
       const bot = Bot.getBot(botId)
-      const avatarUrl = await bot.getAvatarUrl(uid)
-      return avatarUrl || await bot.getAvatarUrl(botId) || ''
+      const avatarUrl = await bot.getAvatarUrl(uid, 100)
+      return avatarUrl || ''
     } else {
       uid = Number(uid) || uid
       const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
       if (gid) {
         gid = Number(gid) || gid
         const group = bot.pickGroup(gid)
-        const avatarUrl = (await group.pickMember(uid)).getAvatarUrl()
+        const avatarUrl = (await group.pickMember(uid)).getAvatarUrl(100)
         return avatarUrl || bot.avatar
       } else {
         const user = bot.pickUser(uid)
-        const avatarUrl = await user.getAvatarUrl()
+        const avatarUrl = await user.getAvatarUrl(100)
         return avatarUrl || bot.avatar || ''
       }
     }

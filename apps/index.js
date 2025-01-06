@@ -13,19 +13,13 @@ const apps = {}
 for (const i of files) {
   if (i === 'index.js') continue
   try {
+    const startTime = Date.now()
     const exp = await import(`file://${join(path, i)}`)
     const id = i.replace('.js', '')
-    // const app = new App(exp.app || {
-    //   id: i.replace('.js', ''),
-    //   name: i.replace('.js', '')
-    // })
-    // for (const key in exp.rule) {
-    //   const rule = exp.rule[key]
-    //   app.rule(key, rule.reg, rule.fnc, rule.cfg)
-    // }
     apps[id] = exp.app
+    logger.debug(`加载js: apps/${i}成功 耗时: ${Date.now() - startTime}ms`)
   } catch (error) {
-    logger.error('error', `[${Version.pluginName}]加载js: apps/${i}错误\n`, error)
+    logger.error('error', `加载js: apps/${i}错误\n`, error)
   }
 }
 

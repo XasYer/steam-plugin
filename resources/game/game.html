@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>steam-plugin</title>
+    <link rel="stylesheet" type="text/css" href="{{pluResPath}}game/game.css" />
+</head>
+
+<body>
+    <div id="container">
+        {{each data i}}
+        <div class="box">
+            <div class="avatar">
+                <img src="{{i.avatar || i.image}}" width="66" height="66" alt="头像">
+            </div>
+            <div class="info">
+                {{if i.isAvatar}}
+                <div class="name">{{i.name}}</div>
+                <div class="online">{{i.desc}}</div>
+                {{else}}
+                <div class="name">{{i.appid}}</div>
+                <div class="desc">{{i.type === 'start' ? '正在玩' : '结束玩'}}</div>
+                <div class="game">{{i.name}}</div>
+                {{/if}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</body>
+
+</html>

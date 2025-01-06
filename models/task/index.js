@@ -56,6 +56,7 @@ export function startTimer () {
             } else if (!Bot[i.botId] && !Config.push.randomBot) {
               continue
             }
+            const avatar = await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId)
             // 0 就是没有人绑定
             const nickname = i.userId == '0' ? player.personaname : await utils.bot.getUserName(i.botId, i.userId, i.groupId)
             // 先收集所有要推送的用户
@@ -69,53 +70,51 @@ export function startTimer () {
                 state: []
               }
             }
-            if (Config.push.enable && player.gameid && player.gameid != lastPlay.appid) {
+            if (Config.push.enable && Config.push.playStart && player.gameid && player.gameid != lastPlay.appid) {
               const time = now - lastPlay.playTime
               state.playTime = now
               userList[i.groupId][i.botId].start.push({
                 name: player.gameextrainfo,
                 appid: `${nickname}(${player.personaname})`,
                 desc: lastPlay.playTime ? `距离上次 ${utils.formatDuration(time)}` : '',
-                image: iconUrl
+                image: iconUrl,
+                avatar,
+                type: 'start'
               })
               db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新统计数据失败', e.message))
-              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now, null, player.gameid, player.gameextrainfo).catch(e => logger.error('添加历史记录失败', e.message))
             }
-            if (Config.push.enable && lastPlay.name && lastPlay.name != player.gameextrainfo) {
+            if (Config.push.enable && Config.push.playEnd && lastPlay.name && lastPlay.name != player.gameextrainfo) {
               const time = now - lastPlay.playTime
               state.playTime = now
               userList[i.groupId][i.botId].end.push({
                 name: lastPlay.name,
                 appid: `${nickname}(${player.personaname})`,
                 desc: `时长: ${utils.formatDuration(time)}`,
-                image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid)
+                image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid),
+                avatar,
+                type: 'end'
               })
               db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新统计数据失败', e.message))
-              db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.playTime, now, lastPlay.appid, lastPlay.name).catch(e => logger.error('添加历史记录失败', e.message))
             }
             // 在线状态改变
             if (Config.push.stateChange && player.personastate != lastPlay.state) {
               const time = now - lastPlay.onlineTime
-              if ([0, 1].includes(player.personastate)) {
-                state.onlineTime = now
-                userList[i.groupId][i.botId].state.push({
-                  name: `${nickname}(${player.personaname})`,
-                  appid: lastPlay.onlineTime ? `距离上次 ${utils.formatDuration(time)}` : '',
-                  desc: `已${utils.steam.getPersonaState(player.personastate)}`,
-                  image: await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId) || (Config.other.steamAvatar ? i.avatarfull : ''),
-                  isAvatar: true,
-                  descBgColor: getColor(player.personastate)
-                })
-                if (player.personastate === 0) {
-                  db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))
-                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, lastPlay.onlineTime, now).catch(e => logger.error('添加历史记录失败', e.message))
-                } else {
-                  db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新统计数据失败', e))
-                  db.HistoryAdd(i.userId, i.groupId, i.botId, i.steamId, now).catch(e => logger.error('添加历史记录失败', e.message))
-                }
+              if (Config.push.stateOffline && player.personastate === 0) {
+                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))
+              } else if (Config.push.stateOnline && player.personastate === 1) {
+                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新统计数据失败', e.message))
               } else {
-                state.state = player.personastate === 0 ? 0 : 1
+                continue
               }
+              state.onlineTime = now
+              userList[i.groupId][i.botId].state.push({
+                name: `${nickname}(${player.personaname})`,
+                appid: lastPlay.onlineTime ? `距离上次 ${utils.formatDuration(time)}` : '',
+                desc: `已${utils.steam.getPersonaState(player.personastate)}`,
+                image: avatar || (Config.other.steamAvatar ? i.avatarfull : ''),
+                isAvatar: true,
+                descBgColor: getColor(player.personastate)
+              })
             }
           }
         }
@@ -125,8 +124,9 @@ export function startTimer () {
         for (const botId in userList[gid]) {
           const i = userList[gid][botId]
           const data = []
+          const isImg = [2, 3].includes(Number(Config.push.pushMode))
           if (i.start.length) {
-            if (Config.push.pushMode == 2) {
+            if (isImg) {
               data.push({
                 title: '开始玩游戏的群友',
                 games: i.start
@@ -136,7 +136,7 @@ export function startTimer () {
             }
           }
           if (i.end.length) {
-            if (Config.push.pushMode == 2) {
+            if (isImg) {
               data.push({
                 title: '结束玩游戏的群友',
                 games: i.end
@@ -146,7 +146,7 @@ export function startTimer () {
             }
           }
           if (i.state.length) {
-            if (Config.push.pushMode == 2) {
+            if (isImg) {
               data.push({
                 title: '在线状态改变的群友',
                 games: i.state
@@ -161,9 +161,12 @@ export function startTimer () {
           if (!data.length) {
             continue
           }
-          if (Config.push.pushMode == 2) {
-            const img = await Render.render('inventory/index', { data })
-            await utils.bot.sendGroupMsg(botId, gid, img)
+          if (isImg) {
+            const path = Config.push.pushMode === 2 ? 'inventory/index' : 'game/game'
+            const img = await Render.render(path, { data })
+            if (typeof img !== 'string') {
+              await utils.bot.sendGroupMsg(botId, gid, img)
+            }
           } else {
             for (const msg of data) {
               await utils.bot.sendGroupMsg(botId, gid, msg)

@@ -115,7 +115,11 @@ class Config {
    * 获取推送配置
    * @returns {{
    *  enable: boolean,
+   *  playStart: boolean,
+   *  playEnd: boolean,
    *  stateChange: boolean,
+   *  stateOnline: boolean,
+   *  stateOffline: boolean,
    *  pushApi: number,
    *  pushMode: number,
    *  time: number,

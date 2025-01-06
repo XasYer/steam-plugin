@@ -62,11 +62,25 @@ export const cfgSchema = {
     title: '推送设置',
     cfg: {
       enable: {
-        title: '推送总开关',
+        title: '游玩推送总开关',
         key: '推送',
         type: 'boolean',
         def: true,
         desc: '是否开启推送功能'
+      },
+      playStart: {
+        title: '游戏开始推送',
+        key: '开始',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送开始游戏'
+      },
+      playEnd: {
+        title: '游戏结束推送',
+        key: '结束',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送结束游戏'
       },
       defaultPush: {
         title: '默认开启推送',
@@ -76,11 +90,25 @@ export const cfgSchema = {
         desc: '是否默认开启推送, 绑定steamId后自动开启推送'
       },
       stateChange: {
-        title: '状态改变推送',
+        title: '状态改变推送总开关',
         key: '状态推送',
         type: 'boolean',
         def: true,
-        desc: '是否推送游戏状态改变 比如上线 下线等'
+        desc: '是否推送游戏状态改变'
+      },
+      stateOnline: {
+        title: '上线推送',
+        key: '上线',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送上线'
+      },
+      stateOffline: {
+        title: '下线推送',
+        key: '下线',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送下线'
       },
       pushApi: {
         title: '推送请求api',
@@ -113,16 +141,17 @@ export const cfgSchema = {
         component: 'RadioGroup',
         options: [
           { label: '文字推送', value: 1 },
-          { label: '图片推送', value: 2 }
+          { label: '图片推送', value: 2 },
+          { label: 'steam风格图片', value: 3 }
         ],
         input: (n) => {
-          if (n >= 1 && n <= 2) {
+          if (n >= 1 && n <= 3) {
             return n * 1
           } else {
             return 1
           }
         },
-        desc: '推送模式 1: 文字推送 2: 图片推送'
+        desc: '推送模式 1: 文字推送 2: 图片推送 3: steam风格图片'
       },
       randomBot: {
         title: '随机推送Bot',
