@@ -1,10 +1,8 @@
 import { join } from 'path'
-import { canvasPKG, createCanvas, toImage } from './canvas.js'
 import { Version } from '#components'
+import { loadImage, createCanvas, toImage, shortenText } from './canvas.js'
 
 export async function render (data) {
-  const { loadImage } = canvasPKG
-
   const bg = await loadImage(join(Version.pluginPath, 'resources', 'game', 'game.png'))
 
   const { ctx, canvas } = createCanvas(bg.width, bg.height * data.length)
@@ -32,14 +30,7 @@ export async function render (data) {
     ctx.font = '19px MiSans'
     ctx.fillStyle = '#e3ffc2'
 
-    let nickname = i.isAvatar ? i.name : i.appid
-
-    if (ctx.measureText(nickname).width > 300) {
-      while (ctx.measureText(nickname).width > 300) {
-        nickname = nickname.slice(0, -1)
-      }
-      nickname += ' ...'
-    }
+    const nickname = shortenText(ctx, i.isAvatar ? i.name : i.appid, 300)
 
     x += 85
     y += 15
@@ -51,14 +42,7 @@ export async function render (data) {
       ctx.fillStyle = '#969696'
       ctx.fillText(i.type === 'end' ? '结束玩' : '正在玩', x, y)
 
-      let name = i.name
-
-      if (ctx.measureText(name).width > 357) {
-        while (ctx.measureText(name).width > 357) {
-          name = name.slice(0, -1)
-        }
-        name += ' ...'
-      }
+      const name = shortenText(ctx, i.name, 357)
 
       y += 25
       ctx.font = '14px Bold'

@@ -20,6 +20,8 @@ export const hasCanvas = !!canvasPKG
 
 const startTimeMap = new Map()
 
+export const loadImage = hasCanvas && canvasPKG.loadImage
+
 export function createCanvas (width, height) {
   if (!hasCanvas) throw new Error('请先pnpm i 安装依赖')
   const canvas = canvasPKG.createCanvas(width, height)
@@ -52,6 +54,22 @@ export function toImage (canvas) {
   } else {
     return segment.image(buffer)
   }
+}
+
+/**
+ * 缩短文本
+ * @param {import('@napi-rs/canvas').SKRSContext2D} ctx
+ * @param {string} text
+ * @param {number} maxWidth
+ * @param {string} replace
+ */
+export function shortenText (ctx, text, maxWidth, replace = '...') {
+  if (!text) return ''
+  if (ctx.measureText(text).width <= maxWidth) return text
+  while (ctx.measureText(text).width > maxWidth) {
+    text = text.slice(0, -1)
+  }
+  return text + replace
 }
 
 export function drawBackgroundColor (ctx, color, x, y, width, height, radius) {

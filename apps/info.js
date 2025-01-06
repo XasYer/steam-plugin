@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { segment } from '#lib'
-import { App, Config, Render } from '#components'
 import { db, utils, api } from '#models'
+import { App, Config, Render } from '#components'
 
 const appInfo = {
   id: 'info',
@@ -35,7 +35,7 @@ const rule = {
         return true
       }
       if (Config.other.infoMode == 2) {
-        const color = info.gameid ? 1 : info.personastate === 0 ? 3 : 2
+        const color = info.gameid ? '#90ba3c' : info.personastate === 0 ? '#898989' : '#57cbde'
         const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
         const avatar = utils.steam.getStaticUrl(bg.animated_avatar.image_small) || info.avatarfull
         const options = {
@@ -52,17 +52,12 @@ const rule = {
           country: info.loccountrycode ? getLoccountryCode(info.loccountrycode) : '',
           color,
           scale: 1.2,
-          pageGotoParams: {
-            waitUntil: 'load'
-          },
           tempName: steamId,
           backgroundWebm: utils.steam.getStaticUrl(bg.mini_profile_background.movie_webm),
           toGif: Config.gif.infoGif
         }
 
-        const target = Config.gif.infoGif ? 'renderGif' : 'render'
-
-        const img = await Render[target]('info/index', options)
+        const img = await Render.render('info/index', options)
         await e.reply(img)
       } else {
         const avatarBuffer = Config.other.steamAvatar ? await utils.getImgUrlBuffer(info.avatarfull) : ''

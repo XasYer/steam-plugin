@@ -10,11 +10,12 @@ export * as steam from './steam.js'
 export * as request from './request.js'
 
 const tempDir = join(Version.pluginPath, 'temp')
-
-if (fs.existsSync(tempDir)) {
-  fs.rmSync(tempDir, { recursive: true })
-}
-fs.mkdirSync(tempDir)
+try {
+  if (fs.existsSync(tempDir)) {
+    fs.rmSync(tempDir, { recursive: true, force: true })
+  }
+  fs.mkdirSync(tempDir)
+} catch { }
 
 /**
  * 将对应时间转换成时长字符串

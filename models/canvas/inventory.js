@@ -1,11 +1,9 @@
 import _ from 'lodash'
 import { utils } from '#models'
 import { Version } from '#components'
-import { canvasPKG, drawBackgroundColor, createCanvas, toImage } from './canvas.js'
+import { loadImage, drawBackgroundColor, createCanvas, toImage, shortenText } from './canvas.js'
 
 export async function render (data, lineItemCount) {
-  const { loadImage } = canvasPKG
-
   // 每一项的宽高间距
   const gameWidth = 468
   const gameHeight = 93
@@ -184,17 +182,13 @@ export async function render (data, lineItemCount) {
 
         // name
         ctx.font = 'bold 20px MiSans'
-        while (ctx.measureText(i.name).width > maxContentWidth) {
-          i.name = i.name.slice(0, -1)
-        }
+        i.name = shortenText(ctx, i.name, maxContentWidth)
         ctx.fillText(i.name, currentX, nameY)
 
         // appid
         ctx.font = '20px MiSans'
         i.appid = i.appid ? String(i.appid) : ''
-        while (ctx.measureText(i.appid).width > maxContentWidth) {
-          i.appid = i.appid.slice(0, -1)
-        }
+        i.appid = shortenText(ctx, i.appid, maxContentWidth)
         if (i.appidPercent) {
           ctx.fillStyle = '#999999'
           ctx.fillRect(currentX, appidY - 18, maxContentWidth * (i.appidPercent / 100), 20)
@@ -205,9 +199,7 @@ export async function render (data, lineItemCount) {
 
         // desc
         i.desc = i.desc || ''
-        while (ctx.measureText(i.desc).width > maxContentWidth) {
-          i.desc = i.desc.slice(0, -1)
-        }
+        i.desc = shortenText(ctx, i.desc, maxContentWidth)
 
         if (i.descBgColor) {
           drawBackgroundColor(ctx, i.descBgColor, currentX, descY, ctx.measureText(i.desc).width + 10, 20, 10)
