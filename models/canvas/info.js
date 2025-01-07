@@ -153,7 +153,11 @@ export async function render (data) {
       }
       if (cmd) {
         cmd += ' -loglevel quiet'
-        execSync(cmd)
+        try {
+          execSync(cmd)
+        } catch {
+          continue
+        }
       }
     }
 

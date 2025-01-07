@@ -235,7 +235,7 @@ export async function render (data, lineItemCount) {
   }
 
   // 底部文字
-  ctx.font = 'bold 20px MiSans'
+  ctx.font = '20px MiSans'
   ctx.textAlign = 'center'
   ctx.fillText(`Created By ${Version.BotName} v${Version.BotVersion} & ${Version.pluginName} v${Version.pluginVersion}`, centerX, startY + 30)
 
