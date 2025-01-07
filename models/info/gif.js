@@ -18,7 +18,7 @@ export async function render (data) {
     fs.rmSync(tempPath, { force: true, recursive: true })
   }
   fs.mkdirSync(tempPath, { recursive: true })
-  if (Config.other.renderType == 2) {
+  if (Config.gif.gifMode == 3) {
     data.tempPath = tempPath
     return await canvas.info.render(data)
   } else {
@@ -87,6 +87,7 @@ export async function render (data) {
     setTimeout(() => {
       fs.rmSync(tempPath, { force: true, recursive: true })
     }, 1000 * 60 * 5) // 5分钟后删除
-    return segment.image(`file://${output}`)
+    const base64 = fs.readFileSync(output, { encoding: 'base64' })
+    return segment.image(`base64://${base64}`)
   }
 }

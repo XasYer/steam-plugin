@@ -97,6 +97,9 @@ export function startTimer () {
             }
             // 在线状态改变
             if (Config.push.stateChange && player.personastate != lastPlay.state) {
+              if (![0, 1].includes(lastPlay.state)) {
+                continue
+              }
               const time = now - lastPlay.onlineTime
               if (Config.push.stateOffline && player.personastate === 0) {
                 db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))

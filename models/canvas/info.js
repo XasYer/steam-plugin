@@ -210,7 +210,8 @@ export async function render (data) {
     setTimeout(() => {
       fs.rmSync(data.tempPath, { recursive: true })
     }, 1000 * 60 * 5)
-    return segment.image(`file://${output}`)
+    const base64 = fs.readFileSync(output, { encoding: 'base64' })
+    return segment.image(`base64://${base64}`)
   } else {
     await draw(data.avatar, data.frame, data.background)
     return toImage(canvas)

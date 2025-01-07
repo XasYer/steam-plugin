@@ -2,9 +2,10 @@
 # 由puppeteer截图多张图片通过ffmpeg生成gif
 # 需要有全局安装ffmpeg
 
-# 转换成gif的模式 
-# 1: 使用puppeteer多次截图 
+# 转换成gif的模式
+# 1: 使用puppeteer多次截图
 # 2: 使用puppeteer-screen-recorder录制视频
+# 3: 使用canvas多次生成图片 不会使用下面的配置项
 gifMode: 1
 
 # 帧率
@@ -20,3 +21,6 @@ videoLimit: 3
 
 # steam状态 迷你背景图 头像框 头像
 infoGif: false
+
+# 仅用于更新注释捏
+gifDoc: 1

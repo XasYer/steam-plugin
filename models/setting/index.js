@@ -348,7 +348,7 @@ export const cfgSchema = {
         min: 1,
         max: 2,
         input: (n) => {
-          if (n >= 1 && n <= 2) {
+          if (n >= 1 && n <= 3) {
             return n * 1
           } else {
             return 1
@@ -359,7 +359,7 @@ export const cfgSchema = {
           { label: '截图合成', value: 1 },
           { label: '视频合成', value: 2 }
         ],
-        desc: '1: 多张截图合成一张gif 2: 视频转换gif'
+        desc: '1: 多张截图合成一张gif 2: 视频转换gif 3: canvas多次截图(不会使用下面的配置)'
       },
       frameRate: {
         title: 'gif帧率',
