@@ -38,12 +38,12 @@ export function startTimer () {
         const state = {
           name: player.gameextrainfo,
           appid: player.gameid,
-          state: player.personastate,
+          state: player.personastate == 0 ? 0 : 1,
           playTime: lastPlay.time || lastPlay.playTime,
           onlineTime: lastPlay.time || lastPlay.onlineTime
         }
         // 如果这一次和上一次的状态不一样
-        if (lastPlay.appid != player.gameid || lastPlay.state != player.personastate) {
+        if (lastPlay.appid != player.gameid || lastPlay.state != state.state) {
           // 找到所有的推送群
           const pushGroups = PushData.filter(i => i.steamId === player.steamid)
           const iconUrl = utils.steam.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid)
@@ -96,14 +96,11 @@ export function startTimer () {
               db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新统计数据失败', e.message))
             }
             // 在线状态改变
-            if (Config.push.stateChange && player.personastate != lastPlay.state) {
-              if (![0, 1].includes(lastPlay.state)) {
-                continue
-              }
+            if (Config.push.stateChange && state.state != lastPlay.state) {
               const time = now - lastPlay.onlineTime
-              if (Config.push.stateOffline && player.personastate === 0) {
+              if (Config.push.stateOffline && state.state === 0) {
                 db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))
-              } else if (Config.push.stateOnline && player.personastate === 1) {
+              } else if (Config.push.stateOnline && state.state === 1) {
                 db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新统计数据失败', e.message))
               } else {
                 continue
@@ -112,10 +109,10 @@ export function startTimer () {
               userList[i.groupId][i.botId].state.push({
                 name: `${nickname}(${player.personaname})`,
                 appid: lastPlay.onlineTime ? `距离上次 ${utils.formatDuration(time)}` : '',
-                desc: `已${utils.steam.getPersonaState(player.personastate)}`,
+                desc: `已${utils.steam.getPersonaState(state.state)}`,
                 image: avatar || (Config.other.steamAvatar ? i.avatarfull : ''),
                 isAvatar: true,
-                descBgColor: utils.steam.getStateColor(player.personastate)
+                descBgColor: utils.steam.getStateColor(state.state)
               })
             }
           }

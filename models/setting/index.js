@@ -357,7 +357,8 @@ export const cfgSchema = {
         component: 'RadioGroup',
         options: [
           { label: '截图合成', value: 1 },
-          { label: '视频合成', value: 2 }
+          { label: '视频合成', value: 2 },
+          { label: 'canvas合成', value: 3 }
         ],
         desc: '1: 多张截图合成一张gif 2: 视频转换gif 3: canvas多次截图(不会使用下面的配置)'
       },
