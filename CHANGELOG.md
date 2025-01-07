@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.9.1](https://github.com/XasYer/steam-plugin/compare/v1.9.0...v1.9.1) (2025-01-07)
+
+
+### Bug Fixes
+
+* 字体 ([4bd361c](https://github.com/XasYer/steam-plugin/commit/4bd361ce6be500101290f53144ec509c2cdb5d4e))
+* 推送 & 锅巴配置 ([fb2d69c](https://github.com/XasYer/steam-plugin/commit/fb2d69c60e75824a2126a36103431a457083d354))
+
+
+### Performance Improvements
+
+* 可选使用canvas合成gif ([b10088e](https://github.com/XasYer/steam-plugin/commit/b10088e496ccca7791952b29df615c27cee443bd))
+
 ## [1.9.0](https://github.com/XasYer/steam-plugin/compare/v1.8.1...v1.9.0) (2025-01-06)
 
 
