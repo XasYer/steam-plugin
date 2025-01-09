@@ -48,13 +48,6 @@ export function startTimer () {
           const pushGroups = PushData.filter(i => i.steamId === player.steamid)
           const iconUrl = utils.steam.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid)
           for (const i of pushGroups) {
-            if (Version.BotName === 'Karin') {
-              if (!Bot.getBot(i.botId)) {
-                continue
-              }
-            } else if (!Bot[i.botId] && !Config.push.randomBot) {
-              continue
-            }
             const avatar = await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId)
             // 0 就是没有人绑定
             const nickname = i.userId == '0' ? player.personaname : await utils.bot.getUserName(i.botId, i.userId, i.groupId)
@@ -69,40 +62,56 @@ export function startTimer () {
                 state: []
               }
             }
-            if (Config.push.enable && Config.push.playStart && player.gameid && player.gameid != lastPlay.appid) {
-              const time = now - lastPlay.playTime
-              state.playTime = now
-              userList[i.groupId][i.botId].start.push({
-                name: player.gameextrainfo,
-                appid: `${nickname}(${player.personaname})`,
-                desc: lastPlay.playTime ? `距离上次 ${utils.formatDuration(time)}` : '',
-                image: iconUrl,
-                avatar,
-                type: 'start'
-              })
-              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新统计数据失败', e.message))
+            if (player.gameid && player.gameid != lastPlay.appid) {
+              if (Config.push.enable && Config.push.playStart) {
+                const time = now - lastPlay.playTime
+                state.playTime = now
+                userList[i.groupId][i.botId].start.push({
+                  name: player.gameextrainfo,
+                  appid: `${nickname}(${player.personaname})`,
+                  desc: lastPlay.playTime ? `距离上次 ${utils.formatDuration(time)}` : '',
+                  image: iconUrl,
+                  avatar,
+                  type: 'start'
+                })
+              }
+              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新游玩统计数据失败', e.message))
             }
-            if (Config.push.enable && Config.push.playEnd && lastPlay.name && lastPlay.name != player.gameextrainfo) {
+            if (lastPlay.appid && lastPlay.appid != player.gameid) {
               const time = now - lastPlay.playTime
-              state.playTime = now
-              userList[i.groupId][i.botId].end.push({
-                name: lastPlay.name,
-                appid: `${nickname}(${player.personaname})`,
-                desc: `时长: ${utils.formatDuration(time)}`,
-                image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid),
-                avatar,
-                type: 'end'
-              })
-              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新统计数据失败', e.message))
+              if (Config.push.enable && Config.push.playEnd) {
+                state.playTime = now
+                userList[i.groupId][i.botId].end.push({
+                  name: lastPlay.name,
+                  appid: `${nickname}(${player.personaname})`,
+                  desc: `时长: ${utils.formatDuration(time)}`,
+                  image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid),
+                  avatar,
+                  type: 'end'
+                })
+              }
+              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新结束游玩统计数据失败', e.message))
             }
             // 在线状态改变
-            if (Config.push.stateChange && state.state != lastPlay.state) {
+            if (state.state != lastPlay.state) {
               const time = now - lastPlay.onlineTime
-              if (Config.push.stateOffline && state.state === 0) {
-                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新统计数据失败', e.message))
-              } else if (Config.push.stateOnline && state.state === 1) {
-                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新统计数据失败', e.message))
+              if (state.state === 0) {
+                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新离线统计数据失败', e.message))
+              } else if (state.state === 1) {
+                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新在线统计数据失败', e.message))
               } else {
+                continue
+              }
+              // 没有开启状态改变推送
+              if (!Config.push.stateChange) {
+                continue
+              }
+              // 没有开启离线状态推送
+              if (state.state === 0 && !Config.push.stateOffline) {
+                continue
+              }
+              // 没有开启在线状态推送
+              if (state.state === 1 && !Config.push.stateOnline) {
                 continue
               }
               state.onlineTime = now
@@ -121,6 +130,13 @@ export function startTimer () {
       }
       for (const gid in userList) {
         for (const botId in userList[gid]) {
+          if (Version.BotName === 'Karin') {
+            if (!Bot.getBot(botId)) {
+              continue
+            }
+          } else if (!Bot[botId] && !Config.push.randomBot) {
+            continue
+          }
           const i = userList[gid][botId]
           const data = []
           const isImg = [2, 3].includes(Number(Config.push.pushMode))
