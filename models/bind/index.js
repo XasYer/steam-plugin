@@ -39,22 +39,26 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
   const pushSteamId = []
   const unPushSteamId = []
   const enablePushSteamIdList = enablePush ? await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, gid, true) : []
-  const allSteamIdInfo = {}
+  const userInfo = {}
   try {
-    const res = await api.ISteamUser.GetPlayerSummaries(userBindAll.map(i => i.steamId))
+    const res = await api.IPlayerService.GetPlayerLinkDetails(userBindAll.map(i => i.steamId))
     res.forEach(i => {
-      allSteamIdInfo[i.steamid] = i
+      const avatarhash = Buffer.from(i.public_data.sha_digest_avatar, 'base64').toString('hex')
+      userInfo[i.public_data.steamid] = {
+        name: i.public_data.persona_name,
+        avatar: `https://avatars.steamstatic.com/${avatarhash}_full.jpg`
+      }
     })
   } catch { }
   let index = 1
   for (const item of userBindAll) {
     const accessToken = accessTokenList.find(i => i.steamId == item.steamId)
-    const i = allSteamIdInfo[item.steamId] || {}
-    const avatar = Config.other.steamAvatar ? i.avatarfull : await utils.bot.getUserAvatar(bid, uid, gid)
+    const i = userInfo[item.steamId] || {}
+    const avatar = Config.other.steamAvatar ? i.avatar : await utils.bot.getUserAvatar(bid, uid, gid)
     const info = {
       steamId: item.steamId,
       isBind: item.isBind,
-      name: i.personaname || await utils.bot.getUserName(bid, uid, gid),
+      name: i.name || await utils.bot.getUserName(bid, uid, gid),
       avatar: avatar || await utils.bot.getUserAvatar(bid, uid, gid),
       index,
       type: accessToken ? 'ck' : 'reg'
