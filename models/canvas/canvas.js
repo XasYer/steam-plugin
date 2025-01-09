@@ -85,9 +85,10 @@ export function toImage (canvas) {
  * @param {number} maxWidth
  * @param {string} replace
  */
-export function shortenText (ctx, text, maxWidth, replace = '') {
+export function shortenText (ctx, text, maxWidth, replace = '...') {
   if (!text) return ''
-  if (ctx.measureText(text).width <= maxWidth) return text
+  maxWidth += ctx.measureText(replace).width
+  if (ctx.measureText(text).width < maxWidth) return text
   while (ctx.measureText(text).width > maxWidth) {
     text = text.slice(0, -1)
   }
