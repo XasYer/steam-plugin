@@ -20,7 +20,29 @@ export const hasCanvas = !!canvasPKG
 
 const startTimeMap = new Map()
 
-export const loadImage = hasCanvas && canvasPKG.loadImage
+/**
+ * 加载图片
+ * @param {any} source
+ * @param {import('@napi-rs/canvas').LoadImageOptions} options
+ * @returns {Promise<import('@napi-rs/canvas').Image>}
+ */
+export const loadImage = async (source, options = {}) => {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 5000)
+  try {
+    const Image = await canvasPKG.loadImage(source, {
+      requestOptions: {
+        signal: controller.signal,
+        ...options.requestOptions
+      },
+      ...options
+    })
+    clearTimeout(timer)
+    return Image
+  } catch {
+    return null
+  }
+}
 
 export function createCanvas (width, height) {
   if (!hasCanvas) throw new Error('请先pnpm i 安装依赖')
@@ -63,7 +85,7 @@ export function toImage (canvas) {
  * @param {number} maxWidth
  * @param {string} replace
  */
-export function shortenText (ctx, text, maxWidth, replace = '...') {
+export function shortenText (ctx, text, maxWidth, replace = '') {
   if (!text) return ''
   if (ctx.measureText(text).width <= maxWidth) return text
   while (ctx.measureText(text).width > maxWidth) {
