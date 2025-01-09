@@ -175,6 +175,13 @@ export const cfgSchema = {
         def: false,
         desc: '有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)'
       },
+      cacheName: {
+        title: '缓存中文游戏名',
+        key: '缓存游戏名',
+        type: 'boolean',
+        def: true,
+        desc: '是否缓存游戏的中文名, 通过接口获取存储在数据库'
+      },
       statusFilterGroup: {
         title: '统计过滤黑白名单',
         key: '统计过滤群',

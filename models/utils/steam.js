@@ -191,7 +191,18 @@ export async function getUserSummaries (steamIds) {
         throw err
       })
       if (data !== false) {
-        return data
+        if (Config.push.cacheName) {
+          const names = await getGameName(data.map(i => i.gameid))
+          return data.map(i => {
+            const info = names[i.gameid]
+            if (info) {
+              i.gameextrainfo = info.name
+            }
+            return i
+          })
+        } else {
+          return data
+        }
       }
     }
     type = 2
@@ -205,15 +216,36 @@ export async function getUserSummaries (steamIds) {
       throw err
     })
     if (data !== false) {
-      return data
+      if (Config.push.cacheName) {
+        const names = await getGameName(data.map(i => i.gameid))
+        return data.map(i => {
+          const info = names[i.gameid]
+          if (info) {
+            i.gameextrainfo = info.name
+          }
+          return i
+        })
+      } else {
+        return data
+      }
     }
   }
   return await api.IPlayerService.GetPlayerLinkDetails(steamIds).then(async res => {
     const appids = res.map(i => i.private_data.game_id).filter(Boolean)
-    const appInfo = appids.length ? await api.IStoreBrowseService.GetItems(appids, { include_assets: true }) : {}
+    const appInfo = {}
+    if (appids.length) {
+      if (Config.push.cacheName) {
+        Object.assign(appInfo, await getGameName(appids))
+      } else {
+        const info = await api.IStoreBrowseService.GetItems(appids, { include_assets: true })
+        Object.assign(appInfo, info)
+      }
+    }
     return res.map(i => {
       const avatarhash = Buffer.from(i.public_data.sha_digest_avatar, 'base64').toString('hex')
       const gameid = i.private_data.game_id
+      const info = appInfo[gameid] || {}
+      const gameextrainfo = info.name
       return {
         steamid: i.public_data.steamid,
         communityvisibilitystate: i.public_data.visibility_state,
@@ -226,9 +258,10 @@ export async function getUserSummaries (steamIds) {
         personastate: i.private_data.persona_state ?? 0,
         timecreated: i.private_data.time_created,
         gameid,
-        gameextrainfo: appInfo[gameid]?.name,
-        lastlogoff: i.private_data.last_logoff_time,
-        community_icon: appInfo[gameid]?.assets?.community_icon
+        gameextrainfo,
+        lastlogoff: i.private_data.last_logoff_time
+        // TODO: 展示在好友列表的小图标
+        // community_icon: appInfo[gameid]?.assets?.community_icon
       }
     })
   })
@@ -247,5 +280,42 @@ export function getStateColor (state) {
       return '#999999'
     default:
       return '#8fbc8b'
+  }
+}
+
+/**
+ * 从数据库中获取游戏中文名
+ * @param {string[]} appids
+ * @returns {Promise<{[appid: string]: import('models/db/game').GameColumns}>}
+ */
+export async function getGameName (appids) {
+  appids = appids.filter(Boolean).map(String)
+  if (!appids.length) {
+    return {}
+  }
+  try {
+    // 先从数据库中找出对应的游戏名
+    const appInfo = await db.GameTableGetGameByAppids(appids)
+    const cacheAppids = Object.keys(appInfo)
+    // 找到没有被缓存的appid
+    const noCacheAppids = _.difference(appids, cacheAppids)
+    if (noCacheAppids.length) {
+      // 获取游戏名
+      const info = await api.IStoreBrowseService.GetItems(noCacheAppids, { include_assets: true })
+      const cache = noCacheAppids.map(i => info[i]
+        ? ({
+            appid: i,
+            name: info[i].name,
+            community: info[i].assets?.community_icon,
+            header: info[i].assets?.header
+          })
+        : null).filter(Boolean)
+      // 缓存游戏名
+      await db.GameTableAddGame(cache)
+      Object.assign(appInfo, _.keyBy(cache, 'appid'))
+    }
+    return appInfo
+  } catch (error) {
+    return {}
   }
 }

@@ -125,6 +125,7 @@ class Config {
    *  time: number,
    *  defaultPush: boolean,
    *  randomBot: boolean,
+   *  cacheName: boolean,
    *  statusFilterGroup: boolean,
    *  blackBotList: string[],
    *  whiteBotList: string[],
