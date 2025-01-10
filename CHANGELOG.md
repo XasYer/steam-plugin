@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.9.2](https://github.com/XasYer/steam-plugin/compare/v1.9.1...v1.9.2) (2025-01-09)
+
+
+### Bug Fixes
+
+* canvas加载图片增加超时时间 ([710d612](https://github.com/XasYer/steam-plugin/commit/710d612ea5cfcd21fcddc0802843739463af1c2b))
+* 替换文本 ([168ed61](https://github.com/XasYer/steam-plugin/commit/168ed611ad76379a5df6d31e58c390bdcd58a325))
+
+
+### Performance Improvements
+
+* 优化推送流程 ([d951bc9](https://github.com/XasYer/steam-plugin/commit/d951bc98e4aceb7f8843b5c2fcb0ce867e69e820))
+* 可选是否缓存游戏中文名 ([f385840](https://github.com/XasYer/steam-plugin/commit/f3858403f47de1b6960e7b45036077576ce6e0a8))
+* 换一下`#steam`的接口 ([3404ca0](https://github.com/XasYer/steam-plugin/commit/3404ca033270430de3d63cf4b9819ca53bf1aafe))
+
 ## [1.9.1](https://github.com/XasYer/steam-plugin/compare/v1.9.0...v1.9.1) (2025-01-07)
 
 
