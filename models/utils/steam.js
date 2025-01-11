@@ -289,7 +289,7 @@ export function getStateColor (state) {
  * @returns {Promise<{[appid: string]: import('models/db/game').GameColumns}>}
  */
 export async function getGameName (appids) {
-  appids = appids.filter(Boolean).map(String)
+  appids = _.uniq(appids.filter(Boolean).map(String))
   if (!appids.length) {
     return {}
   }
