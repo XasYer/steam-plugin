@@ -28,7 +28,7 @@ export async function GetAllClientLogonInfo (accessToken) {
 /**
  * 获得客户端的游戏列表 需要有已登录的客户端实例
  * @param {string} accessToken
- * @param {number} clientInstanceid 客户端id
+ * @param {string} clientInstanceid 客户端id
  * @returns {Promise<{
  *  bytes_available: string,
  *  apps: {
@@ -39,6 +39,7 @@ export async function GetAllClientLogonInfo (accessToken) {
  *    bytes_to_download: string
  *    auto_update: boolean
  *    installed: boolean
+ *    download_paused: boolean
  *    changing: boolean
  *    available_on_platform: boolean
  *    bytes_staged: string

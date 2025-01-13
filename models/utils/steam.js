@@ -114,12 +114,40 @@ export function decodeAccessTokenJwt (jwt) {
  * 获取对应用户的access_token
  * @param {string} userId
  * @param {string} steamId
- * @returns {Promise<string>}
+ * @returns {Promise<{
+ *   success: boolean,
+ *   message?: string,
+ *   token?: string
+ * }>}
  */
 export async function getAccessToken (userId, steamId) {
-  if (!userId || !steamId) return ''
+  if (!userId) {
+    return {
+      success: false,
+      message: 'userId不能为空'
+    }
+  }
+  if (!steamId) {
+    steamId = await db.UserTableGetBindSteamIdByUserId(userId)
+    if (!steamId) {
+      return {
+        success: false,
+        message: Config.tips.noSteamIdTips
+      }
+    }
+  }
   const token = await db.TokenTableGetByUserIdAndSteamId(userId, steamId)
-  return await refreshAccessToken(token)
+  if (!token) {
+    return {
+      success: false,
+      message: `${steamId}没有绑定accessToken`
+    }
+  }
+  return {
+    success: true,
+    token: await refreshAccessToken(token),
+    steamId
+  }
 }
 
 /**
@@ -192,7 +220,7 @@ export async function getUserSummaries (steamIds) {
       })
       if (data !== false) {
         if (Config.push.cacheName) {
-          const names = await getGameName(data.map(i => i.gameid))
+          const names = await getGameSchineseInfo(data.map(i => i.gameid))
           return data.map(i => {
             const info = names[i.gameid]
             if (info) {
@@ -217,7 +245,7 @@ export async function getUserSummaries (steamIds) {
     })
     if (data !== false) {
       if (Config.push.cacheName) {
-        const names = await getGameName(data.map(i => i.gameid))
+        const names = await getGameSchineseInfo(data.map(i => i.gameid))
         return data.map(i => {
           const info = names[i.gameid]
           if (info) {
@@ -235,7 +263,7 @@ export async function getUserSummaries (steamIds) {
     const appInfo = {}
     if (appids.length) {
       if (Config.push.cacheName) {
-        Object.assign(appInfo, await getGameName(appids))
+        Object.assign(appInfo, await getGameSchineseInfo(appids))
       } else {
         const info = await api.IStoreBrowseService.GetItems(appids, { include_assets: true })
         Object.assign(appInfo, info)
@@ -288,7 +316,7 @@ export function getStateColor (state) {
  * @param {string[]} appids
  * @returns {Promise<{[appid: string]: import('models/db/game').GameColumns}>}
  */
-export async function getGameName (appids) {
+export async function getGameSchineseInfo (appids) {
   appids = _.uniq(appids.filter(Boolean).map(String))
   if (!appids.length) {
     return {}

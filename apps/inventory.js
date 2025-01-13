@@ -103,6 +103,51 @@ const rule = {
       await e.reply(img)
       return true
     }
+  },
+  familyInventory: {
+    reg: App.getReg('家庭库存'),
+    cfg: {
+      tips: true
+    },
+    fnc: async e => {
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      if (!accessToken.success) {
+        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+        return true
+      }
+      const steamId = accessToken.steamId
+      // 先获取家庭共享信息
+      const familyInfo = await api.IFamilyGroupsService.GetFamilyGroupForUser(accessToken, steamId)
+      if (!familyInfo.family_groupid) {
+        await e.reply([segment.at(e.user_id), '\n', steamId, '未加入家庭'])
+        return true
+      }
+      // 获取家庭库存
+      const familyInventory = await api.IFamilyGroupsService.GetSharedLibraryApps(accessToken, familyInfo.family_groupid, steamId)
+      if (!familyInventory.apps.length) {
+        await e.reply([segment.at(e.user_id), '\n', steamId, '家庭库存为空'])
+        return true
+      }
+      // 过滤掉自己库存的游戏
+      const games = familyInventory.apps.filter(i => !i.owner_steamids.includes(steamId)).map(i => ({
+        playtime: i.rt_playtime,
+        desc: getTime(i.rt_playtime),
+        appid: i.appid,
+        name: i.name
+      }))
+      const data = [{
+        title: `${familyInfo.family_group.name} 共有 ${games.length} 个游戏`,
+        desc: [
+          `已排除自己库存的游戏${familyInventory.apps.length - games.length}个`
+        ],
+        games: _.orderBy(games, 'playtime', 'desc')
+      }]
+      const img = await Render.render('inventory/index', {
+        data
+      })
+      await e.reply(img)
+      return true
+    }
   }
 }
 
