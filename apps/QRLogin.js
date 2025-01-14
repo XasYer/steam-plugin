@@ -26,7 +26,7 @@ const rule = {
         '2.2: 按f12点击控制台/Console,输入以下内容并回车',
         'copy("#steam辅助扫码登录"+await fetch(\'https://api.steampowered.com/IAuthenticationService/BeginAuthSessionViaQR/v1?input_json={"device_details":{"device_friendly_name":"Xiaomi 15 Pro","platform_type":3,"os_type":-500,"gaming_device_type":528},"website_id":"Mobile"}\',{method: \'POST\'}).then(res=>res.json()).then(res=>res.response).then(JSON.stringify).then(res=>{console.log(res);return res}));alert("复制成功")',
         '2.3 弹窗复制成功后发送复制后的内容到机器人',
-        'ps: 需自行处理代理地址'
+        'ps: 需自行处理代理保证请求和扫码的地址一致'
       ]
       await utils.bot.makeForwardMsg(e, msg)
       return true
