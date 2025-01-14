@@ -5,9 +5,9 @@ import { utils } from '#models'
  * @param {string} accessToken
  * @param {number} appid
  * @returns {Promise<{
- *  appids_added: number[],
- *  packageids_added: number[],
- *  purchase_result_detail: number
+ *  appids_added?: number[],
+ *  packageids_added?: number[],
+ *  purchase_result_detail?: number
  * }>}
  */
 export async function AddFreeLicense (accessToken, appid) {

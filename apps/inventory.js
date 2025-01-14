@@ -202,6 +202,28 @@ const rule = {
       await e.reply([segment.at(e.user_id), '\n', flag ? '添加' : '删除', '私密游戏成功~'])
       return true
     }
+  },
+  addInventory: {
+    reg: App.getReg('入库(?:游戏)?(\\d*)'),
+    fnc: async e => {
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      if (!accessToken.success) {
+        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+        return true
+      }
+      const appid = rule.addInventory.reg.exec(e.msg)[1]
+      if (!appid) {
+        await e.reply([segment.at(e.user_id), '\n', '请带上appid~'])
+        return true
+      }
+      const res = await api.ICheckoutService.AddFreeLicense(accessToken.token, appid)
+      if (res.appids_added?.some(i => i == appid)) {
+        await e.reply([segment.at(e.user_id), '\n', '入库成功~了吗..?'])
+      } else {
+        await e.reply([segment.at(e.user_id), '\n', '入库失败...'])
+      }
+      return true
+    }
   }
 }
 

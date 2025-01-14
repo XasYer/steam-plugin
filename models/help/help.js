@@ -137,6 +137,11 @@ export const helpList = [
         icon: 103,
         title: '#steam客户端启动',
         desc: '在客户端上启动游戏, 需要appid'
+      },
+      {
+        icon: 104,
+        title: '#steam入库',
+        desc: '添加免费游戏入库, 需要appid'
       }
     ]
   },
