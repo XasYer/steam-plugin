@@ -1,12 +1,3 @@
-export const helpCfg = {
-  themeSet: false,
-  title: 'steam帮助',
-  subTitle: '',
-  colCount: 3,
-  colWidth: 265,
-  theme: 'all',
-  bgBlur: true
-}
 export const helpList = [
   {
     group: '需要绑定steamid或好友码后才能使用',
@@ -35,6 +26,11 @@ export const helpList = [
         icon: 67,
         title: '#steam关闭推送',
         desc: '关闭steam个人状态推送'
+      },
+      {
+        icon: 91,
+        title: '#steam扫码登录',
+        desc: 'steamapp扫码绑定access_token'
       }
     ]
   },
@@ -75,6 +71,72 @@ export const helpList = [
         icon: 14,
         title: '#steam统计',
         desc: '查看某个游戏的统计,需要加上appid'
+      }
+    ]
+  },
+  {
+    group: '绑定accessToken可用功能',
+    auth: 'accessToken',
+    list: [
+      {
+        icon: 92,
+        title: '#steam刷新ak',
+        desc: '刷新access_token'
+      },
+      {
+        icon: 93,
+        title: '#steam我的ak',
+        desc: '查看自己的access_token'
+      },
+      {
+        icon: 94,
+        title: '#steam删除ak',
+        desc: '删除access_token'
+      },
+      {
+        icon: 95,
+        title: '#steam家庭库存',
+        desc: '查看家庭库存'
+      },
+      {
+        icon: 96,
+        title: '#steam私密库存',
+        desc: '查看私密库存'
+      },
+      {
+        icon: 97,
+        title: '#steam(添加|删除)私密游戏',
+        desc: '添加或删除私密游戏, 需要appid'
+      },
+      {
+        icon: 98,
+        title: '#steam客户端信息',
+        desc: '查看已登录的steam客户端信息'
+      },
+      {
+        icon: 99,
+        title: '#steam客户端游戏列表',
+        desc: '查看客户端的游戏列表'
+      },
+      {
+        icon: 100,
+        title: '#steam客户端下载',
+        desc: '在客户端上下载游戏, 需要appid'
+      },
+      {
+        icon: 102,
+        title: '#steam客户端(恢复|暂停)下载',
+        desc: '恢复或暂停下载, 需要appid'
+      },
+      {
+        icon: 101,
+        title: '#steam客户端卸载',
+        desc: '在客户端上卸载游戏, 需要appid'
+      },
+      {
+        icon: 103,
+        title: '#steam客户端启动',
+        desc: '在客户端上启动游戏, 需要appid'
       }
     ]
   },

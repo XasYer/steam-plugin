@@ -113,7 +113,7 @@ export function decodeAccessTokenJwt (jwt) {
 /**
  * 获取对应用户的access_token
  * @param {string} userId
- * @param {string} steamId
+ * @param {string?} steamId
  * @returns {Promise<{
  *   success: boolean,
  *   message?: string,

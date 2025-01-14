@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { help as helpUtil } from '#models'
+import { help as helpUtil, utils } from '#models'
 import { App, Render, Version } from '#components'
 
 const appInfo = {
@@ -10,44 +10,53 @@ const appInfo = {
 const rule = {
   help: {
     reg: App.getReg('(插件|plugin)?(帮助|菜单|help)'),
-    fnc: help
+    fnc: async e => {
+      const helpGroup = []
+
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      _.forEach(helpUtil.helpList, (group) => {
+        switch (group.auth) {
+          case 'master':
+            if (!e.isMaster) {
+              return true
+            }
+            break
+          case 'accessToken':
+            if (!accessToken.success) {
+              return true
+            }
+        }
+
+        _.forEach(group.list, (help) => {
+          const icon = help.icon * 1
+          if (!icon) {
+            help.css = 'display:none'
+          } else {
+            const x = (icon - 1) % 10
+            const y = (icon - x - 1) / 10
+            help.css = `background-position:-${x * 50}px -${y * 50}px`
+          }
+        })
+
+        helpGroup.push(group)
+      })
+      const themeData = await helpUtil.helpTheme.getThemeData({
+        colCount: accessToken.success ? 4 : 3,
+        colWidth: 275
+      })
+      const img = await Render.render('help/index', {
+        helpGroup,
+        ...themeData,
+        scale: 1.4
+      })
+      await e.reply(img)
+      return true
+    }
   }
   // version: {
   //   reg: /^#?steam(插件|plugin)?(版本|version)$/i,
   //   fnc: version
   // }
-}
-
-async function help (e) {
-  const helpGroup = []
-
-  _.forEach(helpUtil.helpList, (group) => {
-    if (group.auth && group.auth === 'master' && !e.isMaster) {
-      return true
-    }
-
-    _.forEach(group.list, (help) => {
-      const icon = help.icon * 1
-      if (!icon) {
-        help.css = 'display:none'
-      } else {
-        const x = (icon - 1) % 10
-        const y = (icon - x - 1) / 10
-        help.css = `background-position:-${x * 50}px -${y * 50}px`
-      }
-    })
-
-    helpGroup.push(group)
-  })
-  const themeData = await helpUtil.helpTheme.getThemeData(helpUtil.helpCfg)
-  const img = await Render.render('help/index', {
-    helpCfg: helpUtil.helpCfg,
-    helpGroup,
-    ...themeData,
-    scale: 1.4
-  })
-  await e.reply(img)
-  return true
 }
 
 // eslint-disable-next-line no-unused-vars
