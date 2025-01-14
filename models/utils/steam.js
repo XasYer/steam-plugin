@@ -117,7 +117,8 @@ export function decodeAccessTokenJwt (jwt) {
  * @returns {Promise<{
  *   success: boolean,
  *   message?: string,
- *   token?: string
+ *   token?: string,
+ *   steamId?: string
  * }>}
  */
 export async function getAccessToken (userId, steamId) {
@@ -145,22 +146,23 @@ export async function getAccessToken (userId, steamId) {
   }
   return {
     success: true,
-    token: await refreshAccessToken(token),
-    steamId
+    ...token,
+    token: await refreshAccessToken(token)
   }
 }
 
 /**
  * 刷新access_token
  * @param {import('models/db').TokenColumns} token
+ * @param {boolean} force 是否强制刷新
  * @returns
  */
-export async function refreshAccessToken (token) {
+export async function refreshAccessToken (token, force = false) {
   if (!token) return ''
   const now = moment().unix()
   // 提前30分钟刷新access_token
   const exp = token.accessTokenExpires - 60 * 30
-  if (exp > now) return token.accessToken
+  if (exp > now && !force) return token.accessToken
   // 判断refresh_token是否过期
   const rtExp = token.refreshTokenExpires - 60 * 30
   if (rtExp < now) {

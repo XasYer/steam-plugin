@@ -1,6 +1,7 @@
 import { App } from '#components'
 import { segment } from '#lib'
-import { api, db } from '#models'
+import { api, db, utils } from '#models'
+import moment from 'moment'
 import QRCode from 'qrcode'
 
 const appInfo = {
@@ -51,6 +52,50 @@ const rule = {
         }
       }
       await e.reply('登录超时~请重新触发指令')
+      return true
+    }
+  },
+  refreshToken: {
+    reg: App.getReg('刷新(access_token|token|ak|ck|accesstoken|cookie)'),
+    fnc: async e => {
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      if (!accessToken.success) {
+        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+        return true
+      }
+      await utils.steam.refreshAccessToken(accessToken, true)
+      await e.reply([segment.at(e.user_id), '\n', 'access_token已刷新~'])
+      return true
+    }
+  },
+  showToken: {
+    reg: App.getReg('我的(access_token|token|ak|ck|accesstoken|cookie)'),
+    fnc: async e => {
+      if (e.group_id) {
+        await e.reply([segment.at(e.user_id), '\n', '请私聊查看'])
+        return true
+      }
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      if (!accessToken.success) {
+        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+        return true
+      }
+      const jwt = utils.steam.decodeAccessTokenJwt(accessToken.token)
+      await e.reply([accessToken.token])
+      await e.reply(`过期时间: ${moment.unix(jwt.exp).format('YYYY-MM-DD HH:mm:ss')}`)
+      return true
+    }
+  },
+  deleteToken: {
+    reg: App.getReg('删除(access_token|token|ak|ck|accesstoken|cookie)'),
+    fnc: async e => {
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      if (!accessToken.success) {
+        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+        return true
+      }
+      await db.TokenTableDeleteByUserIdAndSteamId(e.user_id, accessToken.steamId)
+      await e.reply([segment.at(e.user_id), '\n', 'access_token已删除~'])
       return true
     }
   }

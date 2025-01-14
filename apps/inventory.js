@@ -117,13 +117,13 @@ const rule = {
       }
       const steamId = accessToken.steamId
       // 先获取家庭共享信息
-      const familyInfo = await api.IFamilyGroupsService.GetFamilyGroupForUser(accessToken, steamId)
+      const familyInfo = await api.IFamilyGroupsService.GetFamilyGroupForUser(accessToken.token, steamId)
       if (!familyInfo.family_groupid) {
         await e.reply([segment.at(e.user_id), '\n', steamId, '未加入家庭'])
         return true
       }
       // 获取家庭库存
-      const familyInventory = await api.IFamilyGroupsService.GetSharedLibraryApps(accessToken, familyInfo.family_groupid, steamId)
+      const familyInventory = await api.IFamilyGroupsService.GetSharedLibraryApps(accessToken.token, familyInfo.family_groupid, steamId)
       if (!familyInventory.apps.length) {
         await e.reply([segment.at(e.user_id), '\n', steamId, '家庭库存为空'])
         return true
@@ -146,6 +146,60 @@ const rule = {
         data
       })
       await e.reply(img)
+      return true
+    }
+  },
+  privateInventory: {
+    reg: App.getReg('私密(库存|游戏)(列表)?'),
+    cfg: {
+      tips: true
+    },
+    fnc: async e => {
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      if (!accessToken.success) {
+        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+        return true
+      }
+      const appids = await api.IAccountPrivateAppsService.GetPrivateAppList(accessToken.token)
+      if (!appids.length) {
+        await e.reply([segment.at(e.user_id), '\n', '没有偷偷藏小黄油呢'])
+        return true
+      }
+      const appInfo = await api.IStoreBrowseService.GetItems(appids)
+      const data = [{
+        title: `${accessToken.steamId}的私密库存`,
+        games: appids.map(i => {
+          const info = appInfo[i]
+          return {
+            appid: i,
+            name: info.name || ''
+          }
+        })
+      }]
+      const img = await Render.render('inventory/index', {
+        data
+      })
+      await e.reply(img)
+      return true
+    }
+  },
+  togglePrivate: {
+    reg: App.getReg('(?:添加|删除)私密(?:库存|游戏)(.*)'),
+    fnc: async e => {
+      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      if (!accessToken.success) {
+        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+        return true
+      }
+      const flag = e.msg.includes('添加')
+      const input = rule.togglePrivate.reg.exec(e.msg)?.[1]
+      const appids = input.split(' ').map(Number).filter(Boolean)
+      if (!appids.length) {
+        await e.reply([segment.at(e.user_id), '\n', '请带上appid~'])
+        return true
+      }
+      await api.IAccountPrivateAppsService.ToggleAppPrivacy(accessToken.token, appids, flag)
+      await e.reply([segment.at(e.user_id), '\n', flag ? '添加' : '删除', '私密游戏成功~'])
       return true
     }
   }
