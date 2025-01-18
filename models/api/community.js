@@ -43,6 +43,9 @@ const getBaseURL = () => {
  */
 export async function miniprofile (friendCode, json = false) {
   return utils.request.get(`miniprofile/${friendCode}${json ? '/json' : ''}`, {
-    baseURL: getBaseURL()
+    baseURL: getBaseURL(),
+    params: {
+      t: Date.now()
+    }
   })
 }
