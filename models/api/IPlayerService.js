@@ -216,7 +216,7 @@ export async function GetFavoriteBadge (steamid) {
 /**
  * 获取正在玩游戏、曾经玩过游戏、拥有游戏或想要玩游戏的好友列表
  * @param {string} accessToken
- * @param {string} steamid
+ * @param {string} appid
  * @returns {Promise<{
  *   your_info: {
  *     steamid: string,

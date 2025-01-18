@@ -1,4 +1,5 @@
 import { utils } from '#models'
+import _ from 'lodash'
 
 /**
  * 获取多个appid的游戏信息
@@ -164,6 +165,7 @@ import { utils } from '#models'
  * }>}
  */
 export async function GetItems (appids, options = {}) {
+  if (!Array.isArray(appids)) appids = [appids]
   const data = {
     ids: appids.map(appid => ({ appid })),
     country_code: 'CN',
@@ -179,7 +181,7 @@ export async function GetItems (appids, options = {}) {
     }
   }).then(res => {
     const data = res.response.store_items || []
-    return data.reduce((acc, cur) => (acc[cur.appid] = cur) && acc, {})
+    return _.keyBy(data, 'appid')
   })
 }
 

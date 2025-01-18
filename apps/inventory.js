@@ -216,9 +216,20 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '请带上appid~'])
         return true
       }
+      const infos = await api.IStoreBrowseService.GetItems([appid])
+      const info = infos[appid]
+      if (!info) {
+        await e.reply([segment.at(e.user_id), '\n', '没有找到这个游戏哦'])
+        return true
+      }
+      if (!info.is_free) {
+        await e.reply([segment.at(e.user_id), '\n', info.name, '不是免费游戏!目前价格: ', info.best_purchase_option.formatted_final_price])
+        return true
+      }
       const res = await api.ICheckoutService.AddFreeLicense(accessToken.token, appid)
       if (res.appids_added?.some(i => i == appid)) {
-        await e.reply([segment.at(e.user_id), '\n', '入库成功~了吗..?'])
+        // 再获取一下库存确定一下?
+        await e.reply([segment.at(e.user_id), '\n', '入库成功~'])
       } else {
         await e.reply([segment.at(e.user_id), '\n', '入库失败...'])
       }

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { sequelize, DataTypes, Op } from './base.js'
 
 /**
@@ -64,8 +65,5 @@ export async function GameTableGetGameByAppids (appids) {
         [Op.in]: appids.map(String)
       }
     }
-  }).then(res => res.map(i => i.dataValues)).then(i => i.reduce((acc, cur) => {
-    acc[cur.appid] = cur
-    return acc
-  }, {}))
+  }).then(res => res.map(i => i.dataValues)).then(i => _.keyBy(i, 'appid'))
 }
