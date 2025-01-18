@@ -233,3 +233,51 @@ export async function appreviews (appid, count = 30, recent = false) {
     }
   })
 }
+
+/**
+ * 添加愿望单
+ * @param {string} cookie
+ * @param {number} appid
+ * @returns {Promise<{
+ *   success: boolean,
+ *   wishlistCount: number
+ * }>}
+ */
+export async function addtowishlist (cookie, appid) {
+  const sessionid = cookie.split(';').find(i => i.includes('sessionid')).split('=')[1]
+  const data = new URLSearchParams()
+  data.append('appid', appid)
+  data.append('sessionid', sessionid)
+  return utils.request.post('api/addtowishlist', {
+    baseURL: getBaseURL(),
+    headers: {
+      Cookie: cookie,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data
+  })
+}
+
+/**
+ * 删除愿望单
+ * @param {string} cookie
+ * @param {number} appid
+ * @returns {Promise<{
+ *   success: boolean,
+ *   wishlistCount: number
+ * }>}
+ */
+export async function removefromwishlist (cookie, appid) {
+  const sessionid = cookie.split(';').find(i => i.includes('sessionid')).split('=')[1]
+  const data = new URLSearchParams()
+  data.append('appid', appid)
+  data.append('sessionid', sessionid)
+  return utils.request.post('api/removefromwishlist', {
+    baseURL: getBaseURL(),
+    headers: {
+      Cookie: cookie,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data
+  })
+}

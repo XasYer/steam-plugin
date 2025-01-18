@@ -15,12 +15,12 @@ const rule = {
       tips: true
     },
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
-      const clients = await api.IClientCommService.GetAllClientLogonInfo(accessToken.token)
+      const clients = await api.IClientCommService.GetAllClientLogonInfo(token.accessToken)
       if (!clients.sessions) {
         await e.reply([segment.at(e.user_id), '\n', '没有登录Steam客户端'])
         return true
@@ -40,13 +40,13 @@ const rule = {
       tips: true
     },
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
       const instanceid = rule.appList.reg.exec(e.msg)[1]
-      const res = await api.IClientCommService.GetClientAppList(accessToken.token, instanceid)
+      const res = await api.IClientCommService.GetClientAppList(token.accessToken, instanceid)
       if (!res) {
         await e.reply([segment.at(e.user_id), '\n', '没有获取到客户端游戏列表', instanceid ? ' 请检查instanceid是否正确' : ''])
         return true
@@ -115,9 +115,9 @@ const rule = {
   install: {
     reg: App.getReg(`${baseReg}(?:安装|下载)(?:游戏)?\\s*(\\d*)\\s*(\\d*)`),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
       const appid = rule.install.reg.exec(e.msg)[1]
@@ -126,7 +126,7 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '请输入appid'])
         return true
       }
-      await api.IClientCommService.InstallClientApp(accessToken.token, appid, instanceid)
+      await api.IClientCommService.InstallClientApp(token.accessToken, appid, instanceid)
       await e.reply([segment.at(e.user_id), '\n', '已发送安装请求'])
       return true
     }
@@ -134,9 +134,9 @@ const rule = {
   launch: {
     reg: App.getReg(`${baseReg}(?:启动|打开)(?:游戏)?\\s*(\\d*)\\s*(\\d*)`),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
       const appid = rule.launch.reg.exec(e.msg)[1]
@@ -145,7 +145,7 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '请输入appid'])
         return true
       }
-      await api.IClientCommService.LaunchClientApp(accessToken.token, appid, instanceid)
+      await api.IClientCommService.LaunchClientApp(token.accessToken, appid, instanceid)
       await e.reply([segment.at(e.user_id), '\n', '已发送启动请求'])
       return true
     }
@@ -153,9 +153,9 @@ const rule = {
   uninstall: {
     reg: App.getReg(`${baseReg}(?:卸载|删除)(?:游戏)?\\s*(\\d*)\\s*(\\d*)`),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
       const appid = rule.uninstall.reg.exec(e.msg)[1]
@@ -164,7 +164,7 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '请输入appid'])
         return true
       }
-      await api.IClientCommService.UninstallClientApp(accessToken.token, appid, instanceid)
+      await api.IClientCommService.UninstallClientApp(token.accessToken, appid, instanceid)
       await e.reply([segment.at(e.user_id), '\n', '已发送卸载请求'])
       return true
     }
@@ -172,9 +172,9 @@ const rule = {
   download: {
     reg: App.getReg(`${baseReg}(?:恢复|暂停|停止|继续)(?:下载|更新)?(?:游戏)?\\s*(\\d*)\\s*(\\d*)`),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
       const appid = rule.download.reg.exec(e.msg)[1]
@@ -184,7 +184,7 @@ const rule = {
         return true
       }
       const download = /(恢复|继续)/.test(e.msg)
-      await api.IClientCommService.SetClientAppUpdateState(accessToken.token, appid, download, instanceid)
+      await api.IClientCommService.SetClientAppUpdateState(token.accessToken, appid, download, instanceid)
       await e.reply([segment.at(e.user_id), '\n', `已发送${download ? '继续' : '暂停'}下载请求`])
       return true
     }

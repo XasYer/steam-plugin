@@ -110,20 +110,20 @@ const rule = {
       tips: true
     },
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
-      const steamId = accessToken.steamId
+      const steamId = token.steamId
       // 先获取家庭共享信息
-      const familyInfo = await api.IFamilyGroupsService.GetFamilyGroupForUser(accessToken.token, steamId)
+      const familyInfo = await api.IFamilyGroupsService.GetFamilyGroupForUser(token.accessToken, steamId)
       if (!familyInfo.family_groupid) {
         await e.reply([segment.at(e.user_id), '\n', steamId, '未加入家庭'])
         return true
       }
       // 获取家庭库存
-      const familyInventory = await api.IFamilyGroupsService.GetSharedLibraryApps(accessToken.token, familyInfo.family_groupid, steamId)
+      const familyInventory = await api.IFamilyGroupsService.GetSharedLibraryApps(token.accessToken, familyInfo.family_groupid, steamId)
       if (!familyInventory.apps.length) {
         await e.reply([segment.at(e.user_id), '\n', steamId, '家庭库存为空'])
         return true
@@ -155,19 +155,19 @@ const rule = {
       tips: true
     },
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
-      const appids = await api.IAccountPrivateAppsService.GetPrivateAppList(accessToken.token)
+      const appids = await api.IAccountPrivateAppsService.GetPrivateAppList(token.accessToken)
       if (!appids.length) {
         await e.reply([segment.at(e.user_id), '\n', '没有偷偷藏小黄油呢'])
         return true
       }
       const appInfo = await api.IStoreBrowseService.GetItems(appids)
       const data = [{
-        title: `${accessToken.steamId}的私密库存`,
+        title: `${token.steamId}的私密库存`,
         games: appids.map(i => {
           const info = appInfo[i]
           return {
@@ -186,9 +186,9 @@ const rule = {
   togglePrivate: {
     reg: App.getReg('(?:添加|删除)私密(?:库存|游戏)(.*)'),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
       const flag = e.msg.includes('添加')
@@ -198,17 +198,17 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '请带上appid~'])
         return true
       }
-      await api.IAccountPrivateAppsService.ToggleAppPrivacy(accessToken.token, appids, flag)
+      await api.IAccountPrivateAppsService.ToggleAppPrivacy(token.accessToken, appids, flag)
       await e.reply([segment.at(e.user_id), '\n', flag ? '添加' : '删除', '私密游戏成功~'])
       return true
     }
   },
   addInventory: {
-    reg: App.getReg('入库(?:游戏)?(\\d*)'),
+    reg: App.getReg('入库(?:游戏)?\\s*(\\d*)'),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
       const appid = rule.addInventory.reg.exec(e.msg)[1]
@@ -226,7 +226,7 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', info.name, '不是免费游戏!目前价格: ', info.best_purchase_option.formatted_final_price])
         return true
       }
-      const res = await api.ICheckoutService.AddFreeLicense(accessToken.token, appid)
+      const res = await api.ICheckoutService.AddFreeLicense(token.accessToken, appid)
       if (res.appids_added?.some(i => i == appid)) {
         // 再获取一下库存确定一下?
         await e.reply([segment.at(e.user_id), '\n', '入库成功~'])
@@ -234,6 +234,29 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '入库失败...'])
       }
       return true
+    }
+  },
+  modefyWishlist: {
+    reg: App.getReg('([添增]加|[删移][除出])愿望单\\s*(\\d*)'),
+    fnc: async e => {
+      const regRes = rule.modefyWishlist.reg.exec(e.msg)
+      const appid = regRes[2]
+      if (!appid) {
+        await e.reply([segment.at(e.user_id), '\n', '请带上appid~'])
+        return true
+      }
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
+        return true
+      }
+      if (regRes[1].includes('加')) {
+        const res = await api.store.addtowishlist(token.cookie, appid)
+        console.log(res)
+      } else {
+        const res = await api.store.removefromwishlist(token.cookie, appid)
+        console.log(res)
+      }
     }
   }
 }

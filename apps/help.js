@@ -13,7 +13,7 @@ const rule = {
     fnc: async e => {
       const helpGroup = []
 
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
+      const token = await utils.steam.getAccessToken(e.user_id)
       _.forEach(helpUtil.helpList, (group) => {
         switch (group.auth) {
           case 'master':
@@ -22,7 +22,7 @@ const rule = {
             }
             break
           case 'accessToken':
-            if (!accessToken.success) {
+            if (!token.success) {
               return true
             }
         }
@@ -41,7 +41,7 @@ const rule = {
         helpGroup.push(group)
       })
       const themeData = await helpUtil.helpTheme.getThemeData({
-        colCount: accessToken.success ? 4 : 3,
+        colCount: token.success ? 4 : 3,
         colWidth: 275
       })
       const img = await Render.render('help/index', {

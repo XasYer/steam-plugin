@@ -49,7 +49,9 @@ const rule = {
         await new Promise(resolve => setTimeout(resolve, 1000 * 5))
         const qrcodeRes = await api.IAuthenticationService.PollAuthSessionStatus(session.client_id, session.request_id).catch(() => ({}))
         if (qrcodeRes.access_token) {
-          const dbRes = await db.TokenTableAddData(e.user_id, qrcodeRes.access_token, qrcodeRes.refresh_token)
+          const jwt = utils.steam.decodeAccessTokenJwt(qrcodeRes.access_token)
+          const cookie = utils.steam.getCookie(jwt.sub, qrcodeRes.access_token)
+          const dbRes = await db.TokenTableAddData(e.user_id, qrcodeRes.access_token, cookie, qrcodeRes.refresh_token)
           const user = await db.UserTableGetDataBySteamId(dbRes.steamId)
           if (user?.userId) {
             if (user.userId != e.user_id) {
@@ -72,12 +74,12 @@ const rule = {
   refreshToken: {
     reg: App.getReg('刷新(access_token|token|ak|ck|accesstoken|cookie)'),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
-      await utils.steam.refreshAccessToken(accessToken, true)
+      await utils.steam.refreshAccessToken(token, true)
       await e.reply([segment.at(e.user_id), '\n', 'access_token已刷新~'])
       return true
     }
@@ -89,26 +91,31 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '请私聊查看'])
         return true
       }
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
-      const jwt = utils.steam.decodeAccessTokenJwt(accessToken.token)
-      await e.reply([accessToken.token])
-      await e.reply(`过期时间: ${moment.unix(jwt.exp).format('YYYY-MM-DD HH:mm:ss')}`)
+      const jwt = utils.steam.decodeAccessTokenJwt(token.accessToken)
+      await e.reply(token.accessToken)
+      await e.reply(token.cookie)
+      await e.reply([
+        `${token.accessToken.slice(0, 5)}...: access_token`,
+        `${token.cookie.slice(0, 5)}...: cookie`,
+        `过期时间: ${moment.unix(jwt.exp).format('YYYY-MM-DD HH:mm:ss')}`
+      ].join('\n'))
       return true
     }
   },
   deleteToken: {
     reg: App.getReg('删除(access_token|token|ak|ck|accesstoken|cookie)'),
     fnc: async e => {
-      const accessToken = await utils.steam.getAccessToken(e.user_id)
-      if (!accessToken.success) {
-        await e.reply([segment.at(e.user_id), '\n', accessToken.message])
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
-      await db.TokenTableDeleteByUserIdAndSteamId(e.user_id, accessToken.steamId)
+      await db.TokenTableDeleteByUserIdAndSteamId(e.user_id, token.steamId)
       await e.reply([segment.at(e.user_id), '\n', 'access_token已删除~'])
       return true
     }

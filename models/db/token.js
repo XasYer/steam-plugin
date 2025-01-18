@@ -56,7 +56,7 @@ await TokenTable.sync()
  * @param {string?} cookie
  * @returns {Promise<TokenColumns|null>}
  */
-export async function TokenTableAddData (userId, accessToken, refreshToken = '', cookie = '') {
+export async function TokenTableAddData (userId, accessToken, cookie = '', refreshToken = '') {
   userId = String(userId)
 
   const jwt = utils.steam.decodeAccessTokenJwt(accessToken)

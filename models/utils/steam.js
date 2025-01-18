@@ -2,6 +2,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import { api, db } from '#models'
 import { Config } from '#components'
+import { randomBytes } from 'crypto'
 
 const steamIdOffset = 76561197960265728n
 /**
@@ -111,13 +112,14 @@ export function decodeAccessTokenJwt (jwt) {
 }
 
 /**
- * 获取对应用户的access_token
+ * 获取对应用户的token信息
  * @param {string} userId
  * @param {string?} steamId
  * @returns {Promise<{
  *   success: boolean,
  *   message?: string,
- *   token?: string,
+ *   accessToken?: string,
+ *   cookie?: string
  *   steamId?: string
  * }>}
  */
@@ -146,33 +148,56 @@ export async function getAccessToken (userId, steamId) {
   }
   return {
     success: true,
-    ...token,
-    token: await refreshAccessToken(token)
+    ...await refreshAccessToken(token)
   }
 }
 
 /**
  * 刷新access_token
- * @param {import('models/db').TokenColumns} token
+ * @param {import('models/db').TokenColumns|string} token
  * @param {boolean} force 是否强制刷新
- * @returns
+ * @returns {Promise<import('models/db').TokenColumns|null>}
  */
 export async function refreshAccessToken (token, force = false) {
-  if (!token) return ''
+  if (typeof token === 'string') {
+    const steamId = await db.UserTableGetBindSteamIdByUserId(token)
+    if (!steamId) {
+      return null
+    }
+    token = await db.TokenTableGetByUserIdAndSteamId(token, steamId)
+  }
+  if (!token) return null
   const now = moment().unix()
   // 提前30分钟刷新access_token
   const exp = token.accessTokenExpires - 60 * 30
-  if (exp > now && !force) return token.accessToken
+  const isExpired = exp < now
+  if (!isExpired && token.cookie && !force) return token
   // 判断refresh_token是否过期
   const rtExp = token.refreshTokenExpires - 60 * 30
   if (rtExp < now) {
     await db.TokenTableDeleteByUserIdAndSteamId(token.userId, token.steamId)
     throw new Error('refresh_token已过期, 请重新登录')
   }
-  const accessToken = (await api.IAuthenticationService.GenerateAccessTokenForApp(token.refreshToken, token.steamId)).access_token
+  const accessToken = isExpired ? (await api.IAuthenticationService.GenerateAccessTokenForApp(token.refreshToken, token.steamId)).access_token : token.accessToken
   if (!accessToken) throw new Error('刷新access_token失败')
-  await db.TokenTableAddData(token.userId, accessToken)
-  return accessToken
+  const cookie = getCookie(token.steamId, accessToken)
+  await db.TokenTableAddData(token.userId, accessToken, cookie)
+  return {
+    ...token,
+    cookie
+  }
+}
+
+/**
+ * 通过steamId和accessToken生成cookie
+ * @param {string} steamId
+ * @param {string} accessToken
+ * @returns {string}
+ */
+export function getCookie (steamId, accessToken) {
+  const cookieValue = encodeURIComponent([steamId, accessToken].join('||'))
+  const sessionId = randomBytes(12).toString('hex')
+  return [`steamLoginSecure=${cookieValue}`, `sessionid=${sessionId}`].join('; ')
 }
 
 /**

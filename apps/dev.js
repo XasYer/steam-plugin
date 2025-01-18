@@ -52,8 +52,8 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', '只能操作自己的accessToken'])
         return true
       }
-      const accessToken = hasAccessToken && await utils.steam.getAccessToken(uid, steamId)
-      if (hasAccessToken && !accessToken.success) {
+      const token = hasAccessToken && await utils.steam.getAccessToken(uid, steamId)
+      if (hasAccessToken && !token.success) {
         await e.reply([segment.at(uid), '\n', '没有绑定accessToken'])
         return true
       }
@@ -61,7 +61,7 @@ const rule = {
         if (Array.isArray(text)) {
           return text.map(replaceParams)
         } else {
-          return text.replace(/{steamid}/ig, steamId).replace(/{access_?token}/ig, accessToken.token)
+          return text.replace(/{steamid}/ig, steamId).replace(/{access_?token}/ig, token.accessToken)
         }
       }
       const params = args.map(replaceParams)

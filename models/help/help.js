@@ -142,6 +142,16 @@ export const helpList = [
         icon: 104,
         title: '#steam入库',
         desc: '添加免费游戏入库, 需要appid'
+      },
+      {
+        icon: 105,
+        title: '#steam添加愿望单',
+        desc: '添加游戏到愿望单, 需要appid'
+      },
+      {
+        icon: 106,
+        title: '#steam移除愿望单',
+        desc: '从愿望单删除游戏, 需要appid'
       }
     ]
   },

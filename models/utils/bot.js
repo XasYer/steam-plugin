@@ -102,7 +102,7 @@ export function getAtUid (at, id) {
       return at
     }
     if (at.length) {
-      return at.pop()
+      return at[at.length - 1]
     } else {
       return id
     }
