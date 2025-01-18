@@ -250,13 +250,15 @@ const rule = {
         await e.reply([segment.at(e.user_id), '\n', token.message])
         return true
       }
-      if (regRes[1].includes('加')) {
-        const res = await api.store.addtowishlist(token.cookie, appid)
-        console.log(res)
+      const res = regRes[1].includes('加')
+        ? await api.store.addtowishlist(token.cookie, appid)
+        : await api.store.removefromwishlist(token.cookie, appid)
+      if (res.success) {
+        await e.reply([segment.at(e.user_id), '\n', regRes[1], '愿望单成功~现在的愿望单数量是: ', res.wishlistCount])
       } else {
-        const res = await api.store.removefromwishlist(token.cookie, appid)
-        console.log(res)
+        await e.reply([segment.at(e.user_id), '\n', regRes[1], '愿望单失败...'])
       }
+      return true
     }
   }
 }
