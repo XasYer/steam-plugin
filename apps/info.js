@@ -23,7 +23,31 @@ const rule = {
         return true
       }
       // https://steamcommunity.com/profiles/${steamId}/
-      // https://steamcommunity.com/miniprofile/${utils.steam.getFriendCode(steamId)}
+      // https://steamcommunity.com/miniprofile/${utils.steam.getFriendCode(steamId)}/json
+      let mode = Config.other.infoMode
+      if (mode == 3) {
+        if (['porxy', 'commonProxy', 'communityProxy'].some(i => Config.steam[i])) {
+          const friendCode = utils.steam.getFriendCode(steamId)
+          const html = await api.community.miniprofile(friendCode, false)
+          const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
+          const img = await Render.simpleRender('info/steam', {
+            html: html.replace(/<video[\s\S]*video>/, '')
+              .replace(/https:\/\/cdn.cloudflare.steamstatic.com\/steamcommunity/g, 'https://steamcdn-a.akamaihd.net/steamcommunity')
+              .replace(/https:\/\/shared.cloudflare.steamstatic.com\/store_item_assets/g, 'https://steamcdn-a.akamaihd.net')
+              .replace(
+                /<img src="https:\/\/avatars.cloudflare.steamstatic.com\/(.+)_medium.jpg"/,
+                Config.other.steamAvatar
+                  ? '<img src="https://avatars.steamstatic.com/$1_full.jpg"'
+                  : `<img src="${await utils.bot.getUserAvatar(e.self_id, uid, e.group_id)}"`
+              )
+              .replace(/srcset="[\s\S]+?"/, ''),
+            background: utils.steam.getStaticUrl(bg.mini_profile_background.image_large)
+          })
+          await e.reply(img)
+          return true
+        }
+        mode = 2
+      }
       const data = await api.ISteamUser.GetPlayerSummaries(steamId)
       if (!data.length) {
         await e.reply([segment.at(uid), `\n没有获取到${steamId}的信息, 看看有没有输错?`])
@@ -34,7 +58,7 @@ const rule = {
         await e.reply([segment.at(uid), `\n${info.personaname}个人资料未公开`])
         return true
       }
-      if (Config.other.infoMode == 2) {
+      if (mode == 2) {
         const color = info.gameid ? '#90ba3c' : info.personastate === 0 ? '#898989' : '#57cbde'
         const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
         const avatar = utils.steam.getStaticUrl(bg.animated_avatar.image_small) || info.avatarfull

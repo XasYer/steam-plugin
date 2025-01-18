@@ -3,7 +3,7 @@ renderScale: 130
 
 # 生成图片方式
 # 1: puppeteer
-# 2: canvas
+# 2: canvas (仅支持部分功能)
 renderType: 1
 
 # 截图时数量达到多少时隐藏剩余项目
@@ -18,7 +18,8 @@ steamAvatar: true
 
 # steam状态 发送消息模式
 # 1: 文字
-# 2: 图片 (若图片发送时间长可更换为文字模式)
+# 2: 仿steam风格的迷你卡片
+# 3: 原汁原味的steam风格的迷你卡片(需要社区反代或通用反代)
 infoMode: 2
 
 # 是否开启日志
@@ -39,3 +40,6 @@ requireHashTag: false
 # 是否监听文件变化 如果不监听则每次更改文件需要重启 
 # 改动此配置需重启后生效
 watchFile: true
+
+# 仅用于更新注释
+otherDoc: 1

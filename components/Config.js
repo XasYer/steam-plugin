@@ -105,6 +105,7 @@ class Config {
    *  commonProxy: string,
    *  apiProxy: string,
    *  storeProxy: string
+   *  communityProxy: string,
    * }}
    */
   get steam () {

@@ -1,4 +1,5 @@
 export * as store from './store.js'
+export * as community from './community.js'
 export * as ISteamUser from './ISteamUser.js'
 export * as IStoreService from './IStoreService.js'
 export * as IPlayerService from './IPlayerService.js'

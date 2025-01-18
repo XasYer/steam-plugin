@@ -12,8 +12,14 @@ timeout: 5
 # 通用反代 比如填写: https://example.com/{{url}} 则会替换 {{url}} 为实际请求的url
 commonProxy: ""
 
+# 主要用的接口
 # https://api.steampowered.com 的反代 会替换成对应地址
 apiProxy: ""
 
+# steam商城相关的接口
 # https://store.steampowered.com 的反代 会替换成对应地址
 storeProxy: ""
+
+# steam社区相关的接口
+# https://steamcommunity.com/ 的反代 会替换成对应地址
+communityProxy: ""

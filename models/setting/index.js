@@ -309,9 +309,10 @@ export const cfgSchema = {
         component: 'RadioGroup',
         options: [
           { label: '文字', value: 1 },
-          { label: '图片', value: 2 }
+          { label: '仿steam风格图片', value: 2 },
+          { label: 'steam风格图片(需要社区反代)', value: 3 }
         ],
-        desc: 'steam状态发送消息的模式 1: 文字 2: 图片 若图片发送时间长可更换为文字'
+        desc: 'steam状态发送消息的模式 1: 文字 2: 仿steam风格图片 3: steam风格图片(需要社区反代)'
       },
       log: {
         title: '日志输出',
