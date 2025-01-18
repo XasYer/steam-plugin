@@ -232,11 +232,11 @@ export async function GetFavoriteBadge (steamid) {
  *   }[]
  * }>}
  */
-export async function GetFriendsGameplayInfo (accessToken, steamid) {
+export async function GetFriendsGameplayInfo (accessToken, appid) {
   return utils.request.get('IPlayerService/GetFriendsGameplayInfo/v1', {
     params: {
       access_token: accessToken,
-      steamid
+      appid
     }
   }).then(res => res.response)
 }
@@ -661,23 +661,6 @@ export async function GetRecentlyPlayedGames (steamid) {
 }
 
 /**
- * 针对单个 appID 获取某个玩家的游戏时间信息。 WebAPI 密钥必须与此 appID 关联才能获取结果。
- * @param {string} key
- * @param {string} steamid
- * @param {number} appid
- * @returns {Promise<unknown>}
- */
-export async function GetSingleGamePlaytime (key, steamid, appid) {
-  return utils.request.get('IPlayerService/GetSingleGamePlaytime/v1', {
-    params: {
-      key,
-      steamid,
-      appid
-    }
-  })
-}
-
-/**
  * Gets which Steam Deck keyboard skin is active for a specific user
  * @param {string} steamid
  * @returns {Promise<unknown>}
@@ -754,21 +737,6 @@ export async function IgnoreFriend (accessToken, steamid, unignore = false) {
       access_token: accessToken,
       steamid,
       unignore
-    }
-  })
-}
-
-/**
- * Obsolete, partners should use ISteamUser.CheckAppOwnership
- * @param {string} steamid
- * @param {boolean} appidPlaying The game player is currently playing
- * @returns {Promise<unknown>}
- */
-export async function IsPlayingSharedGame (steamid, appidPlaying) {
-  return utils.request.get('IPlayerService/IsPlayingSharedGame/v1', {
-    params: {
-      steamid,
-      appid_playing: appidPlaying
     }
   })
 }

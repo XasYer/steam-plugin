@@ -41,7 +41,7 @@ const rule = {
         session = session.response
       }
       const qrcode = (await QRCode.toDataURL(session.challenge_url)).replace('data:image/png;base64,', 'base64://')
-      await App.reply(e, ['请使用30秒内使用steamApp扫描二维码进行登录', segment.image(qrcode)], {
+      await App.reply(e, ['请在30秒内使用steamApp扫描二维码进行登录', segment.image(qrcode)], {
         recallMsg: 30,
         quote: true
       })
