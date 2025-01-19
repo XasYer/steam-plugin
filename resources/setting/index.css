@@ -1,15 +1,16 @@
-body {
-  transform: scale(1);
-  width: 660px;
-}
 .container {
   background: url("./imgs/bg.png") #000144 left top repeat-y;
-  background-size: 700px auto;
-  width: 660px;
+  background-size: 1320px auto;
+  width: 1320px;
 }
+
+.box {
+  column-count: 2;
+  column-gap: 10px;
+}
+
 .cfg-box {
   border-radius: 15px;
-  margin-top: 20px;
   margin-bottom: 20px;
   padding: 5px 15px;
   overflow: hidden;

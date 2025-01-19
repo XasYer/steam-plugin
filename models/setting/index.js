@@ -40,6 +40,13 @@ export const cfgSchema = {
         def: '',
         desc: '替换https://store.steampowered.com为自定义地址'
       },
+      communityProxy: {
+        title: '社区反代',
+        key: '社区反代',
+        type: 'string',
+        def: '',
+        desc: '替换https://steamcommunity.com/为自定义地址'
+      },
       timeout: {
         title: '请求超时时间',
         key: '超时',
@@ -290,7 +297,7 @@ export const cfgSchema = {
         min: 1,
         def: 10,
         input: (n) => Math.max(1, n * 1 || 10),
-        desc: '统计数据数量 (由steam-plugin统计)'
+        desc: '群统计数据数量 (由steam-plugin统计)'
       },
       infoMode: {
         title: 'steam状态发送模式',
@@ -298,9 +305,9 @@ export const cfgSchema = {
         type: 'number',
         def: 2,
         min: 1,
-        max: 2,
+        max: 3,
         input: (n) => {
-          if (n >= 1 && n <= 2) {
+          if (n >= 1 && n <= 3) {
             return n * 1
           } else {
             return 2
