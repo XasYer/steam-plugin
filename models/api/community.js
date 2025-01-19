@@ -1,7 +1,7 @@
 import { utils } from '#models'
 import { Config } from '#components'
 
-const getBaseURL = () => {
+export function getBaseURL () {
   const url = 'https://steamcommunity.com/'
   if (Config.steam.commonProxy) {
     return Config.steam.commonProxy.replace('{{url}}', url)

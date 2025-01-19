@@ -1,5 +1,6 @@
-import { App, Render } from '#components'
+import { App, Config, Render } from '#components'
 import { api, utils } from '#models'
+import axios from 'axios'
 import moment from 'moment'
 
 const appInfo = {
@@ -147,7 +148,118 @@ const rule = {
       await e.reply(img)
       return true
     }
+  },
+  beseOfYear: {
+    reg: App.getReg('年度最?([畅热]销|新品|VR|抢先体验|热玩|DECK|控制器)?(?:游戏)?(?:排行榜?单?)\\s*(\\d*)'),
+    cfg: {
+      tips: true
+    },
+    fnc: async e => {
+      const regRet = rule.beseOfYear.reg.exec(e.msg)
+      // 指定年份 1-11月为上一年，12月为本年
+      const year = regRet[2] || getYear()
+      // 从年度最佳页面获取announcement_gid
+      const baseURL = api.store.getBaseURL()
+      const yearHtml = await axios.get('charts/bestofyear/bestof' + year, {
+        baseURL,
+        timeout: Config.steam.timeout * 1000
+      }).then(res => res.data)
+      const announcementGid = /ANNOUNCEMENT_GID&quot;:&quot;(\d+)/.exec(yearHtml)?.[1]
+      if (!announcementGid) {
+        await e.reply(`获取${year}年度最佳游戏失败...`)
+        return true
+      }
+      const event = await api.store.ajaxgetpartnerevent(39049601, announcementGid)
+      // 将返回的json数据转为正常json格式
+      const saleSections = JSON.parse(event.jsondata.replace(/\\u[\dA-Fa-f]{4}/g, (match) => {
+        return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16))
+      })).sale_sections
+      const keysMap = {
+        畅销: 'game',
+        热销: 'game',
+        新品: 'new',
+        VR: 'vr',
+        抢先体验: 'early',
+        热玩游戏: 'play',
+        DECK: 'deck',
+        控制器: 'controller'
+      }
+      const keys = Object.keys(keysMap)
+      // 只获取对应类型
+      const type = keysMap[keys.find(i => regRet[1]?.toUpperCase().includes(i)) || '热玩游戏']
+      const data = []
+      for (let index = 0; index < saleSections.length; index++) {
+        const value = saleSections[index]
+        // text_section_contents 为年度最佳游戏标题 6是简体中文
+        if (value.section_type === 'text_section') {
+          const text = value.text_section_contents[6]
+          // 年度开头
+          if (text.startsWith('年度')) {
+            // 看看是不是对应类型
+            const key = keys.find(i => text.toUpperCase().includes(i))
+            if (key && keysMap[key] === type) {
+              data.push({
+                title: year + text,
+                desc: [
+                  '其他排行: 畅销|新品|vr|抢先体验|热玩|deck|控制器']
+              })
+              // 获取对应的游戏
+              while (true) {
+                index++
+                if (saleSections[index].section_type === 'items') {
+                  data.push({
+                    title: saleSections[index].localized_label[6],
+                    games: saleSections[index].capsules.map(i => i.id)
+                  })
+                } else {
+                  break
+                }
+              }
+              break
+            }
+          }
+        }
+      }
+      // 获取对应游戏信息
+      const appids = data.map(i => i.games || []).flat()
+      if (!appids.length) {
+        await e.reply(`${year}年没有${regRet[1] || '热玩游戏'}的排行呢`)
+        return true
+      }
+      const infos = await api.IStoreBrowseService.GetItems(appids, {
+        include_assets: true
+      })
+      const img = await Render.render('inventory/index', {
+        data: data.map(i => {
+          if (i.games?.length) {
+            i.games = i.games.map(appid => {
+              const info = infos[appid]
+              if (!info) {
+                return { appid }
+              } else {
+                const price = info.best_purchase_option || {}
+                return {
+                  name: info.name,
+                  appid,
+                  image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
+                  price: getPrice(price, info.is_free)
+                }
+              }
+            })
+          }
+          return i
+        })
+      })
+      await e.reply(img)
+      return true
+    }
   }
+}
+
+function getYear () {
+  const m = moment().month()
+  const y = moment().year()
+  return m < 11 ? y - 1 : y
 }
 
 function getPrice (price, isFree) {

@@ -35,11 +35,12 @@ const Render = {
     if (path === 'inventory/index') {
       const hiddenLength = Config.other.hiddenLength
       const minLength = Math.min(
-        Math.max(...params.data.map(i => i.games.length)),
+        Math.max(...params.data.map(i => i.games?.length || 0)),
         Math.max(1, Number(Config.other.itemLength) || 1)
       )
       params.data = params.data.map(i => {
         if (!Array.isArray(i.desc)) i.desc = [i.desc].filter(Boolean)
+        if (!i.games) i.games = []
         if (i.games.length > hiddenLength) {
           const length = i.games.length - hiddenLength
           i.desc.push(`太多辣 ! 已隐藏${length}个项目`)

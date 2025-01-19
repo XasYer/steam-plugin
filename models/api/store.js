@@ -1,7 +1,7 @@
 import { utils } from '#models'
 import { Config } from '#components'
 
-const getBaseURL = () => {
+export function getBaseURL () {
   const url = 'https://store.steampowered.com'
   if (Config.steam.commonProxy) {
     return Config.steam.commonProxy.replace('{{url}}', url)
@@ -280,4 +280,23 @@ export async function removefromwishlist (cookie, appid) {
     },
     data
   })
+}
+
+/**
+ *
+ * @param {number} clanAccountid
+ * @param {number} announcementGid
+ * @returns {Promise<any>}
+ */
+export async function ajaxgetpartnerevent (clanAccountid, announcementGid) {
+  return utils.request.get('events/ajaxgetpartnerevent', {
+    baseURL: getBaseURL(),
+    params: {
+      clan_accountid: clanAccountid,
+      announcement_gid: announcementGid,
+      lang_list: '6_0',
+      last_modified_time: 0,
+      for_edit: false
+    }
+  }).then(res => res.event || {})
 }

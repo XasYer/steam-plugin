@@ -217,6 +217,7 @@ export function getCookie (steamId, accessToken) {
 *   gameid?: string,
 *   gameextrainfo?: string,
 *   community_icon?: string
+*   header?: string
 * }[]>}
 */
 export async function getUserSummaries (steamIds) {
@@ -252,6 +253,7 @@ export async function getUserSummaries (steamIds) {
             const info = names[i.gameid]
             if (info) {
               i.gameextrainfo = info.name
+              i.header = info.header
             }
             return i
           })
@@ -277,6 +279,7 @@ export async function getUserSummaries (steamIds) {
           const info = names[i.gameid]
           if (info) {
             i.gameextrainfo = info.name
+            i.header = info.header
           }
           return i
         })
@@ -314,7 +317,8 @@ export async function getUserSummaries (steamIds) {
         timecreated: i.private_data.time_created,
         gameid,
         gameextrainfo,
-        lastlogoff: i.private_data.last_logoff_time
+        lastlogoff: i.private_data.last_logoff_time,
+        header: info.assets?.header || info.header
         // TODO: 展示在好友列表的小图标
         // community_icon: appInfo[gameid]?.assets?.community_icon
       }

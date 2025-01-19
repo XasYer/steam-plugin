@@ -40,13 +40,14 @@ export function startTimer () {
           appid: player.gameid,
           state: player.personastate == 0 ? 0 : 1,
           playTime: lastPlay.time || lastPlay.playTime,
-          onlineTime: lastPlay.time || lastPlay.onlineTime
+          onlineTime: lastPlay.time || lastPlay.onlineTime,
+          header: player.header
         }
         // 如果这一次和上一次的状态不一样
         if (lastPlay.appid != player.gameid || lastPlay.state != state.state) {
           // 找到所有的推送群
           const pushGroups = PushData.filter(i => i.steamId === player.steamid)
-          const iconUrl = utils.steam.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid)
+          const iconUrl = utils.steam.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid, 'apps', player.header)
           for (const i of pushGroups) {
             const avatar = await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId)
             // 0 就是没有人绑定
@@ -85,7 +86,7 @@ export function startTimer () {
                   name: lastPlay.name,
                   appid: `${nickname}(${player.personaname})`,
                   desc: `时长: ${utils.formatDuration(time)}`,
-                  image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid),
+                  image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid, 'apps', lastPlay.header),
                   avatar,
                   type: 'end'
                 })

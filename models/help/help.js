@@ -237,6 +237,16 @@ export const helpList = [
         icon: 90,
         title: '#steam上周热销排行',
         desc: '查看steam上周热销排行'
+      },
+      {
+        icon: 107,
+        title: '#steam年度畅销排行',
+        desc: '查看steam年度畅销排行,可指定年份'
+      },
+      {
+        icon: 109,
+        title: '#steam年度新品排行',
+        desc: '热玩|vr|抢先体验|deck|控制器'
       }
     ]
   },
