@@ -3,7 +3,14 @@ import _ from 'lodash'
 
 /**
  * 获取多个appid的游戏信息
- * @param {string[]} appids
+ * @param {{
+ *   appid?:string
+ *   packageid?:string
+ *   bundleid?:string
+ *   tagid?:string
+ *   creatorid?:string
+ *   hubcategoryid?:string
+ * }[]|string[]} appids
  * @param {{
  *   include_assets: boolean,
  *   include_release: boolean,
@@ -80,7 +87,8 @@ import _ from 'lodash'
  *       steam_deck_compat_category: number,
  *     },
  *     best_purchase_option?: {
- *       packageid: number,
+ *       packageid?: number,
+ *       bundleid?: number,
  *       purchase_option_name: string,
  *       final_price_in_cents: string,
  *       original_price_in_cents: string,
@@ -167,7 +175,13 @@ import _ from 'lodash'
 export async function GetItems (appids, options = {}) {
   if (!Array.isArray(appids)) appids = [appids]
   const data = {
-    ids: appids.map(appid => ({ appid })),
+    ids: appids.map(appid => {
+      if (typeof appid !== 'object') {
+        return { appid }
+      } else {
+        return appid
+      }
+    }),
     country_code: 'CN',
     context: {
       language: 'schinese',
@@ -181,7 +195,7 @@ export async function GetItems (appids, options = {}) {
     }
   }).then(res => {
     const data = res.response.store_items || []
-    return _.keyBy(data, 'appid')
+    return _.keyBy(data, i => i.success === 1 ? i.id : 0)
   })
 }
 

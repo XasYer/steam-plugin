@@ -152,6 +152,21 @@ export const helpList = [
         icon: 106,
         title: '#steam移除愿望单',
         desc: '从愿望单删除游戏, 需要appid'
+      },
+      {
+        icon: 110,
+        title: '#steam查看购物车',
+        desc: '查看购物车'
+      },
+      {
+        icon: 114,
+        title: '#steam(添加|删除)购物车',
+        desc: '添加或删除购物车项目, 需要appid'
+      },
+      {
+        icon: 115,
+        title: '#steam清空购物车',
+        desc: '清空购物车'
       }
     ]
   },

@@ -62,6 +62,9 @@ export function getStaticUrl (path) {
     return `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/${path}`
   } else if (path.startsWith('replay')) {
     return `https://shared.cloudflare.steamstatic.com/social_sharing/${path}`
+  } else if (path.startsWith('steam')) {
+    // return `https://steamcdn-a.akamaihd.net/${path}`
+    return `https://shared.cloudflare.steamstatic.com/store_item_assets/${path}`
   } else {
     return `https://clan.fastly.steamstatic.com/images/${path}`
   }
@@ -178,14 +181,10 @@ export async function refreshAccessToken (token, force = false) {
     await db.TokenTableDeleteByUserIdAndSteamId(token.userId, token.steamId)
     throw new Error('refresh_token已过期, 请重新登录')
   }
-  const accessToken = isExpired ? (await api.IAuthenticationService.GenerateAccessTokenForApp(token.refreshToken, token.steamId)).access_token : token.accessToken
+  const accessToken = (isExpired || force) ? (await api.IAuthenticationService.GenerateAccessTokenForApp(token.refreshToken, token.steamId)).access_token : token.accessToken
   if (!accessToken) throw new Error('刷新access_token失败')
   const cookie = getCookie(token.steamId, accessToken)
-  await db.TokenTableAddData(token.userId, accessToken, cookie)
-  return {
-    ...token,
-    cookie
-  }
+  return await db.TokenTableAddData(token.userId, accessToken, cookie)
 }
 
 /**
