@@ -288,7 +288,8 @@ export async function getUserSummaries (steamIds) {
     }
   }
   return await api.IPlayerService.GetPlayerLinkDetails(steamIds).then(async res => {
-    const appids = res.map(i => i.private_data.game_id).filter(Boolean)
+    // 非steam游戏会返回 17579876560805036032 不知道是不是固定的
+    const appids = res.map(i => i.private_data.game_id).filter(id => id && String(id).length <= 10)
     const appInfo = {}
     if (appids.length) {
       if (Config.push.cacheName) {
@@ -314,7 +315,7 @@ export async function getUserSummaries (steamIds) {
         avatarhash,
         personastate: i.private_data.persona_state ?? 0,
         timecreated: i.private_data.time_created,
-        gameid,
+        gameid: (gameid && String(gameid).length <= 10) ? gameid : undefined,
         gameextrainfo,
         lastlogoff: i.private_data.last_logoff_time,
         header: info.assets?.header || info.header
