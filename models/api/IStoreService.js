@@ -3,6 +3,7 @@ import { utils } from '#models'
 /**
  * 获得探索队列
  * @param {string} accessToken
+ * @param {string} country 地区代码
  * @returns {Promise<{
  *   appids: number[],
  *   country_code: string,
@@ -12,19 +13,12 @@ import { utils } from '#models'
  *   experimental_cohort: number,
  * }>}
  */
-export async function GetDiscoveryQueue (accessToken) {
+export async function GetDiscoveryQueue (accessToken, country = 'CN') {
   const input = {
     queue_type: 0,
-    country_code: 'CN',
+    country_code: country,
     rebuild_queue: true,
-    settings_changed: false,
-    settings: {},
-    rebuild_queue_if_stale: true,
-    ignore_user_preferences: false,
-    no_experimental_results: false,
-    experimental_cohort: 0,
-    debug_get_solr_query: false,
-    store_page_filter: {}
+    rebuild_queue_if_stale: true
   }
   return utils.request.get('IStoreService/GetDiscoveryQueue/v1', {
     params: {
@@ -48,7 +42,7 @@ export async function GetDiscoveryQueueSettings (accessToken) {
       access_token: accessToken,
       input_json: JSON.stringify(input)
     }
-  })
+  }).then(res => res.response)
 }
 
 /**
@@ -120,15 +114,18 @@ export async function GetTagList () {
 
 /**
  * 跳过探索队列中的某一项
+ * @param {string} accessToken
+ * @param {number} appid
  * @returns {Promise<unknown>}
  */
-export async function SkipDiscoveryQueueItem (appid) {
+export async function SkipDiscoveryQueueItem (accessToken, appid) {
   const input = {
     queue_type: 0,
     appid
   }
   return utils.request.post('IStoreService/SkipDiscoveryQueueItem/v1', {
     params: {
+      access_token: accessToken,
       input_json: JSON.stringify(input)
     }
   })

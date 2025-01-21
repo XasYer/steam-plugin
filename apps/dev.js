@@ -1,5 +1,6 @@
 import { App, Config } from '#components'
 import { api, db, utils } from '#models'
+import { segment } from '#lib'
 
 const appInfo = {
   id: 'dev',

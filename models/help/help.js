@@ -167,6 +167,16 @@ export const helpList = [
         icon: 115,
         title: '#steam清空购物车',
         desc: '清空购物车'
+      },
+      {
+        icon: 116,
+        title: '#steam探索队列',
+        desc: '查看探索队列'
+      },
+      {
+        icon: 117,
+        title: '#steam跳过探索队列',
+        desc: '跳过探索队列, 需要appid, 或全部跳过'
       }
     ]
   },

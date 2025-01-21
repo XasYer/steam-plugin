@@ -1,5 +1,6 @@
 import { App, Render } from '#components'
 import { api, utils } from '#models'
+import { segment } from '#lib'
 
 const appInfo = {
   id: 'cart',

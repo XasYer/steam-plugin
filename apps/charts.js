@@ -263,7 +263,7 @@ function getYear () {
 }
 
 function getPrice (price, isFree) {
-  return price.discount_pct
+  return price?.discount_pct
     ? {
         original: price.formatted_original_price,
         discount: price.discount_pct,

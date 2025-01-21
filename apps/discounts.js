@@ -1,5 +1,6 @@
 import { App, Render } from '#components'
-import { api } from '#models'
+import { api, utils } from '#models'
+import { segment } from '#lib'
 import moment from 'moment'
 
 const appInfo = {
@@ -62,7 +63,90 @@ const rule = {
       await e.reply(img)
       return true
     }
+  },
+  queue: {
+    reg: App.getReg('探索队列'),
+    cfg: {
+      tips: true
+    },
+    fnc: async e => {
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
+        return true
+      }
+      const country = await api.IUserAccountService.GetUserCountry(token.accessToken, token.steamId)
+      if (!country) {
+        await e.reply('获取地区代码失败...')
+        return true
+      }
+      const { appids, skipped } = await api.IStoreService.GetDiscoveryQueue(token.accessToken, country)
+      const infoList = await api.IStoreBrowseService.GetItems(appids, { include_assets: true })
+      const games = appids.map(appid => {
+        const info = infoList[appid]
+        if (!info) {
+          return {
+            appid
+          }
+        }
+        return {
+          appid,
+          name: info.name,
+          image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets.header),
+          price: getPrice(info.best_purchase_option, info.is_free)
+        }
+      })
+      const data = [{
+        title: `${await utils.bot.getUserName(e.self_id, e.user_id, e.group_id)}的探索队列`,
+        desc: [`已跳过${skipped}个游戏`, '#steam探索队列跳过+appid', '#steam探索队列全部跳过'],
+        games
+      }]
+      const img = await Render.render('inventory/index', { data })
+      await e.reply(img)
+      return true
+    }
+  },
+  queueSkip: {
+    reg: App.getReg('探索队列(?:全部)?跳过\\s*(\\d*)'),
+    fnc: async e => {
+      const token = await utils.steam.getAccessToken(e.user_id)
+      if (!token.success) {
+        await e.reply([segment.at(e.user_id), '\n', token.message])
+        return true
+      }
+      if (e.msg.includes('全部')) {
+        const country = await api.IUserAccountService.GetUserCountry(token.accessToken, token.steamId)
+        if (!country) {
+          await e.reply('获取地区代码失败...')
+          return true
+        }
+        const appids = (await api.IStoreService.GetDiscoveryQueue(token.accessToken, country)).appids
+        await Promise.all(appids.map(async appid => await api.IStoreService.SkipDiscoveryQueueItem(token.accessToken, appid)))
+        await e.reply('已跳过所有游戏~')
+        return true
+      }
+      const appid = rule.queueSkip.reg.exec(e.msg)[1]
+      if (!appid) {
+        await e.reply('请输入appid~')
+        return true
+      }
+      await api.IStoreService.SkipDiscoveryQueueItem(token.accessToken, appid)
+      await e.reply(`已跳过游戏${appid}~`)
+      return true
+    }
   }
+}
+
+function getPrice (price, isFree) {
+  return price?.discount_pct
+    ? {
+        original: price.formatted_original_price,
+        discount: price.discount_pct,
+        current: price.formatted_final_price
+      }
+    : {
+        original: isFree ? '免费开玩' : price.formatted_final_price || ''
+      }
 }
 
 export const app = new App(appInfo, rule).create()

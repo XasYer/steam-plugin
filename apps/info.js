@@ -9,6 +9,15 @@ const appInfo = {
 }
 
 const rule = {
+  game: {
+    reg: App.getReg('(?:游戏|game|apps?)(?:详细|info|信息|详情)\\s*(\\d+)'),
+    fnc: async e => {
+      const appid = rule.game.reg.exec(e.msg)[1]
+      // TODO: 占位
+      await e.reply(`https://store.steampowered.com/app/${appid}/_/`)
+      return true
+    }
+  },
   info: {
     reg: App.getReg('(?:信息|状态|info|status)\\s*(\\d*)'),
     cfg: {
