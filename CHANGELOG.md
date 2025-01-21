@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.10.0](https://github.com/XasYer/steam-plugin/compare/v1.9.2...v1.10.0) (2025-01-21)
+
+
+### Features
+
+* steam探索队列 & 跳过探索队列 ([e0cf21d](https://github.com/XasYer/steam-plugin/commit/e0cf21dc1194ffbb134cb432600fffa97c833100))
+* 入库免费游戏 ([f724151](https://github.com/XasYer/steam-plugin/commit/f724151900b56919a5516261729547c2042ce363))
+* 家庭库存 & 客户端操作 ([382be88](https://github.com/XasYer/steam-plugin/commit/382be88251cb9ea9a972d351e01ce5e14603a80f))
+* 年度畅销排行 ([aadf098](https://github.com/XasYer/steam-plugin/commit/aadf0982736d1f4f978c922ecef95f5cbb20cdea))
+* 添加愿望单 & 删除愿望单 ([353b12a](https://github.com/XasYer/steam-plugin/commit/353b12a426d8f1102592f8a5e2319848416a76de))
+* 私密库存 & 添加删除私密游戏 & ak操作 ([78160ab](https://github.com/XasYer/steam-plugin/commit/78160ab58206ca28b1f6c81ba85dfc0e10ff0c48))
+* 购物车操作 添加 查看 删除 清空 ([6a4942a](https://github.com/XasYer/steam-plugin/commit/6a4942a704b94a8c8730a985ec1f0c9486be322a))
+
+
+### Bug Fixes
+
+* tip ([ae889b4](https://github.com/XasYer/steam-plugin/commit/ae889b41e02f7d5e9d7bc1e292546aa8f91c70bf))
+* 加个参数 ([17b4d8e](https://github.com/XasYer/steam-plugin/commit/17b4d8e972efbaa1692a404c6acb4e261098a5eb))
+* 忘记输出结果了 ([3327e66](https://github.com/XasYer/steam-plugin/commit/3327e66a0d828335ed283efcaaef97ccbdbcdbc8))
+* 文本错误 ([1a384ef](https://github.com/XasYer/steam-plugin/commit/1a384ef5f833b5e2cf911076fae3804f2fb93772))
+* 超出文本 ([66d63b4](https://github.com/XasYer/steam-plugin/commit/66d63b4541d3736569beca5a09dfe91b1a6669ca))
+* 超出文本 ([b914e02](https://github.com/XasYer/steam-plugin/commit/b914e0200ca9e7787d0c36e7a7d1031245f0b9a6))
+
+
+### Performance Improvements
+
+* steam状态增加3 ([7794efa](https://github.com/XasYer/steam-plugin/commit/7794efadc11b639b5e0329e8684c55205d332d20))
+* 优化入库流程 ([db11575](https://github.com/XasYer/steam-plugin/commit/db115756ebbd4437cc8d85fcc1be2a4bd6c95ea9))
+* 优化喵崽推送 ([e48eada](https://github.com/XasYer/steam-plugin/commit/e48eada190db397828747bb0e191cbd629785f2d))
+* 优化扫码登录 ([9e1e1fc](https://github.com/XasYer/steam-plugin/commit/9e1e1fca57260f8bc49ab3712993e76a7a028457))
+* 优化插件加载速度 ([3d30807](https://github.com/XasYer/steam-plugin/commit/3d308071d21944364965cd75e73f0a2899bdaab0))
+* 优化设置 ([48fbb6c](https://github.com/XasYer/steam-plugin/commit/48fbb6cac8adec9c0fed4078f99663e9a5dee54f))
+* 增加帮助 ([0b312e2](https://github.com/XasYer/steam-plugin/commit/0b312e28058d0af074244c4ef1e54b24bb532fdc))
+
 ## [1.9.2](https://github.com/XasYer/steam-plugin/compare/v1.9.1...v1.9.2) (2025-01-09)
 
 
