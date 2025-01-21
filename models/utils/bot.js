@@ -2,6 +2,22 @@ import { Bot, common, logger, segment } from '#lib'
 import { Config, Version } from '#components'
 
 /**
+ * 获得bot
+ * @param {string} botId
+ * @returns {any}
+ */
+export function getBot (botId) {
+  switch (Version.BotName) {
+    case 'Karin':
+      return Bot.getBot(botId)
+    case 'Trss-Yunzai':
+      return Config.push.randomBot ? Bot : Bot[botId]
+    case 'Miao-Yunzai':
+      return Bot.uin == 88888 ? Bot[botId] : Bot
+  }
+}
+
+/**
  * 获取用户名
  * @param {string} botId
  * @param {string} uid
@@ -9,9 +25,9 @@ import { Config, Version } from '#components'
  */
 export async function getUserName (botId, uid, gid) {
   try {
+    const bot = getBot(botId)
     if (Version.BotName === 'Karin') {
       if (gid) {
-        const bot = Bot.getBot(botId)
         const info = await bot.GetGroupMemberInfo(gid, uid)
         return info.card || info.nick || info.uid || uid
       } else {
@@ -19,7 +35,6 @@ export async function getUserName (botId, uid, gid) {
       }
     } else {
       uid = Number(uid) || uid
-      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
       if (gid) {
         gid = Number(gid) || gid
         const group = bot.pickGroup(gid)
@@ -46,13 +61,12 @@ export async function getUserName (botId, uid, gid) {
    */
 export async function getUserAvatar (botId, uid, gid) {
   try {
+    const bot = getBot(botId)
     if (Version.BotName === 'Karin') {
-      const bot = Bot.getBot(botId)
       const avatarUrl = await bot.getAvatarUrl(uid, 100)
       return avatarUrl || ''
     } else {
       uid = Number(uid) || uid
-      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
       if (gid) {
         gid = Number(gid) || gid
         const group = bot.pickGroup(gid)
@@ -78,11 +92,11 @@ export async function getUserAvatar (botId, uid, gid) {
 export async function getGroupMemberList (botId, groupId) {
   const result = []
   try {
+    const bot = getBot(botId)
     if (Version.BotName === 'Karin') {
-      const memberList = await Bot.getBot(botId).GetGroupMemberList(groupId)
+      const memberList = await bot.GetGroupMemberList(groupId)
       result.push(...memberList.map(i => i.uid))
     } else {
-      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
       const memberMap = await bot.pickGroup(groupId).getMemberMap()
       result.push(...memberMap.keys())
     }
@@ -123,8 +137,8 @@ export async function sendGroupMsg (botId, gid, msg) {
     if (Version.BotName === 'Karin') {
       return await Bot.sendMsg(botId, { scene: 'group', peer: gid }, msg)
     } else {
+      const bot = getBot(botId)
       gid = Number(gid) || gid
-      const bot = (Config.push.randomBot && Version.BotName === 'Trss-Yunzai') ? Bot : Bot[botId]
       return await bot.pickGroup(gid).sendMsg(msg)
     }
   } catch (error) {

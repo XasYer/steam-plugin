@@ -377,3 +377,44 @@ export async function getGameSchineseInfo (appids) {
     return {}
   }
 }
+
+/**
+ * 数字对应的语言中文
+ * @param {number} elanguage
+ * @returns {string}
+ */
+export function getElanguageCN (elanguage) {
+  return [
+    '英语',
+    '德语',
+    '法语',
+    '意大利语',
+    '韩语',
+    '西班牙语',
+    '简体中文',
+    '繁体中文',
+    '俄语',
+    '泰语',
+    '日语',
+    '葡萄牙语（巴西）',
+    '波兰语',
+    '丹麦语',
+    '荷兰语',
+    '芬兰语',
+    '挪威语',
+    '瑞典语',
+    '匈牙利语',
+    '捷克语',
+    '罗马尼亚语',
+    '土耳其语',
+    '葡萄牙语（葡萄牙）',
+    '保加利亚语',
+    '希腊语',
+    '不知道',
+    '乌克兰语',
+    '西班牙语（拉丁美洲）',
+    '越南语',
+    '不知道',
+    '印尼语'
+  ][elanguage] || '不知道'
+}
