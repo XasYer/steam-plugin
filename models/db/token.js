@@ -150,3 +150,11 @@ export async function TokenTableDeleteByUserIdAndSteamId (userId, steamId) {
 export async function TokenTableGetAll () {
   return await TokenTable.findAll().then(res => res.map(item => item.dataValues))
 }
+
+/**
+ * 获得绑定的accessToken数量
+ * @returns {Promise<number>}
+ */
+export async function TokenTableCount () {
+  return await TokenTable.count()
+}

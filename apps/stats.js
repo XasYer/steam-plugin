@@ -158,6 +158,15 @@ const rule = {
       await e.reply(img)
       return true
     }
+  },
+  userStats: {
+    reg: App.getReg('用户统计'),
+    fnc: async e => {
+      const steamIdCount = await db.UserTableCount()
+      const accessTokenCount = await db.TokenTableCount()
+      await e.reply(`绑定: ${steamIdCount}\n扫码: ${accessTokenCount}`)
+      return true
+    }
   }
 }
 

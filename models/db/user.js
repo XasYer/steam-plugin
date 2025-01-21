@@ -190,3 +190,11 @@ export async function UserTableGetDataByUserId (userId) {
 export async function UserTableGetAllSteamIdAndUserId () {
   return await UserTable.findAll().then(result => result?.map(i => i.dataValues))
 }
+
+/**
+ * 获得绑定的steamId数量
+ * @returns {Promise<number>}
+ */
+export async function UserTableCount () {
+  return await UserTable.count()
+}
