@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.1](https://github.com/XasYer/steam-plugin/compare/v1.10.0...v1.10.1) (2025-01-22)
+
+
+### Bug Fixes
+
+* 使用GetPlayerLinkDetails获取状态时会返回非steam游戏 ([61fe67b](https://github.com/XasYer/steam-plugin/commit/61fe67bf4fe307978c2d008ffbecd96be41289a4))
+
+
+### Performance Improvements
+
+* steam用户统计 ([cb4c0bd](https://github.com/XasYer/steam-plugin/commit/cb4c0bd9975fa50ad567e6bc11e48ab38fbb4483))
+
 ## [1.10.0](https://github.com/XasYer/steam-plugin/compare/v1.9.2...v1.10.0) (2025-01-21)
 
 
