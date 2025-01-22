@@ -1,5 +1,4 @@
-import { utils, db, api } from '#models'
-import { segment } from '#lib'
+import { utils, api } from '#models'
 import { Render, App, Config } from '#components'
 import _ from 'lodash'
 
@@ -12,17 +11,11 @@ const rule = {
   rollGame: {
     reg: App.getReg('(玩什么|玩啥|roll)(游戏)?\\s*(\\d*)'),
     cfg: {
-      tips: true
+      tips: true,
+      steamId: true
     },
-    fnc: async e => {
-      const textId = rule.rollGame.reg.exec(e.msg)?.[3]
-      const uid = utils.bot.getAtUid(e.at, e.user_id)
-      const steamId = textId ? utils.steam.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
-      if (!steamId) {
-        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
-        return true
-      }
-      const nickname = textId || await utils.bot.getUserName(e.self_id, uid, e.group_id)
+    fnc: async (e, { steamId, uid }) => {
+      const nickname = await utils.bot.getUserName(e.self_id, uid, e.group_id) || steamId
       const screenshotOptions = {
         title: '',
         games: [],
@@ -31,8 +24,7 @@ const rule = {
 
       const games = await api.IPlayerService.GetOwnedGames(steamId)
       if (!games.length) {
-        await e.reply([segment.at(uid), '\n', Config.tips.inventoryEmptyTips])
-        return true
+        return Config.tips.inventoryEmptyTips
       }
 
       const configCount = Config.other.rollGameCount
@@ -45,11 +37,9 @@ const rule = {
         return i
       })
       screenshotOptions.desc = '以下游戏从您的游戏库中通过完全随机的方式选出，不代表任何个人或团体的观点'
-      const img = await Render.render('inventory/index', {
+      return await Render.render('inventory/index', {
         data: [screenshotOptions]
       })
-      await e.reply(img)
-      return true
     }
   }
 }

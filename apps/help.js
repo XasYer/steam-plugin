@@ -44,13 +44,11 @@ const rule = {
         colCount: token.success ? 4 : 3,
         colWidth: 275
       })
-      const img = await Render.render('help/index', {
+      return await Render.render('help/index', {
         helpGroup,
         ...themeData,
         scale: 1.4
       })
-      await e.reply(img)
-      return true
     }
   }
   // version: {

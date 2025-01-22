@@ -1,6 +1,5 @@
-import { App, Config, Render } from '#components'
-import { utils, db, api } from '#models'
-import { segment } from '#lib'
+import { App, Render } from '#components'
+import { utils, api } from '#models'
 import _ from 'lodash'
 
 const appInfo = {
@@ -12,53 +11,34 @@ const rule = {
   achievements: {
     reg: App.getReg('(成就|统计)\\s*(\\d+|\\d+[-:\\s]\\d+)?'),
     cfg: {
-      tips: true
+      tips: true,
+      steamId: true,
+      appid: true
     },
-    fnc: async e => {
-      const regRet = rule.achievements.reg.exec(e.msg)
-      const textId = regRet[2]?.trim()
-      if (!textId) {
-        await e.reply([segment.at(e.user_id), '\n需要带上游戏的appid哦'])
-        return true
-      }
-      const uid = utils.bot.getAtUid(e.at, e.user_id)
-      const { steamId, appid } = await (async () => {
-        if (/[-:\s]/.test(textId)) {
-          const [appid, steamId] = textId.split(/[-:\s]/)
-          return { steamId, appid }
-        }
-        const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
-        return { steamId, appid: textId }
-      })()
-      if (!steamId) {
-        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
-        return true
-      }
+    fnc: async (e, { appid, steamId, uid }) => {
+      const type = e.msg.includes('成就') ? '成就' : '统计'
       // 先获取游戏的成就列表
       const achievementsByGame = await api.ISteamUserStats.GetSchemaForGame(appid).catch(() => {})
       if (!achievementsByGame || !achievementsByGame.availableGameStats) {
-        await e.reply([segment.at(uid), `\n没有找到${appid}的成就信息`])
-        return true
+        return `没有找到${appid}的成就信息`
       }
       const achievementsByUser = await api.ISteamUserStats.GetUserStatsForGame(appid, steamId).catch(() => {})
       if (!achievementsByUser || !achievementsByUser.achievements) {
-        await e.reply([segment.at(uid), `\n没有找到${steamId}在${appid}的成就信息`])
-        return true
+        return `没有找到${steamId}在${appid}的成就信息`
       }
       const nickname = await utils.bot.getUserName(e.self_id, uid, e.group_id)
       const data = [
         {
-          title: `${nickname}的${achievementsByGame.gameName} ${regRet[1]}统计`,
+          title: `${nickname}的${achievementsByGame.gameName} ${type}统计`,
           games: [{
             name: achievementsByGame.gameName,
             appid
           }]
         }
       ]
-      if (regRet[1] === '成就') {
+      if (type === '成就') {
         if (!achievementsByGame.availableGameStats.achievements?.length) {
-          await e.reply([segment.at(uid), `\n${achievementsByGame.gameName}好像没有成就呢`])
-          return true
+          return `${achievementsByGame.gameName}好像没有成就呢`
         }
         const completeAchievements = []
         const unCompleteAchievements = []
@@ -88,10 +68,9 @@ const rule = {
             games: unCompleteAchievements
           }
         )
-      } else if (regRet[1] === '统计') {
+      } else {
         if (!achievementsByGame.availableGameStats.stats?.length) {
-          await e.reply([segment.at(uid), `\n${achievementsByGame.gameName}好像没有统计呢`])
-          return true
+          return `${achievementsByGame.gameName}好像没有统计呢`
         }
         const completeStats = achievementsByUser.stats.map(i => {
           const item = achievementsByGame.availableGameStats.stats.find(j => j.name === i.name)
@@ -114,27 +93,20 @@ const rule = {
           }
         )
       }
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   achievementStats: {
     reg: App.getReg('成就统计\\s*(\\d*)'),
     cfg: {
-      tips: true
+      tips: true,
+      appid: true
     },
-    fnc: async e => {
-      const appid = rule.achievementStats.reg.exec(e.msg)[1]
-      if (!appid) {
-        await e.reply([segment.at(e.user_id), '\n需要带上游戏的appid哦'])
-        return true
-      }
+    fnc: async (e, { appid }) => {
       // 先获取游戏的成就列表
       const achievementsByGame = await api.ISteamUserStats.GetSchemaForGame(appid)
       if (!achievementsByGame || !achievementsByGame.availableGameStats) {
-        await e.reply([segment.at(e.user_id), `\n没有找到${appid}的成就信息`])
-        return true
+        return `没有找到${appid}的成就信息`
       }
       // 全球统计
       const achievements = await api.ISteamUserStats.GetGlobalAchievementPercentagesForApp(appid)
@@ -166,9 +138,7 @@ const rule = {
         desc: `共${games.length}个`,
         games: _.orderBy(games, 'percent', 'desc')
       })
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   }
 }

@@ -43,20 +43,18 @@ const rule = {
       const method = api[interfaceName][methodName]
       const methodParams = getParams(method)
       const uid = utils.bot.getAtUid(e.at, e.user_id)
-      const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
+      const steamId = await db.user.getBind(uid)
       if (!steamId) {
         await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
         return true
       }
       const hasAccessToken = /{access_?token}/i.test(e.msg)
       if (hasAccessToken && uid != e.user_id) {
-        await e.reply([segment.at(e.user_id), '\n', '只能操作自己的accessToken'])
-        return true
+        return '只能操作自己的accessToken'
       }
       const token = hasAccessToken && await utils.steam.getAccessToken(uid, steamId)
       if (hasAccessToken && !token.success) {
-        await e.reply([segment.at(uid), '\n', '没有绑定accessToken'])
-        return true
+        return '没有绑定accessToken'
       }
       const replaceParams = (text) => {
         if (Array.isArray(text)) {

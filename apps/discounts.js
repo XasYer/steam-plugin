@@ -1,6 +1,5 @@
 import { App, Render } from '#components'
 import { api, utils } from '#models'
-import { segment } from '#lib'
 import moment from 'moment'
 
 const appInfo = {
@@ -59,28 +58,21 @@ const rule = {
         }
         data.push(key)
       }
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   queue: {
     reg: App.getReg('探索队列'),
     cfg: {
-      tips: true
+      tips: true,
+      accessToken: true
     },
-    fnc: async e => {
-      const token = await utils.steam.getAccessToken(e.user_id)
-      if (!token.success) {
-        await e.reply([segment.at(e.user_id), '\n', token.message])
-        return true
-      }
-      const country = await api.IUserAccountService.GetUserCountry(token.accessToken, token.steamId)
+    fnc: async (e, { accessToken, steamId }) => {
+      const country = await api.IUserAccountService.GetUserCountry(accessToken, steamId)
       if (!country) {
-        await e.reply('获取地区代码失败...')
-        return true
+        return '获取地区代码失败...'
       }
-      const { appids, skipped } = await api.IStoreService.GetDiscoveryQueue(token.accessToken, country)
+      const { appids, skipped } = await api.IStoreService.GetDiscoveryQueue(accessToken, country)
       const infoList = await api.IStoreBrowseService.GetItems(appids, { include_assets: true })
       const games = appids.map(appid => {
         const info = infoList[appid]
@@ -101,38 +93,33 @@ const rule = {
         desc: [`已跳过${skipped}个游戏`, '#steam探索队列跳过+appid', '#steam探索队列全部跳过'],
         games
       }]
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   queueSkip: {
-    reg: App.getReg('探索队列(?:全部)?跳过\\s*(\\d*)'),
-    fnc: async e => {
-      const token = await utils.steam.getAccessToken(e.user_id)
-      if (!token.success) {
-        await e.reply([segment.at(e.user_id), '\n', token.message])
-        return true
+    reg: App.getReg('探索队列跳过\\s*(\\d*)'),
+    cfg: {
+      accessToken: true,
+      appid: true
+    },
+    fnc: async (e, { accessToken, appid }) => {
+      await api.IStoreService.SkipDiscoveryQueueItem(accessToken, appid)
+      return `已跳过游戏${appid}~`
+    }
+  },
+  queueSkipAll: {
+    reg: App.getReg('探索队列全部跳过'),
+    cfg: {
+      accessToken: true
+    },
+    fnc: async (e, { accessToken, steamId }) => {
+      const country = await api.IUserAccountService.GetUserCountry(accessToken, steamId)
+      if (!country) {
+        return '获取地区代码失败...'
       }
-      if (e.msg.includes('全部')) {
-        const country = await api.IUserAccountService.GetUserCountry(token.accessToken, token.steamId)
-        if (!country) {
-          await e.reply('获取地区代码失败...')
-          return true
-        }
-        const appids = (await api.IStoreService.GetDiscoveryQueue(token.accessToken, country)).appids
-        await Promise.all(appids.map(async appid => await api.IStoreService.SkipDiscoveryQueueItem(token.accessToken, appid)))
-        await e.reply('已跳过所有游戏~')
-        return true
-      }
-      const appid = rule.queueSkip.reg.exec(e.msg)[1]
-      if (!appid) {
-        await e.reply('请输入appid~')
-        return true
-      }
-      await api.IStoreService.SkipDiscoveryQueueItem(token.accessToken, appid)
-      await e.reply(`已跳过游戏${appid}~`)
-      return true
+      const appids = (await api.IStoreService.GetDiscoveryQueue(accessToken, country)).appids
+      await Promise.all(appids.map(async appid => await api.IStoreService.SkipDiscoveryQueueItem(accessToken, appid)))
+      return '已跳过所有游戏~'
     }
   }
 }

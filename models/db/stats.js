@@ -12,7 +12,7 @@ import { sequelize, DataTypes, fn, col } from './base.js'
  * @property {number} playTotal 游玩总次数
  * @property {number} playTime 游玩总时间
  */
-const GameStatsTable = sequelize.define('gameStats', {
+const gameTable = sequelize.define('gameStats', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
@@ -68,7 +68,7 @@ const GameStatsTable = sequelize.define('gameStats', {
  * @property {number} onlineTotal 上线总次数
  * @property {number} onlineTime 在线总时间 单位秒
  */
-const UserStatsTable = sequelize.define('userStats', {
+const userTable = sequelize.define('userStats', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
@@ -114,8 +114,8 @@ const UserStatsTable = sequelize.define('userStats', {
   freezeTableName: true
 })
 
-await UserStatsTable.sync()
-await GameStatsTable.sync()
+await userTable.sync()
+await gameTable.sync()
 
 /**
  * 更新游玩统计
@@ -129,7 +129,7 @@ await GameStatsTable.sync()
  * @param {number} value 增加的值 默认1
  * @returns {Promise<boolean>}
  */
-export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, name, field, value = 1) {
+export async function set (userId, groupId, botId, steamId, appid, name, field, value = 1) {
   value = Number(value)
   if (!value) {
     return false
@@ -142,7 +142,7 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
   const transaction = await sequelize.transaction()
   try {
     // 更新用户统计表
-    const [UserUpdateRows] = await UserStatsTable.update({
+    const [UserUpdateRows] = await userTable.update({
       [field]: sequelize.literal(`${field} + ${value}`)
     }, {
       where: {
@@ -171,12 +171,12 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
       } else if (field === 'playTime') {
         data.playTotal = 1
       }
-      await UserStatsTable.create(data, { transaction })
+      await userTable.create(data, { transaction })
     }
 
     if (['playTotal', 'playTime'].includes(field)) {
       // 更新游戏统计表
-      const [GameUpdateRows] = await GameStatsTable.update({
+      const [GameUpdateRows] = await gameTable.update({
         [field]: sequelize.literal(`${field} + ${value}`)
       }, {
         where: {
@@ -204,7 +204,7 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
         if (field === 'playTime') {
           data.playTotal = 1
         }
-        await GameStatsTable.create(data, { transaction })
+        await gameTable.create(data, { transaction })
       }
     }
 
@@ -221,13 +221,13 @@ export async function StatsTableUpdate (userId, groupId, botId, steamId, appid, 
  * @param {string} steamId
  * @returns {Promise<boolean>}
  */
-export async function StatsTableDelete (steamId, transaction) {
+export async function del (steamId, transaction) {
   const hasTransaction = !!transaction
   if (!hasTransaction) {
     transaction = await sequelize.transaction()
   }
   try {
-    for (const Table of [UserStatsTable, GameStatsTable]) {
+    for (const Table of [userTable, gameTable]) {
       await Table.destroy({
         where: {
           steamId
@@ -256,7 +256,7 @@ export async function StatsTableDelete (steamId, transaction) {
  *   userPlayTime: Array<{ userId: string, botId: string, steamId: string, playTime: number }>
  * }>}
  */
-export async function StatsTableGetByGroupId (groupId, limit = 10) {
+export async function getAllByGroupId (groupId, limit = 10) {
   const where = { groupId: String(groupId) }
   const result = {
     gamePlayTotal: [],
@@ -267,12 +267,12 @@ export async function StatsTableGetByGroupId (groupId, limit = 10) {
     userPlayTime: []
   }
   const keys = [
-    { table: UserStatsTable, ret: 'userPlayTotal', key: 'playTotal', type: 'user' },
-    { table: UserStatsTable, ret: 'userPlayTime', key: 'playTime', type: 'user' },
-    { table: UserStatsTable, ret: 'userOnlineTotal', key: 'onlineTotal', type: 'user' },
-    { table: UserStatsTable, ret: 'userOnlineTime', key: 'onlineTime', type: 'user' },
-    { table: GameStatsTable, ret: 'gamePlayTotal', key: 'playTotal', type: 'game' },
-    { table: GameStatsTable, ret: 'gamePlayTime', key: 'playTime', type: 'game' }
+    { table: userTable, ret: 'userPlayTotal', key: 'playTotal', type: 'user' },
+    { table: userTable, ret: 'userPlayTime', key: 'playTime', type: 'user' },
+    { table: userTable, ret: 'userOnlineTotal', key: 'onlineTotal', type: 'user' },
+    { table: userTable, ret: 'userOnlineTime', key: 'onlineTime', type: 'user' },
+    { table: gameTable, ret: 'gamePlayTotal', key: 'playTotal', type: 'game' },
+    { table: gameTable, ret: 'gamePlayTime', key: 'playTime', type: 'game' }
   ]
   for (const i of keys) {
     const options = {

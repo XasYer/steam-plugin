@@ -1,5 +1,4 @@
 import { App, Config, Render } from '#components'
-import { segment } from '#lib'
 import { db, utils, task } from '#models'
 import _ from 'lodash'
 
@@ -16,50 +15,48 @@ const rule = {
     fnc: async e => {
       const g = utils.bot.checkGroup(e.group_id)
       if (!g.success) {
-        await e.reply(g.message)
-        return true
+        return g.message
       }
       const textId = rule.push.reg.exec(e.msg)[1]
       const open = e.msg.includes('开启')
       // 如果附带了steamId
       if (textId) {
         let steamId = utils.steam.getSteamId(textId)
-        const user = await db.UserTableGetDataBySteamId(steamId)
+        const user = await db.user.getBySteamId(steamId)
         // 如果没有人绑定这个steamId则判断是否为主人,主人才能添加推送
         if (((!user && e.isMaster) || (user && user.userId == e.user_id))) {
           const uid = e.isMaster ? utils.bot.getAtUid(_.isEmpty(e.at) ? e.user_id : e.at, '0') : e.user_id
           if (uid != '0') {
-            const userBindAll = await db.UserTableGetDataByUserId(uid)
+            const userBindAll = await db.user.getAllByUserId(uid)
             const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
             steamId = index >= 0 ? userBindAll[index].steamId : steamId
           }
           if (open) {
-            await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([uid == '0' ? '' : segment.at(uid), `已开启推送${steamId}到${e.group_id}`])
+            await db.push.add(uid, steamId, e.self_id, e.group_id)
+            return `已开启推送${steamId}到${e.group_id}`
           } else {
-            await db.PushTableDelData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([uid == '0' ? '' : segment.at(uid), `已关闭推送${steamId}到${e.group_id}`])
+            await db.push.set(uid, steamId, e.self_id, e.group_id)
+            return `已关闭推送${steamId}到${e.group_id}`
           }
         } else {
-          await e.reply('只能开启或关闭自己的推送哦')
+          return '只能开启或关闭自己的推送哦'
         }
       } else {
         const uid = utils.bot.getAtUid(e.isMaster ? e.at : '', e.user_id)
         // 没有附带steamId则使用绑定的steamId
-        const steamId = await db.UserTableGetBindSteamIdByUserId(uid)
+        const steamId = await db.user.getBind(uid)
         if (steamId) {
           if (open) {
-            await db.PushTableAddData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([segment.at(uid), `已开启推送${steamId}到${e.group_id}`])
+            await db.push.add(uid, steamId, e.self_id, e.group_id)
+            return `已开启推送${steamId}到${e.group_id}`
           } else {
-            await db.PushTableDelData(uid, steamId, e.self_id, e.group_id)
-            await e.reply([segment.at(uid), `已关闭推送${steamId}到${e.group_id}`])
+            await db.push.set(uid, steamId, e.self_id, e.group_id)
+            return `已关闭推送${steamId}到${e.group_id}`
           }
         } else {
-          await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
+          return Config.tips.noSteamIdTips
         }
       }
-      return true
     }
   },
   list: {
@@ -67,13 +64,11 @@ const rule = {
     fnc: async e => {
       const g = utils.bot.checkGroup(e.group_id)
       if (!g.success) {
-        await e.reply(g.message)
-        return true
+        return g.message
       }
-      const list = await db.PushTableGetDataByGroupId(e.group_id, true)
+      const list = await db.push.getAllByGroupId(e.group_id, true)
       if (!list.length) {
-        await e.reply('本群还没有推送用户哦')
-        return true
+        return '本群还没有推送用户哦'
       }
       const userList = []
       for (const i of list) {
@@ -90,13 +85,7 @@ const rule = {
         desc: `共${list.length}个推送用户`,
         games: userList
       }]
-      const img = await Render.render('inventory/index', { data })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('制作图片出错辣! 再试一次吧')
-      }
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   now: {
@@ -108,29 +97,25 @@ const rule = {
       const isAll = e.msg.includes('全部')
       let list = []
       if (isAll) {
-        list = await db.PushTableGetAllData(false)
+        list = await db.push.getAll(false)
         if (!list.length) {
-          await e.reply([Config.tips.noSteamIdTips])
-          return true
+          return Config.tips.noSteamIdTips
         }
       } else if (!e.group_id) {
-        await e.reply('请在群内使用')
-        return true
+        return '请在群内使用'
       } else {
         const memberList = await utils.bot.getGroupMemberList(e.self_id, e.group_id)
         list = memberList.length
-          ? await db.PushTableGetDataByUserList(memberList, false)
-          : await db.PushTableGetDataByGroupId(e.group_id, false)
+          ? await db.push.getAllByUserIds(memberList, false)
+          : await db.push.getAllByGroupId(e.group_id, false)
         if (!list.length) {
-          await e.reply([Config.tips.noSteamIdTips])
-          return true
+          return '本群还没有推送用户哦'
         }
       }
       list = _.uniqBy(list, 'steamId')
       const userState = await utils.steam.getUserSummaries(list.map(i => i.steamId))
       if (!userState.length) {
-        await e.reply('获取玩家状态失败, 再试一次叭')
-        return true
+        return '获取玩家状态失败, 再试一次叭'
       }
       const playing = []
       const notPlaying = []
@@ -176,9 +161,7 @@ const rule = {
           games: notPlaying
         }
       ]
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   }
 }

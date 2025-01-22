@@ -21,7 +21,7 @@ export function startTimer () {
       // 获取现在的时间
       const now = Math.floor(Date.now() / 1000)
       // 从推送表中获取所有数据
-      const PushData = await db.PushTableGetAllData(Config.push.statusFilterGroup)
+      const PushData = await db.push.getAll(Config.push.statusFilterGroup)
       // 所有的steamId
       const steamIds = _.uniq(PushData.map(i => i.steamId))
       // 获取所有steamId现在的状态
@@ -76,7 +76,7 @@ export function startTimer () {
                   type: 'start'
                 })
               }
-              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新游玩统计数据失败', e.message))
+              db.stats.set(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'playTotal', 1).catch(e => logger.error('更新游玩统计数据失败', e.message))
             }
             if (lastPlay.appid && lastPlay.appid != player.gameid) {
               const time = now - lastPlay.playTime
@@ -91,15 +91,15 @@ export function startTimer () {
                   type: 'end'
                 })
               }
-              db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新结束游玩统计数据失败', e.message))
+              db.stats.set(i.userId, i.groupId, i.botId, i.steamId, lastPlay.appid, lastPlay.name, 'playTime', time).catch(e => logger.error('更新结束游玩统计数据失败', e.message))
             }
             // 在线状态改变
             if (state.state != lastPlay.state) {
               const time = now - lastPlay.onlineTime
               if (state.state === 0) {
-                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新离线统计数据失败', e.message))
+                db.stats.set(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTime', time).catch(e => logger.error('更新离线统计数据失败', e.message))
               } else if (state.state === 1) {
-                db.StatsTableUpdate(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新在线统计数据失败', e.message))
+                db.stats.set(i.userId, i.groupId, i.botId, i.steamId, player.gameid, player.gameextrainfo, 'onlineTotal', 1).catch(e => logger.error('更新在线统计数据失败', e.message))
               } else {
                 continue
               }

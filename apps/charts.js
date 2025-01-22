@@ -53,9 +53,7 @@ const rule = {
           games
         }
       ]
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   topnewreleases: {
@@ -91,9 +89,7 @@ const rule = {
           })
         })
       }
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   topsellers: {
@@ -144,9 +140,7 @@ const rule = {
           games
         }
       ]
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   beseOfYear: {
@@ -166,8 +160,7 @@ const rule = {
       }).then(res => res.data)
       const announcementGid = /ANNOUNCEMENT_GID&quot;:&quot;(\d+)/.exec(yearHtml)?.[1]
       if (!announcementGid) {
-        await e.reply(`获取${year}年度最佳游戏失败...`)
-        return true
+        return `获取${year}年度最佳游戏失败...`
       }
       const event = await api.store.ajaxgetpartnerevent(39049601, announcementGid)
       // 将返回的json数据转为正常json格式
@@ -223,13 +216,12 @@ const rule = {
       // 获取对应游戏信息
       const appids = data.map(i => i.games || []).flat()
       if (!appids.length) {
-        await e.reply(`${year}年没有${regRet[1] || '热玩游戏'}的排行呢`)
-        return true
+        return `${year}年没有${regRet[1] || '热玩游戏'}的排行呢`
       }
       const infos = await api.IStoreBrowseService.GetItems(appids, {
         include_assets: true
       })
-      const img = await Render.render('inventory/index', {
+      return await Render.render('inventory/index', {
         data: data.map(i => {
           if (i.games?.length) {
             i.games = i.games.map(appid => {
@@ -250,8 +242,6 @@ const rule = {
           return i
         })
       })
-      await e.reply(img)
-      return true
     }
   }
 }

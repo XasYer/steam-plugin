@@ -13,7 +13,7 @@ import { sequelize, DataTypes } from './base.js'
  * @property {number} refreshTokenExpires refreshToken过期时间 unix时间戳
  */
 
-const TokenTable = sequelize.define('token', {
+const table = sequelize.define('token', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
@@ -46,7 +46,7 @@ const TokenTable = sequelize.define('token', {
   freezeTableName: true
 })
 
-await TokenTable.sync()
+await table.sync()
 
 /**
  * 添加accessToken到userId
@@ -56,7 +56,7 @@ await TokenTable.sync()
  * @param {string?} cookie
  * @returns {Promise<TokenColumns|null>}
  */
-export async function TokenTableAddData (userId, accessToken, cookie = '', refreshToken = '') {
+export async function set (userId, accessToken, cookie = '', refreshToken = '') {
   userId = String(userId)
 
   const jwt = utils.steam.decodeAccessTokenJwt(accessToken)
@@ -79,7 +79,7 @@ export async function TokenTableAddData (userId, accessToken, cookie = '', refre
     extraData.cookie = cookie
   }
 
-  const existingRecord = await TokenTable.findOne({
+  const existingRecord = await table.findOne({
     where: baseData
   })
 
@@ -91,7 +91,7 @@ export async function TokenTableAddData (userId, accessToken, cookie = '', refre
       ...extraData
     }
 
-    return await TokenTable.create(newRecord).then(res => res.dataValues)
+    return await table.create(newRecord).then(res => res.dataValues)
   }
 }
 
@@ -101,10 +101,10 @@ export async function TokenTableAddData (userId, accessToken, cookie = '', refre
  * @param {string} steamId
  * @returns {Promise<TokenColumns|null>}
  */
-export async function TokenTableGetByUserIdAndSteamId (userId, steamId) {
+export async function getByUserIdAndSteamId (userId, steamId) {
   userId = String(userId)
   steamId = String(steamId)
-  return await TokenTable.findOne({
+  return await table.findOne({
     where: {
       userId,
       steamId
@@ -117,9 +117,9 @@ export async function TokenTableGetByUserIdAndSteamId (userId, steamId) {
  * @param {string} userId
  * @returns {Promise<TokenColumns[]|null>}
  */
-export async function TokenTableGetByUserId (userId) {
+export async function getAllByUserId (userId) {
   userId = String(userId)
-  return await TokenTable.findAll({
+  return await table.findAll({
     where: {
       userId
     }
@@ -132,10 +132,10 @@ export async function TokenTableGetByUserId (userId) {
  * @param {string} steamId
  * @returns
  */
-export async function TokenTableDeleteByUserIdAndSteamId (userId, steamId) {
+export async function del (userId, steamId) {
   userId = String(userId)
   steamId = String(steamId)
-  return await TokenTable.destroy({
+  return await table.destroy({
     where: {
       userId,
       steamId
@@ -147,14 +147,14 @@ export async function TokenTableDeleteByUserIdAndSteamId (userId, steamId) {
  * 查询所有accessToken
  * @returns {Promise<TokenColumns[]>}
  */
-export async function TokenTableGetAll () {
-  return await TokenTable.findAll().then(res => res.map(item => item.dataValues))
+export async function getAll () {
+  return await table.findAll().then(res => res.map(item => item.dataValues))
 }
 
 /**
  * 获得绑定的accessToken数量
  * @returns {Promise<number>}
  */
-export async function TokenTableCount () {
-  return await TokenTable.count()
+export async function count () {
+  return await table.count()
 }

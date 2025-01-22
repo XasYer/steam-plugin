@@ -15,8 +15,7 @@ const rule = {
     fnc: async e => {
       const name = rule.search.reg.exec(e.msg)[1].trim()
       if (!name) {
-        await e.reply('要搜什么?')
-        return true
+        return '要搜什么?'
       }
       const result = await api.store.search(name)
       const games = result.split('</a>').map(i => {
@@ -36,17 +35,14 @@ const rule = {
         }
       }).filter(Boolean)
       if (!games.length) {
-        await e.reply(`没有搜索到${name}相关的游戏, 换个关键词试试?`)
-        return true
+        return '没有搜索到相关的游戏, 换个关键词试试?'
       }
       const screenshotOptions = {
         title: `${name} 搜索结果`,
         games
 
       }
-      const img = await Render.render('inventory/index', { data: [screenshotOptions] })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data: [screenshotOptions] })
     }
   }
 }

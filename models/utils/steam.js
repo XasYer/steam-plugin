@@ -134,7 +134,7 @@ export async function getAccessToken (userId, steamId) {
     }
   }
   if (!steamId) {
-    steamId = await db.UserTableGetBindSteamIdByUserId(userId)
+    steamId = await db.user.getBind(userId)
     if (!steamId) {
       return {
         success: false,
@@ -142,7 +142,7 @@ export async function getAccessToken (userId, steamId) {
       }
     }
   }
-  const token = await db.TokenTableGetByUserIdAndSteamId(userId, steamId)
+  const token = await db.token.getByUserIdAndSteamId(userId, steamId)
   if (!token) {
     return {
       success: false,
@@ -157,17 +157,17 @@ export async function getAccessToken (userId, steamId) {
 
 /**
  * 刷新access_token
- * @param {import('models/db').TokenColumns|string} token
+ * @param {import('models/db').token.TokenColumns|string} token token列或uid
  * @param {boolean} force 是否强制刷新
- * @returns {Promise<import('models/db').TokenColumns|null>}
+ * @returns {Promise<import('models/db').token.TokenColumns|null>}
  */
 export async function refreshAccessToken (token, force = false) {
   if (typeof token === 'string') {
-    const steamId = await db.UserTableGetBindSteamIdByUserId(token)
+    const steamId = await db.user.getBind(token)
     if (!steamId) {
       return null
     }
-    token = await db.TokenTableGetByUserIdAndSteamId(token, steamId)
+    token = await db.token.getByUserIdAndSteamId(token, steamId)
   }
   if (!token) return null
   const now = moment().unix()
@@ -178,13 +178,13 @@ export async function refreshAccessToken (token, force = false) {
   // 判断refresh_token是否过期
   const rtExp = token.refreshTokenExpires - 60 * 30
   if (rtExp < now) {
-    await db.TokenTableDeleteByUserIdAndSteamId(token.userId, token.steamId)
+    await db.token.del(token.userId, token.steamId)
     throw new Error('refresh_token已过期, 请重新登录')
   }
   const accessToken = (isExpired || force) ? (await api.IAuthenticationService.GenerateAccessTokenForApp(token.refreshToken, token.steamId)).access_token : token.accessToken
   if (!accessToken) throw new Error('刷新access_token失败')
   const cookie = getCookie(token.steamId, accessToken)
-  return await db.TokenTableAddData(token.userId, accessToken, cookie)
+  return await db.token.set(token.userId, accessToken, cookie)
 }
 
 /**
@@ -228,7 +228,7 @@ export async function getUserSummaries (steamIds) {
   }
   if (type === 1) {
     let accessToken = null
-    const tokenList = await db.TokenTableGetAll()
+    const tokenList = await db.token.getAll()
     while (!accessToken) {
       const token = _.sample(tokenList)
       if (!token) {
@@ -354,7 +354,7 @@ export async function getGameSchineseInfo (appids) {
   }
   try {
     // 先从数据库中找出对应的游戏名
-    const appInfo = await db.GameTableGetGameByAppids(appids)
+    const appInfo = await db.game.get(appids)
     const cacheAppids = Object.keys(appInfo)
     // 找到没有被缓存的appid
     const noCacheAppids = _.difference(appids, cacheAppids)
@@ -370,7 +370,7 @@ export async function getGameSchineseInfo (appids) {
           })
         : null).filter(Boolean)
       // 缓存游戏名
-      await db.GameTableAddGame(cache)
+      await db.game.add(cache)
       Object.assign(appInfo, _.keyBy(cache, 'appid'))
     }
     return appInfo

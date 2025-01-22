@@ -11,7 +11,7 @@ import { sequelize, DataTypes, Op } from './base.js'
  * @property {boolean} isPush 是否开启推送
  */
 
-const PushTable = sequelize.define('push', {
+export const table = sequelize.define('push', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
@@ -42,7 +42,7 @@ const PushTable = sequelize.define('push', {
   freezeTableName: true
 })
 
-await PushTable.sync()
+await table.sync()
 
 /**
  * 添加一个推送群
@@ -53,12 +53,12 @@ await PushTable.sync()
  * @param {Transaction?} [transaction]
  * @returns {Promise<PushColumns>}
  */
-export async function PushTableAddData (userId, steamId, botId, groupId, transaction) {
+export async function add (userId, steamId, botId, groupId, transaction) {
   userId = String(userId)
   botId = String(botId)
   groupId = String(groupId)
   // 判断是否存在
-  const data = await PushTable.findOne({
+  const data = await table.findOne({
     where: {
       userId,
       steamId,
@@ -67,7 +67,7 @@ export async function PushTableAddData (userId, steamId, botId, groupId, transac
     }
   }).then(i => i?.dataValues)
   if (data) {
-    return await PushTable.update({
+    return await table.update({
       isPush: true
     }, {
       where: {
@@ -79,7 +79,7 @@ export async function PushTableAddData (userId, steamId, botId, groupId, transac
       transaction
     }).then(result => result?.[0])
   }
-  return await PushTable.create({
+  return await table.create({
     userId,
     steamId,
     botId,
@@ -97,11 +97,11 @@ export async function PushTableAddData (userId, steamId, botId, groupId, transac
  * @param {Transaction?} [transaction]
  * @returns {Promise<number>}
  */
-export async function PushTableDelData (userId, steamId, botId, groupId, transaction) {
+export async function set (userId, steamId, botId, groupId, transaction) {
   userId = String(userId)
   botId = String(botId)
   groupId = String(groupId)
-  return await PushTable.update({
+  return await table.update({
     isPush: false
   }, {
     where: {
@@ -119,8 +119,8 @@ export async function PushTableDelData (userId, steamId, botId, groupId, transac
  * @param {string} steamId
  * @returns {Promise<PushColumns[]>}
  */
-export async function PushTableGetDataBySteamId (steamId) {
-  return await PushTable.findAll({
+export async function getAllBySteamId (steamId) {
+  return await table.findAll({
     where: {
       steamId,
       isPush: true
@@ -135,7 +135,7 @@ export async function PushTableGetDataBySteamId (steamId) {
  * @param {boolean} [isPush=true] 是否只获取开启推送的用户
  * @returns {Promise<string[]>}
  */
-export async function PushTableGetAllSteamIdBySteamIdAndGroupId (userId, groupId, isPush = true) {
+export async function getAllByUserIdAndGroupId (userId, groupId, isPush = true) {
   if (!groupId) return []
   userId = String(userId)
   groupId = String(groupId)
@@ -146,7 +146,7 @@ export async function PushTableGetAllSteamIdBySteamIdAndGroupId (userId, groupId
   if (isPush) {
     where.isPush = true
   }
-  return await PushTable.findAll({
+  return await table.findAll({
     where
   }).then(result => result.map(item => item?.dataValues?.steamId))
 }
@@ -157,8 +157,8 @@ export async function PushTableGetAllSteamIdBySteamIdAndGroupId (userId, groupId
  * @param {Transaction?} [transaction]
  * @returns {Promise<number>}
  */
-export async function PushTableDelAllDataBySteamId (steamId, transaction) {
-  return await PushTable.destroy({
+export async function delBySteamId (steamId, transaction) {
+  return await table.destroy({
     where: {
       steamId
     },
@@ -171,7 +171,7 @@ export async function PushTableDelAllDataBySteamId (steamId, transaction) {
  * @param {boolean} [filter=true] 是否使用黑白名单查找 默认开启
  * @returns {Promise<PushColumns[]>}
  */
-export async function PushTableGetAllData (filter = true) {
+export async function getAll (filter = true) {
   const where = {
     isPush: true
   }
@@ -195,7 +195,7 @@ export async function PushTableGetAllData (filter = true) {
       }
     }
   }
-  return await PushTable.findAll({
+  return await table.findAll({
     where
   }).then(result => result?.map(item => item?.dataValues))
 }
@@ -205,9 +205,9 @@ export async function PushTableGetAllData (filter = true) {
  * @param {string} userId
  * @param {string} steamId
  */
-export async function PushTableSetNAUserIdToRealUserIdBySteamId (userId, steamId) {
+export async function setNA (userId, steamId) {
   userId = String(userId)
-  return await PushTable.update({
+  return await table.update({
     userId
   }, {
     where: {
@@ -223,7 +223,7 @@ export async function PushTableSetNAUserIdToRealUserIdBySteamId (userId, steamId
  * @param {boolean} [isPush=true] 是否只获取开启推送的用户
  * @returns {Promise<PushColumns[]>}
  */
-export async function PushTableGetDataByGroupId (groupId, isPush = true) {
+export async function getAllByGroupId (groupId, isPush = true) {
   groupId = String(groupId)
   const where = {
     groupId
@@ -231,7 +231,7 @@ export async function PushTableGetDataByGroupId (groupId, isPush = true) {
   if (isPush) {
     where.isPush = true
   }
-  return await PushTable.findAll({
+  return await table.findAll({
     where
   }).then(result => result?.map(item => item?.dataValues))
 }
@@ -242,7 +242,7 @@ export async function PushTableGetDataByGroupId (groupId, isPush = true) {
  * @param {boolean} isPush 是否只获取开启推送的用户
  * @returns
  */
-export async function PushTableGetDataByUserList (userList, isPush = true) {
+export async function getAllByUserIds (userList, isPush = true) {
   const where = {
     userId: {
       [Op.in]: userList.map(String)
@@ -251,7 +251,7 @@ export async function PushTableGetDataByUserList (userList, isPush = true) {
   if (isPush) {
     where.isPush = true
   }
-  return await PushTable.findAll({
+  return await table.findAll({
     where
   }).then(result => result?.map(item => item?.dataValues))
 }

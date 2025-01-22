@@ -1,6 +1,6 @@
-import { PushTableDelAllDataBySteamId } from './push.js'
+import { delBySteamId } from './push.js'
 import { sequelize, DataTypes } from './base.js'
-import { StatsTableDelete } from './stats.js'
+import { del as statsDel } from './stats.js'
 
 /**
  * @typedef {Object} UserColumns
@@ -10,7 +10,7 @@ import { StatsTableDelete } from './stats.js'
  * @property {boolean} isBind 是否绑定
  */
 
-const UserTable = sequelize.define('user', {
+const table = sequelize.define('user', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
@@ -33,7 +33,7 @@ const UserTable = sequelize.define('user', {
   freezeTableName: true
 })
 
-await UserTable.sync()
+await table.sync()
 
 /**
  * 添加steamId到userId
@@ -41,14 +41,14 @@ await UserTable.sync()
  * @param {string} steamId
  * @returns {Promise<UserColumns|null>}
  */
-export async function UserTableAddSteamIdByUserId (userId, steamId) {
+export async function add (userId, steamId) {
   userId = String(userId)
-  const res = await UserTable.create({
+  const res = await table.create({
     userId,
     steamId
   }).then(result => result?.dataValues)
   // 更换绑定为新的steamId
-  await UserTableBindSteamIdByUserId(userId, steamId, true)
+  await set(userId, steamId, true)
   return res
 }
 
@@ -58,17 +58,17 @@ export async function UserTableAddSteamIdByUserId (userId, steamId) {
  * @param {string} steamId
  * @param {boolean} isBind 是否绑定
  */
-export async function UserTableBindSteamIdByUserId (userId, steamId, isBind = true) {
+export async function set (userId, steamId, isBind = true) {
   userId = String(userId)
   // 开启一个事务
   const transaction = await sequelize.transaction()
   try {
     if (isBind) {
       // 先将之前绑定的steamId解除绑定
-      const data = await UserTableGetDataByUserId(userId)
+      const data = await getAllByUserId(userId)
       const bind = data.find(item => item.isBind)
       if (bind) {
-        await UserTable.update({
+        await table.update({
           isBind: false
         }, {
           transaction,
@@ -79,7 +79,7 @@ export async function UserTableBindSteamIdByUserId (userId, steamId, isBind = tr
         })
       }
     }
-    const res = await UserTable.update({
+    const res = await table.update({
       isBind
     }, {
       transaction,
@@ -102,17 +102,17 @@ export async function UserTableBindSteamIdByUserId (userId, steamId, isBind = tr
  * @param {string} steamId
  * @returns {Promise<UserColumns|null>}
  */
-export async function UserTableDelSteamIdByUserId (userId, steamId) {
+export async function del (userId, steamId) {
   userId = String(userId)
   const transaction = await sequelize.transaction()
-  const data = await UserTableGetDataByUserId(userId)
+  const data = await getAllByUserId(userId)
   try {
     // 如果删除的是绑定的steamId，则将其他steamId设为绑定
     const bind = data.find(item => item.isBind)
     if (bind.steamId === steamId) {
       const notBindItem = data.find(item => !item.isBind)
       if (notBindItem) {
-        await UserTable.update({
+        await table.update({
           isBind: true
         }, {
           where: {
@@ -123,7 +123,7 @@ export async function UserTableDelSteamIdByUserId (userId, steamId) {
         })
       }
     }
-    const res = await UserTable.destroy({
+    const res = await table.destroy({
       where: {
         userId,
         steamId
@@ -131,8 +131,8 @@ export async function UserTableDelSteamIdByUserId (userId, steamId) {
       transaction
     })
     // 删除steamId对应的所有推送数据
-    await PushTableDelAllDataBySteamId(steamId, transaction)
-    await StatsTableDelete(steamId, transaction)
+    await delBySteamId(steamId, transaction)
+    await statsDel(steamId, transaction)
     transaction.commit()
     return res
   } catch (error) {
@@ -146,9 +146,9 @@ export async function UserTableDelSteamIdByUserId (userId, steamId) {
  * @param {string} userId
  * @returns {Promise<string|null>}
  */
-export async function UserTableGetBindSteamIdByUserId (userId) {
+export async function getBind (userId) {
   userId = String(userId)
-  return await UserTable.findOne({
+  return await table.findOne({
     where: {
       userId,
       isBind: true
@@ -161,8 +161,8 @@ export async function UserTableGetBindSteamIdByUserId (userId) {
  * @param {string} steamId
  * @returns {Promise<UserColumns|null>}
  */
-export async function UserTableGetDataBySteamId (steamId) {
-  return await UserTable.findOne({
+export async function getBySteamId (steamId) {
+  return await table.findOne({
     where: {
       steamId
     }
@@ -174,9 +174,9 @@ export async function UserTableGetDataBySteamId (steamId) {
  * @param {string} userId
  * @returns {Promise<UserColumns[]>}
  */
-export async function UserTableGetDataByUserId (userId) {
+export async function getAllByUserId (userId) {
   userId = String(userId)
-  return await UserTable.findAll({
+  return await table.findAll({
     where: {
       userId
     }
@@ -187,14 +187,14 @@ export async function UserTableGetDataByUserId (userId) {
  * 获取所有steamId以及对应的userId
  * @returns {Promise<UserColumns[]>}
  */
-export async function UserTableGetAllSteamIdAndUserId () {
-  return await UserTable.findAll().then(result => result?.map(i => i.dataValues))
+export async function getAll () {
+  return await table.findAll().then(result => result?.map(i => i.dataValues))
 }
 
 /**
  * 获得绑定的steamId数量
  * @returns {Promise<number>}
  */
-export async function UserTableCount () {
-  return await UserTable.count()
+export async function count () {
+  return await table.count()
 }

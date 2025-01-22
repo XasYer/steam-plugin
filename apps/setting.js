@@ -17,8 +17,7 @@ const rule = {
     reg: App.getReg(`设置\\s*(${keys.join('|')})?[\\s+]*(.*)`),
     fnc: async e => {
       if (!e.isMaster) {
-        await e.reply('只有主人才可以设置哦~')
-        return true
+        return '只有主人才可以设置哦~'
       }
       const regRet = rule.setting.reg.exec(e.msg)
       const cfgSchemaMap = setting.getCfgSchemaMap()
@@ -80,24 +79,17 @@ const rule = {
       const cfg = Config.getCfg()
       cfg.setAll = (await redis.get('steam-plugin:set-all')) == 1
 
-      const img = await Render.render('setting/index', {
+      return await Render.render('setting/index', {
         schema,
         cfg
       }, { e, scale: 1.4 })
-      if (img) {
-        await e.reply(img)
-      } else {
-        await e.reply('截图失败辣! 再试一次叭')
-      }
-      return true
     }
   },
   push: {
     reg: App.getReg('(添加|删除)?(?:推送((?:bot)?[黑白])名单|apikey)(列表)?[\\s+]*(.*)'),
     fnc: async e => {
       if (!e.isMaster) {
-        await e.reply('只有主人才可以设置哦~')
-        return true
+        return '只有主人才可以设置哦~'
       }
       const regRet = rule.push.reg.exec(e.msg)
       if (/推送/.test(e.msg)) {
@@ -107,69 +99,64 @@ const rule = {
           : isBot ? 'whiteBotList' : 'whiteGroupList'
         const data = Config.push[target]
         if (regRet[3] || !regRet[1]) {
-          await e.reply(`${regRet[2]}名单列表:\n${data.join('\n') || '空'}`)
-          return true
+          return `${regRet[2]}名单列表:\n${data.join('\n') || '空'}`
         }
         const type = regRet[1] === '添加' ? 'add' : 'del'
         const id = regRet[4]?.trim() || (isBot ? String(e.self_id) : String(e.group_id))
         if (!id) {
-          await e.reply('请输入群号或在指定群中使用~')
-          return true
+          return '请输入群号或在指定群中使用~'
         }
         if (type === 'add') {
           if (data.some(i => i == id)) {
-            await e.reply(`${id}已经在${regRet[2]}名单中了~`)
+            return `${id}已经在${regRet[2]}名单中了~`
           } else {
             data.push(id)
-            await e.reply(`已将${id}添加到${regRet[2]}名单了~现在的${regRet[2]}名单是:\n${data.join('\n') || '空'}`)
             Config.modify('push', target, data)
+            return `已将${id}添加到${regRet[2]}名单了~现在的${regRet[2]}名单是:\n${data.join('\n') || '空'}`
           }
         } else {
           const index = data.findIndex(i => i == id)
           if (index === -1) {
-            await e.reply(`${id}不在${regRet[2]}名单中~`)
+            return `${id}不在${regRet[2]}名单中~`
           } else {
             data.splice(index, 1)
-            await e.reply(`已将${id}移出${regRet[2]}名单了~现在的${regRet[2]}名单是:\n${data.join('\n') || '空'}`)
             Config.modify('push', target, data)
+            return `已将${id}移出${regRet[2]}名单了~现在的${regRet[2]}名单是:\n${data.join('\n') || '空'}`
           }
         }
       } else {
         const data = Config.steam.apiKey
         if (regRet[3] || !regRet[1]) {
           if (e.group_id) {
-            await e.reply('请私聊查看apikey列表~')
+            return '请私聊查看apikey列表~'
           } else {
-            await e.reply(`apiKey列表:\n${data.join('\n') || '空'}`)
+            return `apiKey列表:\n${data.join('\n') || '空'}`
           }
-          return true
         }
         const type = regRet[1] === '添加' ? 'add' : 'del'
         const id = regRet[4]?.trim()
         if (!id) {
-          await e.reply('请输入apiKey~')
-          return true
+          return '请输入apiKey~'
         }
         if (type === 'add') {
           if (data.some(i => i == id)) {
-            await e.reply(`${id}已经在列表中了~`)
+            return `${id}已经在列表中了~`
           } else {
             data.push(id)
-            await e.reply(`已将${id}添加到apikey列表了~现在的apikey列表是:\n${data.join('\n') || '空'}`)
             Config.modify('steam', 'apiKey', data)
+            return `已将${id}添加到apikey列表了~现在的apikey列表是:\n${data.join('\n') || '空'}`
           }
         } else {
           const index = data.findIndex(i => i == id)
           if (index === -1) {
-            await e.reply(`${id}不在apikey列表中~`)
+            return `${id}不在apikey列表中~`
           } else {
             data.splice(index, 1)
-            await e.reply(`已将${id}移出apikey列表了~现在的apikey列表是:\n${data.join('\n') || '空'}`)
             Config.modify('steam', 'apiKey', data)
+            return `已将${id}移出apikey列表了~现在的apikey列表是:\n${data.join('\n') || '空'}`
           }
         }
       }
-      return true
     }
   }
 }

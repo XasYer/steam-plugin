@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { segment } from '#lib'
-import { db, utils, api } from '#models'
+import { utils, api } from '#models'
 import { App, Config, Render } from '#components'
 
 const appInfo = {
@@ -11,26 +11,21 @@ const appInfo = {
 const rule = {
   game: {
     reg: App.getReg('(?:游戏|game|apps?)(?:详细|info|信息|详情)\\s*(\\d+)'),
-    fnc: async e => {
-      const appid = rule.game.reg.exec(e.msg)[1]
+    cfg: {
+      appid: true
+    },
+    fnc: async (e, { appid }) => {
       // TODO: 占位
-      await e.reply(`https://store.steampowered.com/app/${appid}/_/`)
-      return true
+      return `https://store.steampowered.com/app/${appid}/_/`
     }
   },
   info: {
     reg: App.getReg('(?:信息|状态|info|status)\\s*(\\d*)'),
     cfg: {
-      tips: true
+      tips: true,
+      steamId: true
     },
-    fnc: async e => {
-      const textId = rule.info.reg.exec(e.msg)?.[1]
-      const uid = utils.bot.getAtUid(e.at, e.user_id)
-      const steamId = textId ? utils.steam.getSteamId(textId) : await db.UserTableGetBindSteamIdByUserId(uid)
-      if (!steamId) {
-        await e.reply([segment.at(uid), '\n', Config.tips.noSteamIdTips])
-        return true
-      }
+    fnc: async (e, { steamId, uid }) => {
       // https://steamcommunity.com/profiles/${steamId}/
       // https://steamcommunity.com/miniprofile/${utils.steam.getFriendCode(steamId)}/json
       let mode = Config.other.infoMode
@@ -39,7 +34,7 @@ const rule = {
           const friendCode = utils.steam.getFriendCode(steamId)
           const html = await api.community.miniprofile(friendCode, false)
           const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
-          const img = await Render.simpleRender('info/steam', {
+          return await Render.simpleRender('info/steam', {
             html: html.replace(/<video[\s\S]*video>/, '')
               .replace(/https:\/\/cdn.cloudflare.steamstatic.com\/steamcommunity/g, 'https://steamcdn-a.akamaihd.net/steamcommunity')
               .replace(/https:\/\/shared.cloudflare.steamstatic.com\/store_item_assets/g, 'https://steamcdn-a.akamaihd.net')
@@ -52,20 +47,16 @@ const rule = {
               .replace(/srcset="[\s\S]+?"/, ''),
             background: utils.steam.getStaticUrl(bg.mini_profile_background.image_large)
           })
-          await e.reply(img)
-          return true
         }
         mode = 2
       }
       const data = await api.ISteamUser.GetPlayerSummaries(steamId)
       if (!data.length) {
-        await e.reply([segment.at(uid), `\n没有获取到${steamId}的信息, 看看有没有输错?`])
-        return true
+        return `没有获取到${steamId}的信息, 看看有没有输错?`
       }
       const info = data.pop()
       if (info.communityvisibilitystate !== 3) {
-        await e.reply([segment.at(uid), `\n${info.personaname}个人资料未公开`])
-        return true
+        return `${info.personaname}个人资料未公开`
       }
       if (mode == 2) {
         const color = info.gameid ? '#90ba3c' : info.personastate === 0 ? '#898989' : '#57cbde'
@@ -90,8 +81,7 @@ const rule = {
           toGif: Config.gif.infoGif
         }
 
-        const img = await Render.render('info/index', options)
-        await e.reply(img)
+        return await Render.render('info/index', options)
       } else {
         const avatarBuffer = Config.other.steamAvatar ? await utils.getImgUrlBuffer(info.avatarfull) : ''
         const msg = []
@@ -109,9 +99,8 @@ const rule = {
           const icon = utils.steam.getHeaderImgUrlByAppid(info.gameid)
           msg.push('\n', segment.image(icon), `\n正在游玩: ${info.gameextrainfo}`)
         }
-        await e.reply(msg)
+        return msg
       }
-      return true
     }
   }
 }

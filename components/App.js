@@ -2,8 +2,16 @@ import lodash from 'lodash'
 import Version from './Version.js'
 import { plugin, logger } from '#lib'
 import Config from './Config.js'
+import { db, utils } from '#models'
 
 const throttle = {}
+
+function clearThrottle (key) {
+  if (throttle[key]) {
+    clearTimeout(throttle[key])
+    delete throttle[key]
+  }
+}
 
 export default class App {
   constructor ({
@@ -26,7 +34,7 @@ export default class App {
     return new RegExp(`^#${Config.other.requireHashTag ? '' : '?'}steam${text}$`, 'i')
   }
 
-  static reply (e, msg, options = { recallMsg: 0, quote: false, at: false }) {
+  static reply (e, msg, options = { recallMsg: 0, quote: false, at: true }) {
     if (Version.BotName === 'Karin') {
       return e.reply(msg, { recallMsg: options.recallMsg, at: options.at, reply: options.quote }).catch(() => {})
     } else {
@@ -44,7 +52,18 @@ export default class App {
     }
   }
 
-  rule (name, reg, fnc, cfg = {}) {
+  rule (name, reg, fnc, cfg = {
+    // 是否仅私聊触发
+    private: false,
+    // 是否发送触发提示
+    tips: false,
+    // 是否需要appid
+    appid: false,
+    // 是否需要steamId
+    steamId: false,
+    // 是否需要accessToken
+    accessToken: false
+  }) {
     if (!name) return false
     if (lodash.isPlainObject(name)) {
       lodash.forEach(name, (p, k) => {
@@ -83,17 +102,66 @@ export default class App {
         }
         const key = `${name}:${e.user_id}`
         if (throttle[key]) {
-          App.reply(e, Config.tips.repeatTips, { recallMsg: 5, at: true })
+          await App.reply(e, Config.tips.repeatTips, { recallMsg: 5, at: true })
           return true
         } else {
           throttle[key] = setTimeout(() => {
             delete throttle[key]
           }, 1000 * 60)
         }
-        if (cfg.tips) {
-          App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
+        if (cfg.private && e.group_id) {
+          await App.reply(e, '请私聊使用~')
+          clearThrottle(key)
+          return true
         }
-        const res = await fnc(e).catch(error => {
+        if (cfg.tips) {
+          await App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
+        }
+        const nums = e.msg.match(/\d+/g) || []
+        const options = {
+          uid: e.user_id
+        }
+        // 需要appid
+        if (cfg.appid) {
+          if (!nums.length) {
+            await App.reply(e, Config.tips.noAppidTips)
+            clearThrottle(key)
+            return true
+          } else {
+            options.appid = nums.shift()
+          }
+        }
+        // 需要steamId
+        if (cfg.steamId) {
+          // 先看看有没有在指令中附带steamId
+          if (nums.length) {
+            // 最后一个
+            options.steamId = nums.pop()
+            options.uid = e.user_id
+          } else {
+            options.uid = utils.bot.getAtUid(e.at, e.user_id)
+            options.steamId = await db.user.getBind(options.uid)
+            if (!options.steamId) {
+              await App.reply(e, Config.tips.noSteamIdTips, { at: options.uid })
+              clearThrottle(key)
+              return true
+            }
+          }
+          options.steamId = utils.steam.getSteamId(options.steamId)
+        }
+        // 需要accessToken
+        if (cfg.accessToken) {
+          const token = await utils.steam.getAccessToken(e.user_id)
+          if (!token.success) {
+            await App.reply(e, token.message)
+            clearThrottle(key)
+            return true
+          }
+          options.accessToken = token.accessToken
+          options.cookie = token.cookie
+          options.steamId = token.steamId
+        }
+        const res = await fnc(e, options).catch(error => {
           if (error.isAxiosError) {
             logger.error(error.message)
           } else {
@@ -117,9 +185,13 @@ export default class App {
           e.reply(`出错辣! ${message}`).catch(() => {})
           return true
         })
-        clearTimeout(throttle[key])
-        delete throttle[key]
-        return res ?? true
+        clearThrottle(key)
+        if (typeof res == 'boolean') {
+          return res
+        } else if (res) {
+          await App.reply(e, res, { at: res.type !== 'image' })
+        }
+        return true
       }
     }
     return cls

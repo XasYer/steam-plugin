@@ -51,73 +51,59 @@ const rule = {
         if (qrcodeRes.access_token) {
           const jwt = utils.steam.decodeAccessTokenJwt(qrcodeRes.access_token)
           const cookie = utils.steam.getCookie(jwt.sub, qrcodeRes.access_token)
-          const dbRes = await db.TokenTableAddData(e.user_id, qrcodeRes.access_token, cookie, qrcodeRes.refresh_token)
-          const user = await db.UserTableGetDataBySteamId(dbRes.steamId)
+          const dbRes = await db.token.set(e.user_id, qrcodeRes.access_token, cookie, qrcodeRes.refresh_token)
+          const user = await db.user.getBySteamId(dbRes.steamId)
           if (user?.userId) {
             if (user.userId != e.user_id) {
-              await db.UserTableDelSteamIdByUserId(user.userId, dbRes.steamId)
-              await db.UserTableAddSteamIdByUserId(e.user_id, dbRes.steamId)
+              await db.user.del(user.userId, dbRes.steamId)
+              await db.user.add(e.user_id, dbRes.steamId)
             } else {
-              await db.UserTableBindSteamIdByUserId(e.user_id, dbRes.steamId, true)
+              await db.user.set(e.user_id, dbRes.steamId, true)
             }
           } else {
-            await db.UserTableAddSteamIdByUserId(e.user_id, dbRes.steamId)
+            await db.user.add(e.user_id, dbRes.steamId)
           }
-          await e.reply(`登录成功\nsteamId: ${dbRes.steamId}\n登录名: ${qrcodeRes.account_name.replace(/^(.)(.*)(.)$/, '$1***$3')}\n需要切换到对应的steamId才会生效`)
-          return true
+          return `登录成功\nsteamId: ${dbRes.steamId}\n登录名: ${qrcodeRes.account_name.replace(/^(.)(.*)(.)$/, '$1***$3')}\n需要切换到对应的steamId才会生效`
         }
       }
-      await e.reply('登录超时~请重新触发指令')
-      return true
+      return '登录超时~请重新触发指令'
     }
   },
   refreshToken: {
     reg: App.getReg('刷新(access_token|token|ak|ck|accesstoken|cookie)'),
-    fnc: async e => {
-      const token = await utils.steam.getAccessToken(e.user_id)
-      if (!token.success) {
-        await e.reply([segment.at(e.user_id), '\n', token.message])
-        return true
-      }
-      await utils.steam.refreshAccessToken(token, true)
-      await e.reply([segment.at(e.user_id), '\n', 'access_token已刷新~'])
-      return true
+    cfg: {
+      accessToken: true
+    },
+    fnc: async (e) => {
+      await utils.steam.refreshAccessToken(e.user_id, true)
+      return 'access_token已刷新~'
     }
   },
   showToken: {
     reg: App.getReg('我的(access_token|token|ak|ck|accesstoken|cookie)'),
-    fnc: async e => {
-      if (e.group_id) {
-        await e.reply([segment.at(e.user_id), '\n', '请私聊查看'])
-        return true
-      }
-      const token = await utils.steam.getAccessToken(e.user_id)
-      if (!token.success) {
-        await e.reply([segment.at(e.user_id), '\n', token.message])
-        return true
-      }
-      const jwt = utils.steam.decodeAccessTokenJwt(token.accessToken)
-      await e.reply(token.accessToken)
-      await e.reply(token.cookie)
-      await e.reply([
-        `${token.accessToken.slice(0, 5)}...: access_token`,
-        `${token.cookie.slice(0, 5)}...: cookie`,
+    cfg: {
+      accessToken: true,
+      private: true
+    },
+    fnc: async (e, { accessToken, cookie }) => {
+      const jwt = utils.steam.decodeAccessTokenJwt(accessToken)
+      await App.reply(e, accessToken, { at: false })
+      await App.reply(e, cookie, { at: false })
+      return [
+        `${accessToken.slice(0, 5)}...: access_token`,
+        `${cookie.slice(0, 5)}...: cookie`,
         `过期时间: ${moment.unix(jwt.exp).format('YYYY-MM-DD HH:mm:ss')}`
-      ].join('\n'))
-      return true
+      ].join('\n')
     }
   },
   deleteToken: {
     reg: App.getReg('删除(access_token|token|ak|ck|accesstoken|cookie)'),
-    fnc: async e => {
-      const token = await utils.steam.getAccessToken(e.user_id)
-      if (!token.success) {
-        await e.reply([segment.at(e.user_id), '\n', token.message])
-        return true
-      }
-      await db.TokenTableDeleteByUserIdAndSteamId(e.user_id, token.steamId)
-      await e.reply([segment.at(e.user_id), '\n', 'access_token已删除~'])
-      return true
+    cfg: {
+      accessToken: true
+    },
+    fnc: async (e, { steamId }) => {
+      await db.token.del(e.user_id, steamId)
+      return 'access_token已删除~'
     }
   }
 }

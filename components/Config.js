@@ -181,6 +181,7 @@ class Config {
    *   loadingTips: string,
    *   noSteamIdTips: string,
    *   repeatBindTips: string,
+   *   noAppidTips: string,
    *   inventoryEmptyTips: string,
    *   recentPlayEmptyTips: string,
    *   wishListEmptyTips: string,

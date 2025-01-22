@@ -11,12 +11,12 @@ import { Config, Render } from '#components'
  */
 export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
   if (!userBindAll?.length) {
-    userBindAll = await db.UserTableGetDataByUserId(uid)
+    userBindAll = await db.user.getAllByUserId(uid)
   }
   if (!userBindAll.length) {
-    return '没有绑定任何steamId, 请使用#steam绑定steamId或好友码 进行绑定'
+    return Config.tips.noSteamIdTips
   }
-  const accessTokenList = await db.TokenTableGetByUserId(uid)
+  const accessTokenList = await db.token.getAllByUserId(uid)
   const enablePush = (() => {
     if (!Config.push.enable) {
       return false
@@ -38,7 +38,7 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
   const data = []
   const pushSteamId = []
   const unPushSteamId = []
-  const enablePushSteamIdList = enablePush ? await db.PushTableGetAllSteamIdBySteamIdAndGroupId(uid, gid, true) : []
+  const enablePushSteamIdList = enablePush ? await db.push.getAllByUserIdAndGroupId(uid, gid, true) : []
   const userInfo = {}
   try {
     const res = await api.IPlayerService.GetPlayerLinkDetails(userBindAll.map(i => i.steamId))
@@ -89,14 +89,9 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindAll = []) {
       list: unPushSteamId
     })
   }
-  const img = await Render.render('user/index', {
+  return await Render.render('user/index', {
     data,
     enablePush,
     random: Math.floor(Math.random() * 5) + 1
   })
-  if (img) {
-    return img
-  } else {
-    return '制作图片失败,重试一下'
-  }
 }

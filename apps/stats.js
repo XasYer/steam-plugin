@@ -18,11 +18,10 @@ const rule = {
     fnc: async e => {
       const g = utils.bot.checkGroup(e.group_id)
       if (!g.success) {
-        await e.reply(g.message)
-        return true
+        return g.message
       }
       const limit = Math.max(1, Number(Config.other.statsCount) || 10)
-      const stats = await db.StatsTableGetByGroupId(e.group_id, limit)
+      const stats = await db.stats.getAllByGroupId(e.group_id, limit)
       const data = []
 
       if (stats.gamePlayTotal.length) {
@@ -107,13 +106,10 @@ const rule = {
       }
 
       if (!data.length) {
-        await e.reply('本群还没有统计哦~')
-        return true
+        return '本群还没有统计哦~'
       }
 
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   apiStats: {
@@ -151,21 +147,17 @@ const rule = {
         }
       }
       if (!data.length) {
-        await e.reply('还没有api调用统计数据哦')
-        return true
+        return '还没有api调用统计数据哦'
       }
-      const img = await Render.render('inventory/index', { data })
-      await e.reply(img)
-      return true
+      return await Render.render('inventory/index', { data })
     }
   },
   userStats: {
     reg: App.getReg('用户统计'),
     fnc: async e => {
-      const steamIdCount = await db.UserTableCount()
-      const accessTokenCount = await db.TokenTableCount()
-      await e.reply(`绑定: ${steamIdCount}\n扫码: ${accessTokenCount}`)
-      return true
+      const steamIdCount = await db.user.count()
+      const accessTokenCount = await db.token.count()
+      return `绑定: ${steamIdCount}\n扫码: ${accessTokenCount}`
     }
   }
 }

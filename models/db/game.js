@@ -9,7 +9,7 @@ import { sequelize, DataTypes, Op } from './base.js'
  * @property {string} header header图片
  */
 
-const GameTable = sequelize.define('game', {
+export const table = sequelize.define('game', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
@@ -35,13 +35,13 @@ const GameTable = sequelize.define('game', {
   freezeTableName: true
 })
 
-await GameTable.sync()
+await table.sync()
 
 /**
  * 添加游戏信息
  * @param {GameColumns[]} games
  */
-export async function GameTableAddGame (games) {
+export async function add (games) {
   if (!Array.isArray(games)) {
     if (typeof games === 'object') {
       games = Object.values(games)
@@ -49,7 +49,7 @@ export async function GameTableAddGame (games) {
       games = [games]
     }
   }
-  return (await GameTable.bulkCreate(games.map(i => ({ ...i, appid: String(i.appid) })))).map(i => i.dataValues)
+  return (await table.bulkCreate(games.map(i => ({ ...i, appid: String(i.appid) })))).map(i => i.dataValues)
 }
 
 /**
@@ -57,9 +57,9 @@ export async function GameTableAddGame (games) {
  * @param {string[]} appids
  * @returns {Promise<{[appid: string]: GameColumns}>}
  */
-export async function GameTableGetGameByAppids (appids) {
+export async function get (appids) {
   if (!Array.isArray(appids)) appids = [appids]
-  return await GameTable.findAll({
+  return await table.findAll({
     where: {
       appid: {
         [Op.in]: appids.map(String)
