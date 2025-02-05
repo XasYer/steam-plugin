@@ -171,7 +171,8 @@ export default class App {
           const keyMap = [
             { key: 'apiProxy', title: 'api反代' },
             { key: 'storeProxy', title: 'store反代' },
-            { key: 'commonProxy', title: '通用反代' }
+            { key: 'commonProxy', title: '通用反代' },
+            { key: 'communityProxy', title: '社区反代' }
           ]
           for (const i of keyMap) {
             const url = Config.steam[i.key]
