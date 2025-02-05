@@ -1,6 +1,5 @@
 import { utils, api } from '#models'
 import { Render, App, Config } from '#components'
-import moment from 'moment'
 import _ from 'lodash'
 
 const appInfo = {
@@ -10,7 +9,7 @@ const appInfo = {
 
 const rule = {
   inventory: {
-    reg: App.getReg('(?:库存|游戏列表|(?:最近|近期)(?:游?玩|运行|启动)|愿望单)\\s*(\\d*)'),
+    reg: App.getReg('(?:库存|游戏列表|(?:最近|近期)(?:游?玩|运行|启动))\\s*(\\d*)'),
     cfg: {
       tips: true,
       steamId: true
@@ -29,45 +28,6 @@ const rule = {
         }
         screenshotOptions.games = _.orderBy(games, 'playtime_2weeks', 'desc')
         screenshotOptions.title = `${nickname} 近期游玩了 ${games.length} 个游戏`
-      } else if (e.msg.includes('愿')) {
-        const wishlist = await api.IWishlistService.GetWishlist(steamId)
-        if (!wishlist.length) {
-          return Config.tips.wishListEmptyTips
-        }
-        if (wishlist.length > Config.other.hiddenLength) {
-          wishlist.length = Config.other.hiddenLength
-        }
-        // 愿望单没有给name, 尝试获取一下, 顺便也可以获取一下价格 获取失败超过3次就不再获取了
-        // 2024年11月27日 已更新 有个api可以获取多个appid 不知道一次最多能获取多少
-        const appidsInfo = await api.IStoreBrowseService.GetItems(wishlist.map(i => i.appid), {
-          include_assets: true
-        })
-        for (const i in wishlist) {
-          const appid = wishlist[i].appid
-          const info = appidsInfo[appid]
-          if (!info) {
-            wishlist[i].price = {
-              discount: 0,
-              original: '获取失败'
-            }
-            continue
-          }
-          wishlist[i].image = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header)
-          wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
-          wishlist[i].name = info.name
-          wishlist[i].price = info.is_free
-            ? {
-                discount: 0,
-                original: '免费'
-              }
-            : {
-                discount: info.best_purchase_option?.discount_pct || 0,
-                original: info.best_purchase_option?.formatted_original_price || info.best_purchase_option?.formatted_final_price || '即将推出',
-                current: info.best_purchase_option?.formatted_final_price || ''
-              }
-        }
-        screenshotOptions.title = `${nickname} 愿望单共有 ${wishlist.length} 个游戏`
-        screenshotOptions.games = _.orderBy(wishlist, 'date_added', 'desc')
       } else {
         const games = await api.IPlayerService.GetOwnedGames(steamId)
         if (!games.length) {
@@ -76,17 +36,15 @@ const rule = {
         screenshotOptions.games = _.orderBy(games, 'playtime_forever', 'desc')
         screenshotOptions.title = `${nickname} 库存共有 ${games.length} 个游戏`
       }
-      if (!e.msg.includes('愿')) {
-        let playtimeForever = 0
-        let playtime2weeks = 0
-        screenshotOptions.games.map(i => {
-          i.desc = `${getTime(i.playtime_forever)} ${i.playtime_2weeks ? `/ ${getTime(i.playtime_2weeks)}` : ''}`
-          playtimeForever += i.playtime_forever
-          i.playtime_2weeks && (playtime2weeks += i.playtime_2weeks)
-          return i
-        })
-        screenshotOptions.desc = `总游戏时长：${getTime(playtimeForever)} / 最近两周游戏时长：${getTime(playtime2weeks)}`
-      }
+      let playtimeForever = 0
+      let playtime2weeks = 0
+      screenshotOptions.games.map(i => {
+        i.desc = `${getTime(i.playtime_forever)} ${i.playtime_2weeks ? `/ ${getTime(i.playtime_2weeks)}` : ''}`
+        playtimeForever += i.playtime_forever
+        i.playtime_2weeks && (playtime2weeks += i.playtime_2weeks)
+        return i
+      })
+      screenshotOptions.desc = `总游戏时长：${getTime(playtimeForever)} / 最近两周游戏时长：${getTime(playtime2weeks)}`
       return await Render.render('inventory/index', {
         data: [screenshotOptions]
       })
@@ -188,24 +146,6 @@ const rule = {
         return '入库成功~'
       } else {
         return '入库失败...'
-      }
-    }
-  },
-  modefyWishlist: {
-    reg: App.getReg('([添增]加|[删移][除出])愿望单\\s*(\\d*)'),
-    cfg: {
-      accessToken: true,
-      appid: true
-    },
-    fnc: async (e, { appid, cookie }) => {
-      const type = rule.modefyWishlist.reg.exec(e.msg)[1]
-      const res = type.includes('加')
-        ? await api.store.addtowishlist(cookie, appid)
-        : await api.store.removefromwishlist(cookie, appid)
-      if (res.success) {
-        return [type, '愿望单成功~现在的愿望单数量是: ', res.wishlistCount]
-      } else {
-        return [type, '愿望单失败...']
       }
     }
   }

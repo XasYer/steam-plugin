@@ -1,6 +1,21 @@
 import { utils } from '#models'
 
 /**
+ * 添加到愿望单
+ * @param {string} accessToken
+ * @param {string} appid
+ * @returns {Promise<undefined>}
+ */
+export async function AddToWishlist (accessToken, appid) {
+  return utils.request.post('IWishlistService/AddToWishlist/v1', {
+    params: {
+      access_token: accessToken,
+      appid
+    }
+  }).then(res => res.response)
+}
+
+/**
  * 获取用户的愿望单 (居然不给name)
  * @param {string} steamid
  * @returns {Promise<{
@@ -28,4 +43,19 @@ export async function GetWishlistItemCount (steamid) {
       steamid
     }
   }).then(res => res.response.count)
+}
+
+/**
+ * 移除愿望单
+ * @param {string} accessToken
+ * @param {string} appid
+ * @returns {Promise<number>} 愿望单数量
+ */
+export async function RemoveFromWishlist (accessToken, appid) {
+  return utils.request.post('IWishlistService/RemoveFromWishlist/v1', {
+    params: {
+      access_token: accessToken,
+      appid
+    }
+  }).then(res => res.response.wishlist_count)
 }
