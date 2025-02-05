@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { join } from 'path'
 import { Version } from '#components'
 
@@ -27,18 +28,13 @@ const startTimeMap = new Map()
  * @returns {Promise<import('@napi-rs/canvas').Image>}
  */
 export const loadImage = async (source, options = {}) => {
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), 5000)
   try {
-    const Image = await canvasPKG.loadImage(source, {
-      requestOptions: {
-        signal: controller.signal,
-        ...options.requestOptions
-      },
-      ...options
-    })
-    clearTimeout(timer)
-    return Image
+    if (source?.startsWith?.('http')) {
+      const buffer = (await axios.get(source, { responseType: 'arraybuffer', timeout: 5000 })).data
+      return await canvasPKG.loadImage(buffer, options)
+    } else {
+      return await canvasPKG.loadImage(source, options)
+    }
   } catch {
     return null
   }
