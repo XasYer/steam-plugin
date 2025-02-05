@@ -97,7 +97,7 @@ export default class App {
       })
       cls.prototype[name] = async (e) => {
         if (!Config.steam.apiKey.length && !/帮助|设置|添加|删除/.test(e.msg)) {
-          await e.reply('没有配置apiKey不能调用Steam Web API哦\n先到https://steamcommunity.com/dev/apikey 申请一下apiKey\n然后使用 #steam添加apiKey + 申请到的apiKey\n之后再使用吧')
+          await App.reply(e, '没有配置apiKey不能调用Steam Web API哦\n先到https://steamcommunity.com/dev/apikey 申请一下apiKey\n然后使用 #steam添加apiKey + 申请到的apiKey\n之后再使用吧', { at: false })
           return true
         }
         const key = `${name}:${e.user_id}`
@@ -115,7 +115,7 @@ export default class App {
           return true
         }
         if (cfg.tips) {
-          await App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
+          App.reply(e, Config.tips.loadingTips, { recallMsg: 5, at: true })
         }
         const nums = e.msg.match(/\d+/g) || []
         const options = {
@@ -183,7 +183,7 @@ export default class App {
               } catch (error) { }
             }
           }
-          e.reply(`出错辣! ${message}`).catch(() => {})
+          App.reply(e, `出错辣! ${message}`, { quote: true })
           return true
         })
         clearThrottle(key)

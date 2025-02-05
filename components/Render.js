@@ -1,7 +1,7 @@
 import fs from 'fs'
 import _ from 'lodash'
 import { join } from 'path'
-import { puppeteer } from '#lib'
+import { logger, puppeteer } from '#lib'
 import template from 'art-template'
 import { canvas, info } from '#models'
 import { Version, Config } from '#components'
@@ -62,15 +62,20 @@ const Render = {
         return this.simpleRender(path, params)
       }
     } else if (path === 'info/index') {
-      if (params.toGif) {
+      if (data.toGif) {
+        data.tempPath = join(Version.pluginPath, 'temp', String(data.tempName || Date.now())).replace(/\\/g, '/')
         try {
-          return info.gif.render(data)
+          return await info.gif.render(data)
         } catch (error) {
-          const tempPath = join(Version.pluginPath, 'temp', String(data.tempName || Date.now())).replace(/\\/g, '/')
-          fs.rmdirSync(tempPath, { recursive: true })
-          throw error
+          if (fs.existsSync(data.tempPath)) {
+            fs.rmdirSync(data.tempPath, { recursive: true })
+          }
+          data.toGif = false
+          logger.error(error)
+          // throw error
         }
-      } else if (Config.other.renderType == 2) {
+      }
+      if (Config.other.renderType == 2) {
         return await canvas.info.render(data)
       }
     }

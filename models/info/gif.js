@@ -1,5 +1,4 @@
 import fs from 'fs'
-import { join } from 'path'
 import { canvas } from '#models'
 import { execSync } from 'child_process'
 import { logger, puppeteer, segment } from '#lib'
@@ -8,18 +7,17 @@ import { Config, Render, Version } from '#components'
 /**
  * 渲染gif 需要传入tempName参数 用于存放临时文件 建议使用唯一id 比如steamId
  * @param {{
- *   tempName: string,
+ *   tempPath: string,
  *   [key: string]: any
  * }} data
  */
 export async function render (data) {
-  const tempPath = join(Version.pluginPath, 'temp', String(data.tempName || Date.now())).replace(/\\/g, '/')
+  const tempPath = data.tempPath
   if (fs.existsSync(tempPath)) {
     fs.rmSync(tempPath, { force: true, recursive: true })
   }
   fs.mkdirSync(tempPath, { recursive: true })
   if (Config.gif.gifMode == 3) {
-    data.tempPath = tempPath
     return await canvas.info.render(data)
   } else {
     if (Version.BotName === 'Karin') {
