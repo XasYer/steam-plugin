@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.10.2](https://github.com/XasYer/steam-plugin/compare/v1.10.1...v1.10.2) (2025-02-05)
+
+
+### Bug Fixes
+
+* 社区反代隐私 ([2c40c66](https://github.com/XasYer/steam-plugin/commit/2c40c6675008d0ad40ed0ef8de9a6e4a64a81272))
+
+
+### Performance Improvements
+
+* canvas加载图片 ([9b8bcbc](https://github.com/XasYer/steam-plugin/commit/9b8bcbc17dada67da477655112cb7e7c17189db9))
+* 更换添加和移除愿望单的接口 ([6c2001f](https://github.com/XasYer/steam-plugin/commit/6c2001fe3589232a5b215f60442094a7007b1c7f))
+* 状态合成gif失败时发送静态图 ([044ff59](https://github.com/XasYer/steam-plugin/commit/044ff59f749cc72a9cf246b87248bc22cef6d67f))
+
 ## [1.10.1](https://github.com/XasYer/steam-plugin/compare/v1.10.0...v1.10.1) (2025-01-22)
 
 
