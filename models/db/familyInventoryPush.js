@@ -95,9 +95,7 @@ export async function del (steamId, transaction) {
  * @returns {Promise<familyInventoryPushColumns[]>}
  */
 export async function getAll (filter = true) {
-  const where = {
-    isPush: true
-  }
+  const where = {}
   if (filter) {
     if (Config.push.whiteGroupList.length) {
       where.groupId = {
