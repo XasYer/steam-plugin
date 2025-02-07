@@ -47,8 +47,17 @@ pushMode: 1
 # Steam Web API 使用条款
 # https://steamcommunity.com/dev/apiterms
 # 其中说明: 每天对 Steam Web API 的调用次数限制为十万 (100,000) 次
-# 多少分钟检查一次
+# 可以是cron表达式 也可以是数字 单位: 分钟
 time: 5
+
+# 是否开启家庭库存增加推送
+# 不能批量查询
+# 需要绑定先扫码登录获取access_token 并且发送 #steam开启家庭库存推送
+familyInventotyAdd: false
+
+# 家庭库存检查间隔
+# 可以是cron表达式 也可以是数字 单位: 分钟
+familyInventotyTime: 0 0 12 * * ?
 
 # 是否默认开启推送 即绑定steamId之后不需要发 #steam开启推送 指令
 defaultPush: true

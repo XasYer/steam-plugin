@@ -134,15 +134,19 @@ export function getAtUid (at, id) {
    */
 export async function sendGroupMsg (botId, gid, msg) {
   try {
+    const bot = getBot(botId)
+    if (!bot) {
+      return false
+    }
     if (Version.BotName === 'Karin') {
       return await Bot.sendMsg(botId, { scene: 'group', peer: gid }, msg)
     } else {
-      const bot = getBot(botId)
       gid = Number(gid) || gid
       return await bot.pickGroup(gid).sendMsg(msg)
     }
   } catch (error) {
     logger.error(`群消息发送失败: ${gid}`, error)
+    return false
   }
 }
 
@@ -173,18 +177,6 @@ export async function makeForwardMsg (e, msg) {
  * @returns {{success: boolean, message?: string}}
  */
 export function checkGroup (gid) {
-  if (!gid) {
-    return {
-      success: false,
-      message: Config.tips.privateUseTips
-    }
-  }
-  if (!Config.push.enable) {
-    return {
-      success: false,
-      message: Config.tips.pushDisabledTips
-    }
-  }
   if (Config.push.whiteGroupList.length && !Config.push.whiteGroupList.some(id => id == gid)) {
     return {
       success: false,

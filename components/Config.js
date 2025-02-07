@@ -91,7 +91,8 @@ class Config {
       delete this.config[key]
       logger.mark(`[${Version.pluginName}][修改配置文件][${type}][${name}]`)
       if (key === 'config.push') {
-        task.startTimer()
+        task.play.startTimer()
+        task.inventory.startTimer()
       }
     })
   }
@@ -121,9 +122,11 @@ class Config {
    *  stateChange: boolean,
    *  stateOnline: boolean,
    *  stateOffline: boolean,
+   *  familyInventotyAdd: boolean,
+   *  familyInventotyTime: number|string
    *  pushApi: number,
    *  pushMode: number,
-   *  time: number,
+   *  time: number|string,
    *  defaultPush: boolean,
    *  randomBot: boolean,
    *  cacheName: boolean,
@@ -186,10 +189,12 @@ class Config {
    *   recentPlayEmptyTips: string,
    *   wishListEmptyTips: string,
    *   privateUseTips: string,
+   *   groupUseTips: string,
    *   pushDisabledTips: string,
    *   blackGroupTips: string,
    *   noWhiteGroupTips: string,
    *   makeImageFailedTips: string,
+   *   familyInventoryDisabledTips: string,
    * }}
    */
   get tips () {

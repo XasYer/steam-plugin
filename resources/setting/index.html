@@ -12,7 +12,7 @@
 </div>
 
 <div class="box">
-{{each schema cfgGroup}}
+{{each schema cfgGroup cfgGroupKey}}
 <div class="cfg-box">
   <div class="cfg-group">{{cfgGroup.title}}</div>
   <ul class="cfg-ul">
@@ -41,7 +41,7 @@
         {{/if}}
         {{else if cfgItem.type ==='string'}}
         {{if cfg[cfgKey]}}
-        <div class="cfg-status">已设置</div>
+        <div class="cfg-status">{{cfgGroupKey === 'steam' ? '已设置' : cfg[cfgKey]}}</div>
         {{else}}
         <div class="cfg-status status-off">未设置</div>
         {{/if}}

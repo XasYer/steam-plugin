@@ -89,13 +89,6 @@ export const cfgSchema = {
         def: true,
         desc: '是否推送结束游戏'
       },
-      defaultPush: {
-        title: '默认开启推送',
-        key: '默认推送',
-        type: 'boolean',
-        def: true,
-        desc: '是否默认开启推送, 绑定steamId后自动开启推送'
-      },
       stateChange: {
         title: '状态改变推送总开关',
         key: '状态推送',
@@ -117,12 +110,19 @@ export const cfgSchema = {
         def: true,
         desc: '是否推送下线'
       },
+      defaultPush: {
+        title: '默认开启推送',
+        key: '默认推送',
+        type: 'boolean',
+        def: true,
+        desc: '是否默认开启推送, 绑定steamId后自动开启推送'
+      },
       time: {
         title: '推送间隔',
         key: '推送间隔',
         def: 5,
         min: 1,
-        type: 'number',
+        type: 'string',
         input: (n) => {
           if (n >= 0) {
             return n * 1
@@ -130,7 +130,7 @@ export const cfgSchema = {
             return 5
           }
         },
-        desc: '间隔多少分钟推送一次'
+        desc: '推送间隔 可以是cron 也可以是数字 单位分钟'
       },
       pushApi: {
         title: '推送请求api',
@@ -174,6 +174,20 @@ export const cfgSchema = {
           }
         },
         desc: '推送模式 1: 文字推送 2: 图片推送 3: steam风格图片'
+      },
+      familyInventotyAdd: {
+        title: '家庭库存增加推送',
+        key: '家庭库存推送',
+        type: 'boolean',
+        def: false,
+        desc: '是否推送家庭库存增加,需要先扫码登录'
+      },
+      familyInventotyTime: {
+        title: '家庭库存推送间隔',
+        key: '家庭库存间隔',
+        type: 'string',
+        def: '0 0 12 * * ?',
+        desc: '家庭库存推送时间间隔 可以是cron 也可以是数字 单位分钟'
       },
       randomBot: {
         title: '随机推送Bot',

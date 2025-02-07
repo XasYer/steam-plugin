@@ -1,6 +1,7 @@
 import { delBySteamId } from './push.js'
 import { sequelize, DataTypes } from './base.js'
 import { del as statsDel } from './stats.js'
+import { del as familyInventoryDel } from './familyInventoryPush.js'
 
 /**
  * @typedef {Object} UserColumns
@@ -133,6 +134,7 @@ export async function del (userId, steamId) {
     // 删除steamId对应的所有推送数据
     await delBySteamId(steamId, transaction)
     await statsDel(steamId, transaction)
+    await familyInventoryDel(steamId, transaction)
     transaction.commit()
     return res
   } catch (error) {

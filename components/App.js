@@ -110,7 +110,12 @@ export default class App {
           }, 1000 * 60)
         }
         if (cfg.private && e.group_id) {
-          await App.reply(e, '请私聊使用~')
+          await App.reply(e, Config.tips.groupUseTips)
+          clearThrottle(key)
+          return true
+        }
+        if (cfg.group && !e.group_id) {
+          await App.reply(e, Config.tips.privateUseTips)
           clearThrottle(key)
           return true
         }

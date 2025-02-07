@@ -2,7 +2,8 @@ import { App, Config, Render } from '#components'
 import { db, utils, task } from '#models'
 import _ from 'lodash'
 
-task.startTimer()
+task.play.startTimer()
+task.inventory.startTimer()
 
 const appInfo = {
   id: 'push',
@@ -12,7 +13,13 @@ const appInfo = {
 const rule = {
   push: {
     reg: App.getReg('(?:开启|关闭)推送\\s*(\\d*)'),
+    cfg: {
+      group: true
+    },
     fnc: async e => {
+      if (!Config.push.enable) {
+        return Config.tips.pushDisabledTips
+      }
       const g = utils.bot.checkGroup(e.group_id)
       if (!g.success) {
         return g.message
@@ -56,6 +63,29 @@ const rule = {
         } else {
           return Config.tips.noSteamIdTips
         }
+      }
+    }
+  },
+  familyInventory: {
+    reg: App.getReg('(?:开启|关闭)家庭库存推送'),
+    cfg: {
+      accessToken: true,
+      group: true
+    },
+    fnc: async (e, { steamId }) => {
+      if (!Config.push.familyInventotyAdd) {
+        return Config.tips.familyInventoryDisabledTips
+      }
+      const g = utils.bot.checkGroup(e.group_id)
+      if (!g.success) {
+        return g.message
+      }
+      if (e.msg.includes('开启')) {
+        await db.familyInventoryPush.add(e.user_id, steamId, e.self_id, e.group_id)
+        return `已开启家庭库存推送到${e.group_id}~`
+      } else {
+        await db.familyInventoryPush.del(steamId)
+        return `已关闭家庭库存推送到${e.group_id}~`
       }
     }
   },

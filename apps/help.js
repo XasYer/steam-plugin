@@ -28,14 +28,10 @@ const rule = {
         }
 
         _.forEach(group.list, (help) => {
-          const icon = help.icon * 1
-          if (!icon) {
-            help.css = 'display:none'
-          } else {
-            const x = (icon - 1) % 10
-            const y = (icon - x - 1) / 10
-            help.css = `background-position:-${x * 50}px -${y * 50}px`
-          }
+          const icon = _.random(1, 350)
+          const x = (icon - 1) % 10
+          const y = (icon - x - 1) / 10
+          help.css = `background-position:-${x * 50}px -${y * 50}px`
         })
 
         helpGroup.push(group)
