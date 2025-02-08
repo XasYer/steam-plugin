@@ -15,10 +15,10 @@ export function startTimer () {
   }
   clearInterval(timer)
   timer?.cancel?.()
-  if (Number(Config.push.time)) {
-    timer = setInterval(callback, 1000 * 60 * Config.push.time)
+  if (Number(Config.push.familyInventotyTime)) {
+    timer = setInterval(callback, 1000 * 60 * Config.push.familyInventotyTime)
   } else {
-    timer = schedule.scheduleJob(Config.push.time, callback)
+    timer = schedule.scheduleJob(Config.push.familyInventotyTime, callback)
   }
 }
 
