@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { join } from 'path'
 import { logger, puppeteer } from '#lib'
 import template from 'art-template'
-import { canvas, info } from '#models'
+import { canvas, info, utils } from '#models'
 import { Version, Config } from '#components'
 
 function scale (pct = 1) {
@@ -45,6 +45,9 @@ const Render = {
           const length = i.games.length - hiddenLength
           i.desc.push(`太多辣 ! 已隐藏${length}个项目`)
           i.games.length = hiddenLength
+        }
+        if (!i.image && !i.noImg) {
+          i.image = utils.steam.getHeaderImgUrlByAppid(i.appid)
         }
         return i
       })

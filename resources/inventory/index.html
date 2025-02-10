@@ -23,9 +23,6 @@
         <div class="header-img">
             {{if i.image}}
             <img src="{{i.image}}" class="{{i.isAvatar ? 'square' : 'rectangle'}}">
-            {{else if !i.noImg}}
-            <img src="https://steamcdn-a.akamaihd.net/steam/apps/{{i.appid}}/header.jpg"
-                class="{{i.isAvatar ? 'square' : 'rectangle'}}">
             {{/if}}
         </div>
         <div class="game-info overflow game-info-size-{{!i.price? 'large' :'small'}}">
