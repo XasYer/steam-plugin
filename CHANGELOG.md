@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.11.0](https://github.com/XasYer/steam-plugin/compare/v1.10.2...v1.11.0) (2025-02-10)
+
+
+### Features
+
+* 可开启家庭库存增加推送 `#开启家庭库存推送` ([6b134a9](https://github.com/XasYer/steam-plugin/commit/6b134a97381493faa1f561e7c2a87afb8f0711c5))
+
+
+### Bug Fixes
+
+* 家庭库存定时任务时间错误 ([5decdc0](https://github.com/XasYer/steam-plugin/commit/5decdc0398533d9264242bd70d4028f046da7c3d))
+* 获取家庭库存推送列表 ([f138a87](https://github.com/XasYer/steam-plugin/commit/f138a87e7674630411a500ac552d5a3e4a9a0ca3))
+
+
+### Performance Improvements
+
+* 家庭库存推送显示来自用户 ([ae9123e](https://github.com/XasYer/steam-plugin/commit/ae9123ece421f6e7071212e6ee2de7488f174e17))
+* 来自最后一个的steam名称 ([c8424b4](https://github.com/XasYer/steam-plugin/commit/c8424b4d3ab0fb94a3a0cf3e3b2e0152a2105d34))
+
 ## [1.10.2](https://github.com/XasYer/steam-plugin/compare/v1.10.1...v1.10.2) (2025-02-05)
 
 
