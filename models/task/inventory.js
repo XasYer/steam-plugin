@@ -45,31 +45,24 @@ async function callback () {
       if (!lastTime) {
         continue
       }
+      const addItems = familyInventory.apps.filter(i => i.rt_time_acquired > Number(lastTime))
+      if (!addItems.length) {
+        continue
+      }
+      // pop会修改原数组
+      const steamIds = _.uniq(addItems.map(i => i.owner_steamids[i.owner_steamids.length - 1]))
+      const infoMap = await api.IPlayerService.GetPlayerLinkDetails(steamIds)
+        .catch(() => steamIds.map(i => ({ public_data: { persona_name: i, steamid: i } })))
       const games = []
-      for (const app of familyInventory.apps.filter(i => i.rt_time_acquired > Number(lastTime))) {
-        const owners = []
-        const steamInfos = await api.IPlayerService.GetPlayerLinkDetails(app.owner_steamids)
-          .catch(() => app.owner_steamids.map(i => ({ public_data: { persona_name: i, steamid: i } })))
-        for (const info of steamInfos) {
-          const user = await db.user.getBySteamId(info.public_data.steamid)
-          if (user) {
-            const username = await utils.bot.getUserName(i.botId, user.userId, i.groupId)
-            if (user.userId != username) {
-              owners.push(username)
-              continue
-            }
-          }
-          owners.push(info.public_data.persona_name)
-        }
+      for (const app of addItems) {
+        const steamId = app.owner_steamids.pop()
+        const info = infoMap.find(i => i.public_data.steamid === steamId)
         games.push({
           name: app.name,
           image: utils.steam.getHeaderImgUrlByAppid(app.appid),
           appid: moment.unix(app.rt_time_acquired).format('YYYY-MM-DD HH:mm:ss'),
-          desc: `来自: ${owners.join('、')}`
+          desc: `来自: ${info?.public_data?.persona_name || steamId}`
         })
-      }
-      if (!games.length) {
-        continue
       }
       for (const g of pushList.filter(p => p.steamId === i.steamId)) {
         const username = await utils.bot.getUserName(g.botId, g.userId, g.groupId)
