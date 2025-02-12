@@ -10,7 +10,7 @@ const appInfo = {
 
 const rule = {
   urlGameInfo: {
-    reg: /store.steampowered.com\/(app|sub|bundle)\/(\d+)\//,
+    reg: /store.steampowered.com\/(?:agecheck\/)?(app|sub|bundle)\/(\d+)\//,
     fnc: async e => {
       const [, type, appid] = rule.urlGameInfo.reg.exec(e.msg)
       const typeMap = {

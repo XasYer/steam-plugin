@@ -46,9 +46,12 @@ const Render = {
           i.desc.push(`太多辣 ! 已隐藏${length}个项目`)
           i.games.length = hiddenLength
         }
-        if (!i.image && !i.noImg) {
-          i.image = utils.steam.getHeaderImgUrlByAppid(i.appid)
-        }
+        i.games = i.games.map(g => {
+          if (!g.image && !g.noImg) {
+            g.image = utils.steam.getHeaderImgUrlByAppid(g.appid)
+          }
+          return g
+        })
         return i
       })
       const len = minLength === 1 ? 1.4 : minLength
