@@ -25,7 +25,7 @@ const rule = {
         include_release: true,
         include_assets: true,
         include_included_items: true
-      })
+      }).catch(() => ({}))
       if (!infoMap[appid]) {
         return false
       }
