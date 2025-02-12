@@ -66,6 +66,7 @@ export async function GetDiscoveryQueueSkippedApps (accessToken, steamid) {
 
 /**
  * 获取不同语言的tag名称
+ * @param {number[]} tagids
  * @returns {Promise<{
  *   tagid: number,
  *   english_name: string,

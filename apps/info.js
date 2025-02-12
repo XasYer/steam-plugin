@@ -9,14 +9,73 @@ const appInfo = {
 }
 
 const rule = {
-  game: {
+  urlGameInfo: {
+    reg: /store.steampowered.com\/(app|sub|bundle)\/(\d+)\//,
+    fnc: async e => {
+      const [, type, appid] = rule.urlGameInfo.reg.exec(e.msg)
+      const typeMap = {
+        app: 'appid',
+        sub: 'packageid',
+        bundle: 'bundleid'
+      }
+      const infoMap = await api.IStoreBrowseService.GetItems({ [typeMap[type]]: appid }, {
+        include_reviews: true,
+        include_tag_count: 5,
+        include_basic_info: true,
+        include_release: true,
+        include_assets: true,
+        include_included_items: true
+      })
+      if (!infoMap[appid]) {
+        return false
+      }
+      const info = infoMap[appid]
+      // eslint-disable-next-line no-template-curly-in-string
+      const header = utils.steam.getStaticUrl(info.assets.asset_url_format.replace('${FILENAME}', info.assets.header))
+      const msg = [segment.image(header)]
+      switch (type) {
+        case 'app': {
+          const tagsCN = await api.IStoreService.GetLocalizedNameForTags(info.tagids).catch(() => [])
+          msg.push([
+            `appid: ${appid}`,
+            `游戏名称: ${info.name}`,
+            `游戏简介: ${info.basic_info.short_description}`,
+            `全部评测: ${info.reviews.summary_filtered.review_score_label} (${info.reviews.summary_filtered.review_count}篇评测中有${info.reviews.summary_filtered.percent_positive}%为好评)`,
+            `发行日期: ${
+            info.release.steam_release_date
+            ? moment.unix(info.release.steam_release_date).format('YYYY-MM-DD')
+            : info.release.custom_release_date_message
+            }`,
+            `玩家标签: ${tagsCN.map(i => i.name).join(',')}`,
+            `游戏价格: ${getPrice(info)}`
+          ].join('\n'))
+          break
+        }
+        default:
+          msg.push([
+            `${type === 'sub' ? '礼包' : '捆绑包'}名称: ${info.name}`,
+            `${type === 'sub' ? '礼包' : '捆绑包'}价格: ${getPrice(info)}`,
+            '包含游戏:',
+            ...info.included_items.included_apps.map(i => `${i.name}: ${getPrice(i)}`)
+          ].join('\n'))
+          break
+      }
+      return msg
+    }
+  },
+  appidInfo: {
     reg: App.getReg('(?:游戏|game|apps?)(?:详细|info|信息|详情)\\s*(\\d+)'),
     cfg: {
       appid: true
     },
     fnc: async (e, { appid }) => {
-      // TODO: 占位
-      return `https://store.steampowered.com/app/${appid}/_/`
+      const msg = await rule.urlGameInfo.fnc({
+        msg: `https://store.steampowered.com/app/${appid}/`
+      })
+      if (msg) {
+        return msg
+      }
+      return `没有找到${appid}相关信息`
     }
   },
   info: {
@@ -106,6 +165,24 @@ const rule = {
 }
 
 export const app = new App(appInfo, rule).create()
+
+function getPrice (info) {
+  let price
+  if (info.is_free) {
+    price = '免费'
+  } else if (info.best_purchase_option) {
+    if (info.best_purchase_option.discount_pct) {
+      price = `原价: ${info.best_purchase_option.formatted_original_price} 现价: ${info.best_purchase_option.formatted_final_price} (-${info.best_purchase_option.discount_pct}%)`
+    } else {
+      price = info.best_purchase_option.formatted_final_price
+    }
+  } else if (info.release.is_coming_soon) {
+    price = '暂未发售'
+  } else {
+    price = '未知'
+  }
+  return price
+}
 
 /**
  * 将地区码转换为中文

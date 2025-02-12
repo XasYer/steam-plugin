@@ -20,6 +20,7 @@ import _ from 'lodash'
  *   include_trailers: boolean,
  *   include_ratings: boolean,
  *   include_reviews: boolean,
+ *   include_tag_count: count
  *   include_basic_info: boolean,
  *   include_supported_languages: boolean,
  *   include_full_description: boolean,
@@ -52,6 +53,7 @@ import _ from 'lodash'
  *         review_score_label: string,
  *       }
  *     },
+ *     included_appids?: number[],
  *     basic_info?: {
  *       short_description: string,
  *       publishers: {
@@ -64,6 +66,7 @@ import _ from 'lodash'
  *       }[],
  *       capsule_headline: string,
  *     },
+ *     tagids: number[],
  *     assets?: {
  *       asset_url_format: string,
  *       main_capsule: string,
@@ -77,6 +80,9 @@ import _ from 'lodash'
  *       community_icon: string,
  *     },
  *     release?: {
+ *       is_coming_soon: boolean,
+ *       custom_release_date_message: string,
+ *       coming_soon_display: string,
  *       steam_release_date: number,
  *     },
  *     platforms?: {

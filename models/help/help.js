@@ -176,6 +176,10 @@ export const helpList = [
     group: 'steam相关信息',
     list: [
       {
+        title: '#steam游戏信息',
+        desc: '查看游戏简单信息,需要appid'
+      },
+      {
         title: '#steam成就统计',
         desc: '查看游戏全球成就完成度,需要appid'
       },

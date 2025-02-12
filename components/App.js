@@ -166,7 +166,13 @@ export default class App {
           options.cookie = token.cookie
           options.steamId = token.steamId
         }
-        const res = await fnc(e, options).catch(error => {
+        let res
+        try {
+          res = fnc(e, options)
+          if (res instanceof Promise) {
+            res = await res
+          }
+        } catch (error) {
           if (error.isAxiosError) {
             logger.error(error.message)
           } else {
@@ -189,8 +195,8 @@ export default class App {
             }
           }
           App.reply(e, `出错辣! ${message}`, { quote: true })
-          return true
-        })
+          res = true
+        }
         clearThrottle(key)
         if (typeof res == 'boolean') {
           return res
