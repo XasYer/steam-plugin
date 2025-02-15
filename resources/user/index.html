@@ -37,6 +37,22 @@
               <div class="detail">
                 <div class="name">{{uid.name}}</div>
               </div>
+              {{if groupPermission}}
+              <div class="push">
+                {{if play}}
+                <div class="{{uid.play ? 'open' : 'close'}}">游玩推送</div>
+                {{/if}}
+                {{if state}}
+                <div class="{{uid.state ? 'open' : 'close'}}">状态推送</div>
+                {{/if}}
+                {{if inventory}}
+                <div class="{{uid.inventory ? 'open' : 'close'}}">库存推送</div>
+                {{/if}}
+                {{if wishlist}}
+                <div class="{{uid.wishlist ? 'open' : 'close'}}">愿望单推送</div>
+                {{/if}}
+              </div>
+              {{/if}}
             </div>
           </div>
         </div>
@@ -57,10 +73,10 @@
     <nobr>#steam绑定123456789</nobr>
     绑定对应steamId或好友码
   </li>
-  {{if enablePush}}
+  {{if groupPermission}}
   <li>
-    <nobr>#steam(开启/关闭)推送1</nobr>
-    可以开启或关闭对应序号steamId的推送功能
+    <nobr>#steam(开启/关闭)游玩推送1</nobr>
+    可以开启或关闭对应序号steamId的对应推送功能
   </li>
   {{/if}}
 </ul>

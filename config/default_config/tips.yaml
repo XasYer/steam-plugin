@@ -30,8 +30,20 @@ privateUseTips: "请在群聊中使用此功能~"
 # 在群聊中使用私聊限定的指令时的提示语
 groupUseTips: "请在私聊中使用此功能~"
 
-# 没有开启推送功能时的提示语
-pushDisabledTips: "主人没有开启推送功能哦"
+# 没有开启对应推送功能时的提示语 {{type}} 对应的推送类型
+pushDisableTips: "主人没有开启{{type}}推送功能哦"
+
+# 用户尝试开关其他人的推送时提示语 {{type}} 对应的推送类型
+pushPermissionTips: "只能开启或关闭自己的{{type}}推送哦"
+
+# 开启或关闭推送的提示语
+# 可用的模版字符串
+# {{target}} 开启/关闭
+# {{type}} 推送类型
+# {{groupId}} 群号
+# {{userId}} 用户id
+# {{steamId}} 用户绑定的steamId
+pushChangeTips: "已{{target}}{{type}}推送{{steamId}}到{{groupId}}~"
 
 # 在推送黑名单中的提示语
 blackGroupTips: "本群在推送黑名单中, 请联系主人解除~"

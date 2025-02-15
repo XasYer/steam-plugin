@@ -65,183 +65,6 @@ export const cfgSchema = {
       }
     }
   },
-  push: {
-    title: '推送设置',
-    cfg: {
-      enable: {
-        title: '游玩推送总开关',
-        key: '推送',
-        type: 'boolean',
-        def: true,
-        desc: '是否开启推送功能'
-      },
-      playStart: {
-        title: '游戏开始推送',
-        key: '开始',
-        type: 'boolean',
-        def: true,
-        desc: '是否推送开始游戏'
-      },
-      playEnd: {
-        title: '游戏结束推送',
-        key: '结束',
-        type: 'boolean',
-        def: true,
-        desc: '是否推送结束游戏'
-      },
-      stateChange: {
-        title: '状态改变推送总开关',
-        key: '状态推送',
-        type: 'boolean',
-        def: true,
-        desc: '是否推送游戏状态改变'
-      },
-      stateOnline: {
-        title: '上线推送',
-        key: '上线',
-        type: 'boolean',
-        def: true,
-        desc: '是否推送上线'
-      },
-      stateOffline: {
-        title: '下线推送',
-        key: '下线',
-        type: 'boolean',
-        def: true,
-        desc: '是否推送下线'
-      },
-      defaultPush: {
-        title: '默认开启推送',
-        key: '默认推送',
-        type: 'boolean',
-        def: true,
-        desc: '是否默认开启推送, 绑定steamId后自动开启推送'
-      },
-      time: {
-        title: '推送间隔',
-        key: '推送间隔',
-        def: 5,
-        min: 1,
-        type: 'string',
-        input: (n) => {
-          if (n >= 0) {
-            return n * 1
-          } else {
-            return 5
-          }
-        },
-        desc: '推送间隔 可以是cron 也可以是数字 单位分钟'
-      },
-      pushApi: {
-        title: '推送请求api',
-        key: '推送api',
-        type: 'number',
-        def: 2,
-        min: 1,
-        max: 4,
-        input: (n) => {
-          if (n >= 1 && n <= 4) {
-            return n * 1
-          } else {
-            return 2
-          }
-        },
-        component: 'RadioGroup',
-        options: [
-          { label: '需要access_token', value: 1 },
-          { label: '默认 可能会出现429', value: 2 },
-          { label: '需要请求两个接口', value: 3 },
-          { label: '随机', value: 4 }
-        ],
-        desc: '推送消息的api 请查看default_config/push.yaml的注释'
-      },
-      pushMode: {
-        title: '推送模式',
-        key: '推送模式',
-        type: 'number',
-        def: 1,
-        component: 'RadioGroup',
-        options: [
-          { label: '文字推送', value: 1 },
-          { label: '图片推送', value: 2 },
-          { label: 'steam风格图片', value: 3 }
-        ],
-        input: (n) => {
-          if (n >= 1 && n <= 3) {
-            return n * 1
-          } else {
-            return 1
-          }
-        },
-        desc: '推送模式 1: 文字推送 2: 图片推送 3: steam风格图片'
-      },
-      familyInventotyAdd: {
-        title: '家庭库存增加推送',
-        key: '家庭库存推送',
-        type: 'boolean',
-        def: false,
-        desc: '是否推送家庭库存增加,需要先扫码登录'
-      },
-      familyInventotyTime: {
-        title: '家庭库存推送间隔',
-        key: '家庭库存间隔',
-        type: 'string',
-        def: '0 0 12 * * ?',
-        desc: '家庭库存推送时间间隔 可以是cron 也可以是数字 单位分钟'
-      },
-      randomBot: {
-        title: '随机推送Bot',
-        key: '随机Bot',
-        type: 'boolean',
-        def: false,
-        desc: '有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)'
-      },
-      cacheName: {
-        title: '缓存中文游戏名',
-        key: '缓存游戏名',
-        type: 'boolean',
-        def: true,
-        desc: '是否缓存游戏的中文名, 通过接口获取存储在数据库'
-      },
-      statusFilterGroup: {
-        title: '统计过滤黑白名单',
-        key: '统计过滤群',
-        type: 'boolean',
-        def: true,
-        desc: '群统计是否过滤掉黑名单群和白名单群 关闭则每次都会获取所有群的状态'
-      },
-      blackBotList: {
-        title: '推送黑名单机器人',
-        key: '推送bot黑名单',
-        type: 'array',
-        def: [],
-        desc: '黑名单中的Bot账号不会开启推送',
-        component: 'GTags'
-      },
-      whiteBotList: {
-        title: '推送白名单机器人',
-        key: '推送bot白名单',
-        type: 'array',
-        def: [],
-        desc: '只推送白名单Bot账号的状态',
-        component: 'GTags'
-      },
-      blackGroupList: {
-        title: '推送黑名单群',
-        key: '推送黑名单',
-        type: 'array',
-        def: [],
-        desc: '不推送黑名单群的状态'
-      },
-      whiteGroupList: {
-        title: '推送白名单群',
-        key: '推送白名单',
-        type: 'array',
-        def: [],
-        desc: '只推送白名单群的状态'
-      }
-    }
-  },
   other: {
     title: '其他设置',
     cfg: {
@@ -433,6 +256,237 @@ export const cfgSchema = {
         type: 'boolean',
         def: false,
         desc: '是否将#steam状态发送为gif图片,谨慎开启! 会短时间内截图多次, 可能导致服务器压力过大'
+      }
+    }
+  },
+  push: {
+    title: '推送设置',
+    cfg: {
+      enable: {
+        title: '游玩推送总开关',
+        key: '推送',
+        type: 'boolean',
+        def: true,
+        desc: '是否开启推送功能'
+      },
+      playStart: {
+        title: '游戏开始推送',
+        key: '开始',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送开始游戏'
+      },
+      playEnd: {
+        title: '游戏结束推送',
+        key: '结束',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送结束游戏'
+      },
+      stateChange: {
+        title: '状态改变推送总开关',
+        key: '状态推送',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送游戏状态改变'
+      },
+      stateOnline: {
+        title: '上线推送',
+        key: '上线',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送上线'
+      },
+      stateOffline: {
+        title: '下线推送',
+        key: '下线',
+        type: 'boolean',
+        def: true,
+        desc: '是否推送下线'
+      },
+      defaultPush: {
+        title: '默认开启推送',
+        key: '默认推送',
+        type: 'boolean',
+        def: true,
+        desc: '是否默认开启推送, 绑定steamId后自动开启游玩推送和状态'
+      },
+      time: {
+        title: '推送间隔',
+        key: '推送间隔',
+        def: 5,
+        min: 1,
+        type: 'string',
+        input: (n) => {
+          if (n >= 0) {
+            return n * 1
+          } else {
+            return 5
+          }
+        },
+        desc: '游玩和状态推送间隔 可以是cron 也可以是数字 单位分钟'
+      },
+      familyInventotyAdd: {
+        title: '家庭库存增加推送',
+        key: '家庭库存推送',
+        type: 'boolean',
+        def: false,
+        desc: '是否推送家庭库存增加,需要先扫码登录 不能批量查询'
+      },
+      familyInventotyTime: {
+        title: '家庭库存推送间隔',
+        key: '家庭库存间隔',
+        type: 'string',
+        def: '0 0 12 * * ?',
+        desc: '家庭库存推送时间间隔 可以是cron 也可以是数字 单位分钟'
+      },
+      userInventoryChange: {
+        title: '库存变化推送',
+        key: '库存推送',
+        type: 'number',
+        def: false,
+        desc: '是否开启库存推送 0关闭 1绑定acceseToken可开启 2所有人可开启 不能批量查询',
+        input: (n) => {
+          if (n >= 0 && n <= 2) {
+            return n * 1
+          } else {
+            return 0
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '关闭', value: 0 },
+          { label: '绑定acceseToken可开启', value: 1 },
+          { label: '所有人可开启', value: 2 }
+        ]
+      },
+      userInventoryTime: {
+        title: '库存推送间隔',
+        key: '库存间隔',
+        type: 'string',
+        def: '0 0 12 * * ?',
+        desc: '库存推送时间间隔 可以是cron 也可以是数字 单位分钟'
+      },
+      userWishlistChange: {
+        title: '愿望单变化推送',
+        key: '愿望单推送',
+        type: 'number',
+        def: false,
+        desc: '是否开启愿望单推送 0关闭 1绑定acceseToken可开启 2所有人可开启 不能批量查询',
+        input: (n) => {
+          if (n >= 0 && n <= 2) {
+            return n * 1
+          } else {
+            return 0
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '关闭', value: 0 },
+          { label: '绑定acceseToken可开启', value: 1 },
+          { label: '所有人可开启', value: 2 }
+        ]
+      },
+      userWishlistTime: {
+        title: '愿望单推送间隔',
+        key: '愿望单间隔',
+        type: 'string',
+        def: '0 0 12 * * ?',
+        desc: '愿望单推送时间间隔 可以是cron 也可以是数字 单位分钟'
+      },
+      pushApi: {
+        title: '推送请求api',
+        key: '推送api',
+        type: 'number',
+        def: 2,
+        min: 1,
+        max: 4,
+        input: (n) => {
+          if (n >= 1 && n <= 4) {
+            return n * 1
+          } else {
+            return 2
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '需要access_token', value: 1 },
+          { label: '默认 可能会出现429', value: 2 },
+          { label: '需要请求两个接口', value: 3 },
+          { label: '随机', value: 4 }
+        ],
+        desc: '推送消息的api 请查看default_config/push.yaml的注释'
+      },
+      pushMode: {
+        title: '推送模式',
+        key: '推送模式',
+        type: 'number',
+        def: 1,
+        component: 'RadioGroup',
+        options: [
+          { label: '文字推送', value: 1 },
+          { label: '图片推送', value: 2 },
+          { label: 'steam风格图片', value: 3 }
+        ],
+        input: (n) => {
+          if (n >= 1 && n <= 3) {
+            return n * 1
+          } else {
+            return 1
+          }
+        },
+        desc: '推送模式 1: 文字推送 2: 图片推送 3: steam风格图片'
+      },
+      randomBot: {
+        title: '随机推送Bot',
+        key: '随机Bot',
+        type: 'boolean',
+        def: false,
+        desc: '有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)'
+      },
+      cacheName: {
+        title: '缓存中文游戏名',
+        key: '缓存游戏名',
+        type: 'boolean',
+        def: true,
+        desc: '是否缓存游戏的中文名, 通过接口获取存储在数据库'
+      },
+      statusFilterGroup: {
+        title: '统计过滤黑白名单',
+        key: '统计过滤群',
+        type: 'boolean',
+        def: true,
+        desc: '群统计是否过滤掉黑名单群和白名单群 关闭则每次都会获取所有群的状态'
+      },
+      blackBotList: {
+        title: '推送黑名单机器人',
+        key: '推送bot黑名单',
+        type: 'array',
+        def: [],
+        desc: '黑名单中的Bot账号不会开启推送',
+        component: 'GTags'
+      },
+      whiteBotList: {
+        title: '推送白名单机器人',
+        key: '推送bot白名单',
+        type: 'array',
+        def: [],
+        desc: '只推送白名单Bot账号的状态',
+        component: 'GTags'
+      },
+      blackGroupList: {
+        title: '推送黑名单群',
+        key: '推送黑名单',
+        type: 'array',
+        def: [],
+        desc: '不推送黑名单群的状态'
+      },
+      whiteGroupList: {
+        title: '推送白名单群',
+        key: '推送白名单',
+        type: 'array',
+        def: [],
+        desc: '只推送白名单群的状态'
       }
     }
   },

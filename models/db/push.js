@@ -8,7 +8,10 @@ import { sequelize, DataTypes, Op } from './base.js'
  * @property {string} steamId steamId
  * @property {string} botId 机器人id
  * @property {string} groupId 群组id
- * @property {boolean} isPush 是否开启推送
+ * @property {boolean} play 是否开启游玩推送
+ * @property {boolean} state 是否开启状态推送
+ * @property {boolean} inventory 是否开启库存推送
+ * @property {boolean} wishlist 是否开启愿望单推送
  */
 
 export const table = sequelize.define('push', {
@@ -33,10 +36,21 @@ export const table = sequelize.define('push', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  isPush: {
+  play: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true,
-    allowNull: false
+    defaultValue: true
+  },
+  state: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  inventory: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  wishlist: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
   freezeTableName: true
@@ -44,16 +58,55 @@ export const table = sequelize.define('push', {
 
 await table.sync()
 
+// 修改字段isPush 细分为游玩推送 状态推送 库存推送 愿望单推送
+// 2025年2月15日 七天后删除
+async function PushTableUpdateColumn () {
+  const queryInterface = sequelize.getQueryInterface()
+  // 检查isPush是否存在
+  const isPush = await queryInterface.describeTable('push').then(i => i.isPush)
+  if (!isPush) {
+    return
+  }
+  // 修改isPush字段为play
+  await queryInterface.renameColumn('push', 'isPush', 'play')
+  // 添加state字段
+  await queryInterface.addColumn('push', 'state', {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  })
+  // 添加inventory字段
+  await queryInterface.addColumn('push', 'inventory', {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  })
+  // 添加wishlist字段
+  await queryInterface.addColumn('push', 'wishlist', {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  })
+  // 修改state字段和play一样
+  await table.update({
+    state: true
+  }, {
+    where: {
+      play: true
+    }
+  })
+}
+
+await PushTableUpdateColumn()
+
 /**
  * 添加一个推送群
  * @param {string} userId
  * @param {string} steamId
  * @param {string} botId
  * @param {string} groupId
+ * @param {{play: boolean, state: boolean, inventory: boolean, wishlist: boolean}} columns 开启推送的类型
  * @param {Transaction?} [transaction]
  * @returns {Promise<PushColumns>}
  */
-export async function add (userId, steamId, botId, groupId, transaction) {
+export async function set (userId, steamId, botId, groupId, columns = {}, transaction) {
   userId = String(userId)
   botId = String(botId)
   groupId = String(groupId)
@@ -67,9 +120,7 @@ export async function add (userId, steamId, botId, groupId, transaction) {
     }
   }).then(i => i?.dataValues)
   if (data) {
-    return await table.update({
-      isPush: true
-    }, {
+    return await table.update(columns, {
       where: {
         userId,
         steamId,
@@ -84,71 +135,26 @@ export async function add (userId, steamId, botId, groupId, transaction) {
     steamId,
     botId,
     groupId,
-    isPush: Config.push.defaultPush
+    ...columns
   }, { transaction }).then(result => result?.dataValues)
 }
 
 /**
- * 删除一个推送群
+ * 根据userId和groupId获取所有数据
  * @param {string} userId
- * @param {string} steamId
- * @param {string} botId
  * @param {string} groupId
- * @param {Transaction?} [transaction]
- * @returns {Promise<number>}
- */
-export async function set (userId, steamId, botId, groupId, transaction) {
-  userId = String(userId)
-  botId = String(botId)
-  groupId = String(groupId)
-  return await table.update({
-    isPush: false
-  }, {
-    where: {
-      userId,
-      steamId,
-      botId,
-      groupId
-    },
-    transaction
-  }).then(result => result?.[0])
-}
-
-/**
- * 通过steamId获取所有推送群组
- * @param {string} steamId
  * @returns {Promise<PushColumns[]>}
  */
-export async function getAllBySteamId (steamId) {
-  return await table.findAll({
-    where: {
-      steamId,
-      isPush: true
-    }
-  }).then(result => result?.map(item => item?.dataValues))
-}
-
-/**
- * 根据userId和groupId获取所有的steamId
- * @param {string} userId
- * @param {string} groupId
- * @param {boolean} [isPush=true] 是否只获取开启推送的用户
- * @returns {Promise<string[]>}
- */
-export async function getAllByUserIdAndGroupId (userId, groupId, isPush = true) {
+export async function getAllByUserIdAndGroupId (userId, groupId) {
   if (!groupId) return []
   userId = String(userId)
   groupId = String(groupId)
-  const where = {
-    userId,
-    groupId
-  }
-  if (isPush) {
-    where.isPush = true
-  }
   return await table.findAll({
-    where
-  }).then(result => result.map(item => item?.dataValues?.steamId))
+    where: {
+      userId,
+      groupId
+    }
+  }).then(result => result.map(item => item?.dataValues))
 }
 
 /**
@@ -168,12 +174,20 @@ export async function delBySteamId (steamId, transaction) {
 
 /**
  * 获取所有推送群组
+ * @param {{play: boolean, state: boolean, inventory: boolean, wishlist: boolean}} where 查询条件
  * @param {boolean} [filter=true] 是否使用黑白名单查找 默认开启
  * @returns {Promise<PushColumns[]>}
  */
-export async function getAll (filter = true) {
+export async function getAll (columns = {
+  play: true,
+  state: true,
+  inventory: false,
+  wishlist: false
+}, filter = true) {
   const where = {
-    isPush: true
+  }
+  if (Object.keys(columns).length) {
+    where[Op.or] = columns
   }
   if (filter) {
     if (Config.push.whiteGroupList.length) {
@@ -220,16 +234,21 @@ export async function setNA (userId, steamId) {
 /**
  * 根据groupId获取所有数据
  * @param {string} groupId
- * @param {boolean} [isPush=true] 是否只获取开启推送的用户
+ * @param {{play: boolean, state: boolean, inventory: boolean, wishlist: boolean}} columns 查询条件
  * @returns {Promise<PushColumns[]>}
  */
-export async function getAllByGroupId (groupId, isPush = true) {
+export async function getAllByGroupId (groupId, columns = {
+  play: true,
+  state: true,
+  inventory: false,
+  wishlist: false
+}) {
   groupId = String(groupId)
   const where = {
     groupId
   }
-  if (isPush) {
-    where.isPush = true
+  if (Object.keys(columns).length) {
+    where[Op.or] = columns
   }
   return await table.findAll({
     where
@@ -239,17 +258,22 @@ export async function getAllByGroupId (groupId, isPush = true) {
 /**
  * 根据userId列表获取对应的所有数据
  * @param {string[]} userList
- * @param {boolean} isPush 是否只获取开启推送的用户
+ * @param {{play: boolean, state: boolean, inventory: boolean, wishlist: boolean}} columns 查询条件
  * @returns
  */
-export async function getAllByUserIds (userList, isPush = true) {
+export async function getAllByUserIds (userList, columns = {
+  play: true,
+  state: true,
+  inventory: false,
+  wishlist: false
+}) {
   const where = {
     userId: {
       [Op.in]: userList.map(String)
     }
   }
-  if (isPush) {
-    where.isPush = true
+  if (Object.keys(columns).length) {
+    where[Op.or] = columns
   }
   return await table.findAll({
     where

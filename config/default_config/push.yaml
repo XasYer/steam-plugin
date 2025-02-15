@@ -51,15 +51,37 @@ pushMode: 1
 time: 5
 
 # 是否开启家庭库存增加推送
-# 不能批量查询
-# 需要绑定先扫码登录获取access_token 并且发送 #steam开启家庭库存推送
+# 请注意: 
+# 1. 不能批量查询
+# 2. 需要绑定先扫码登录获取access_token
 familyInventotyAdd: false
 
 # 家庭库存检查间隔
 # 可以是cron表达式 也可以是数字 单位: 分钟
 familyInventotyTime: 0 0 12 * * ?
 
-# 是否默认开启推送 即绑定steamId之后不需要发 #steam开启推送 指令
+# 是否开启用户库存增加推送
+# 可选 0: 关闭用户库存推送 1: 扫码绑定后可开启库存推送 2: 所有用户都可开启库存推送
+# 请注意:
+# 1. 不能批量查询
+# 2. 因为接口没有返回入库时间, 所以会缓存用户的库存
+userInventoryChange: 0
+
+# 用户库存检查间隔
+# 可以是cron表达式 也可以是数字 单位: 分钟
+userInventoryTime: 0 0 12 * * ?
+
+# 是否开启用户愿望单增加推送
+# 可选 0: 关闭用户愿望单推送 1: 扫码绑定后可开启愿望单推送 2: 所有用户都可开启愿望单推送
+# 请注意:
+# 1. 不能批量查询
+userWishlistChange: 0
+
+# 用户愿望单检查间隔
+# 可以是cron表达式 也可以是数字 单位: 分钟
+userWishlistTime: 0 0 12 * * ?
+
+# 是否默认开启游玩推送和状态推送 即绑定steamId之后不需要发 #steam开启游玩推送 和 #steam开启状态推送 指令
 defaultPush: true
 
 # 是否随机Bot进行推送, 有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)

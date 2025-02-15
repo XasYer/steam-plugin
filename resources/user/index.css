@@ -93,9 +93,12 @@ nobr {
   background-repeat: no-repeat;
 }
 .uid-list .game-inner .info {
-  padding: 4px 10px;
+  padding: 1px 10px;
   line-height: 18px;
   color: #414e64;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .uid-list .game-inner .info div.shadow {
   position: relative;
@@ -110,10 +113,10 @@ nobr {
   top: 0;
 }
 .uid-list .game-inner .info .uid-info {
-  height: 25px;
+  height: 20px;
   font-size: 24px;
   display: flex;
-  margin-top: 5px;
+  margin-top: 0px;
 }
 .uid-list .game-inner .info .uid-info .type {
   width: 35px;
@@ -154,6 +157,22 @@ nobr {
   color: #555;
   font-size: 12px;
   text-shadow: 0 0 1px #fff;
+}
+.uid-list .game-inner .info .push {
+  display: flex;
+  font-size: 11px;
+}
+.uid-list .game-inner .info .push div {
+  margin-right: 5px;
+  box-shadow: 0 0 3px 0 #000;
+  border-radius: 3px;
+  padding: 0 3px;
+}
+.uid-list .game-inner .info .push .open {
+  background: #adff2f;
+}
+.uid-list .game-inner .info .push .close {
+  background: #ff4d4d;
 }
 .uid-list .game-inner:after {
   display: block;

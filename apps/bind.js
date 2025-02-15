@@ -38,7 +38,12 @@ const rule = {
         // 群聊绑定才添加
         if (e.group_id) {
           await db.push.setNA(uid, steamId)
-          await db.push.add(uid, steamId, e.self_id, e.group_id)
+          await db.push.set(uid, steamId, e.self_id, e.group_id, {
+            play: Config.push.defaultPush,
+            state: Config.push.defaultPush,
+            inventory: false,
+            wishlist: false
+          })
         }
       }
       return await bind.getBindSteamIdsImg(e.self_id, uid, e.group_id)

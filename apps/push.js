@@ -2,8 +2,7 @@ import { App, Config, Render } from '#components'
 import { db, utils, task } from '#models'
 import _ from 'lodash'
 
-task.play.startTimer()
-task.inventory.startTimer()
+task.startTask()
 
 const appInfo = {
   id: 'push',
@@ -12,58 +11,52 @@ const appInfo = {
 
 const rule = {
   push: {
-    reg: App.getReg('(?:开启|关闭)推送\\s*(\\d*)'),
+    reg: App.getReg('(?:开启|关闭)(游玩|库存|愿望单|状态)?推送\\s*(\\d*)'),
     cfg: {
-      group: true
+      group: true,
+      steamId: true
     },
-    fnc: async e => {
-      if (!Config.push.enable) {
-        return Config.tips.pushDisabledTips
-      }
+    fnc: async (e, { steamId, uid, userSteamIdList }) => {
       const g = utils.bot.checkGroup(e.group_id)
       if (!g.success) {
         return g.message
       }
-      const textId = rule.push.reg.exec(e.msg)[1]
-      const open = e.msg.includes('开启')
-      // 如果附带了steamId
-      if (textId) {
-        let steamId = utils.steam.getSteamId(textId)
-        const user = await db.user.getBySteamId(steamId)
-        // 如果没有人绑定这个steamId则判断是否为主人,主人才能添加推送
-        if (((!user && e.isMaster) || (user && user.userId == e.user_id))) {
-          const uid = e.isMaster ? utils.bot.getAtUid(_.isEmpty(e.at) ? e.user_id : e.at, '0') : e.user_id
-          if (uid != '0') {
-            const userBindAll = await db.user.getAllByUserId(uid)
-            const index = Number(textId) <= userBindAll.length ? Number(textId) - 1 : -1
-            steamId = index >= 0 ? userBindAll[index].steamId : steamId
-          }
-          if (open) {
-            await db.push.add(uid, steamId, e.self_id, e.group_id)
-            return `已开启推送${steamId}到${e.group_id}`
-          } else {
-            await db.push.set(uid, steamId, e.self_id, e.group_id)
-            return `已关闭推送${steamId}到${e.group_id}`
-          }
-        } else {
-          return '只能开启或关闭自己的推送哦'
-        }
-      } else {
-        const uid = utils.bot.getAtUid(e.isMaster ? e.at : '', e.user_id)
-        // 没有附带steamId则使用绑定的steamId
-        const steamId = await db.user.getBind(uid)
-        if (steamId) {
-          if (open) {
-            await db.push.add(uid, steamId, e.self_id, e.group_id)
-            return `已开启推送${steamId}到${e.group_id}`
-          } else {
-            await db.push.set(uid, steamId, e.self_id, e.group_id)
-            return `已关闭推送${steamId}到${e.group_id}`
-          }
-        } else {
-          return Config.tips.noSteamIdTips
+      const regRet = rule.push.reg.exec(e.msg)
+      const type = regRet[1] || '游玩'
+      if ((uid != e.user_id && !e.isMaster) || !userSteamIdList.find(i => i == steamId)) {
+        return Config.tips.pushPermissionTips.replace('{{type}}', type)
+      }
+      const key = {
+        游玩: 'play',
+        库存: 'inventory',
+        愿望单: 'wishlist',
+        状态: 'state'
+      }[type]
+      // 判断是否开启对应推送
+      if (
+        (key === 'inventory' && !Config.push.userInventoryChange) ||
+        (key === 'wishlist' && !Config.push.userWishlistChange) ||
+        (key === 'state' && !Config.push.stateChange) ||
+        (key === 'play' && !Config.push.enable)
+      ) {
+        return Config.tips.pushDisableTips.replace('{{type}}', type)
+      } else if (
+        (key === 'inventory' && Config.push.userInventoryChange == 1) ||
+        (key === 'wishlist' && Config.push.userWishlistChange == 1)
+      ) {
+        const token = await utils.steam.getAccessToken(uid, steamId)
+        if (!token.success) {
+          return `需要#steam扫码登录 后才可以开启${type}推送~`
         }
       }
+      const open = e.msg.includes('开启')
+      await db.push.set(uid, steamId, e.self_id, e.group_id, { [key]: open })
+      return Config.tips.pushChangeTips
+        .replace('{{type}}', type)
+        .replace('{{target}}', open ? '开启' : '关闭')
+        .replace('{{groupId}}', e.group_id)
+        .replace('{{userId}}', uid)
+        .replace('{{steamId}}', steamId)
     }
   },
   familyInventory: {
@@ -96,25 +89,65 @@ const rule = {
       if (!g.success) {
         return g.message
       }
-      const list = await db.push.getAllByGroupId(e.group_id, true)
+      const list = await db.push.getAllByGroupId(e.group_id, {
+        play: true,
+        state: true,
+        inventory: true,
+        wishlist: true
+      })
       if (!list.length) {
         return '本群还没有推送用户哦'
       }
-      const userList = []
+      const play = []
+      const state = []
+      const inventory = []
+      const wishlist = []
       for (const i of list) {
         const name = i.userId == '0' ? 'N/A' : await utils.bot.getUserName(i.botId, i.userId, i.groupId)
-        userList.push({
+        const info = {
           name,
           desc: i.steamId,
           image: await utils.bot.getUserAvatar(i.botId, i.userId == '0' ? i.botId : i.userId, i.groupId),
           isAvatar: true
+        }
+        if (i.play) {
+          play.push(info)
+        }
+        if (i.state) {
+          state.push(info)
+        }
+        if (i.inventory) {
+          inventory.push(info)
+        }
+        if (i.wishlist) {
+          wishlist.push(info)
+        }
+      }
+      const data = []
+      if (play.length) {
+        data.push({
+          title: '开启游玩推送的用户',
+          games: play
         })
       }
-      const data = [{
-        title: `群${e.group_id}推送列表`,
-        desc: `共${list.length}个推送用户`,
-        games: userList
-      }]
+      if (state.length) {
+        data.push({
+          title: '开启状态推送的用户',
+          games: state
+        })
+      }
+      if (inventory.length) {
+        data.push({
+          title: '开启库存推送的用户',
+          games: inventory
+        })
+      }
+      if (wishlist.length) {
+        data.push({
+          title: '开启愿望单推送的用户',
+          games: wishlist
+        })
+      }
       return await Render.render('inventory/index', { data })
     }
   },
@@ -126,8 +159,9 @@ const rule = {
     fnc: async e => {
       const isAll = e.msg.includes('全部')
       let list = []
+      // TODO: 是否开启全部群友状态查询
       if (isAll) {
-        list = await db.push.getAll(false)
+        list = await db.push.getAll({ }, false)
         if (!list.length) {
           return Config.tips.noSteamIdTips
         }
@@ -136,8 +170,8 @@ const rule = {
       } else {
         const memberList = await utils.bot.getGroupMemberList(e.self_id, e.group_id)
         list = memberList.length
-          ? await db.push.getAllByUserIds(memberList, false)
-          : await db.push.getAllByGroupId(e.group_id, false)
+          ? await db.push.getAllByUserIds(memberList, {})
+          : await db.push.getAllByGroupId(e.group_id, {})
         if (!list.length) {
           return '本群还没有推送用户哦'
         }
@@ -192,6 +226,32 @@ const rule = {
         }
       ]
       return await Render.render('inventory/index', { data })
+    }
+  },
+  run: {
+    reg: App.getReg('主动推送'),
+    fnc: async e => {
+      if (!e.isMaster) {
+        return '只有主人才能操作哦~'
+      }
+      const run = []
+      if (Config.push.enable) {
+        task.play.callback()
+        run.push('游玩推送')
+      }
+      if (Config.push.familyInventotyAdd) {
+        task.familyInventory.callback()
+        run.push('家庭库存推送')
+      }
+      if (Config.push.userInventoryChange) {
+        task.userInventory.callback()
+        run.push('库存推送')
+      }
+      if (Config.push.userWishlistChange) {
+        task.userWishlist.callback()
+        run.push('愿望单推送')
+      }
+      return '已主动触发' + run.join('、') + '~'
     }
   }
 }

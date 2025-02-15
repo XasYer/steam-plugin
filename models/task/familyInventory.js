@@ -22,7 +22,7 @@ export function startTimer () {
   }
 }
 
-async function callback () {
+export async function callback () {
   logger.info('开始检查Steam家庭库存信息')
   const pushList = await db.familyInventoryPush.getAll()
   for (const i of _.uniqBy(pushList, 'steamId')) {

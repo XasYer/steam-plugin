@@ -138,14 +138,20 @@ export default class App {
         }
         // 需要steamId
         if (cfg.steamId) {
+          options.userSteamIdList = await db.user.getAllByUserId(options.uid)
+          options.uid = utils.bot.getAtUid(e.at, e.user_id)
           // 先看看有没有在指令中附带steamId
           if (nums.length) {
             // 最后一个
-            options.steamId = nums.pop()
-            options.uid = e.user_id
+            const steamId = nums.pop()
+            if (options.userSteamIdList[steamId - 1]) {
+              options.steamId = options.userSteamIdList[steamId - 1].steamId
+            } else {
+              options.steamId = steamId
+              options.uid = e.user_id
+            }
           } else {
-            options.uid = utils.bot.getAtUid(e.at, e.user_id)
-            options.steamId = await db.user.getBind(options.uid)
+            options.steamId = options.userSteamIdList.find(i => i.isBind)?.steamId
             if (!options.steamId) {
               await App.reply(e, Config.tips.noSteamIdTips, { at: options.uid })
               clearThrottle(key)
@@ -153,6 +159,7 @@ export default class App {
             }
           }
           options.steamId = utils.steam.getSteamId(options.steamId)
+          options.userSteamIdList = options.userSteamIdList.map(i => i.steamId)
         }
         // 需要accessToken
         if (cfg.accessToken) {

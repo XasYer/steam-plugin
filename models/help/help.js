@@ -52,12 +52,12 @@ export const helpList = [
         desc: '查看某个游戏的统计,需要加上appid'
       },
       {
-        title: '#steam开启推送',
-        desc: '开启steam个人状态推送'
+        title: '#steam开启游玩推送',
+        desc: '开启steam个人游玩推送'
       },
       {
-        title: '#steam关闭推送',
-        desc: '关闭steam个人状态推送'
+        title: '#steam关闭状态推送',
+        desc: '可选:游玩|状态|库存|愿望单 推送'
       },
       {
         title: '#steam开启家庭库存推送',
@@ -241,6 +241,14 @@ export const helpList = [
     group: '主人功能',
     auth: 'master',
     list: [
+      {
+        title: '#steam设置',
+        desc: '设置steam相关功能'
+      },
+      {
+        title: '#steam主动推送',
+        desc: '主动触发推送流程'
+      },
       {
         title: '#steam添加推送(黑|白)名单',
         desc: '黑名单中的群不会推送'
