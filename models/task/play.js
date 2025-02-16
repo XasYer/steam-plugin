@@ -73,7 +73,7 @@ export async function callback () {
             }
           }
           if (player.gameid && player.gameid != lastPlay.appid) {
-            if (Config.push.enable && Config.push.playStart) {
+            if (Config.push.enable && Config.push.playStart && i.play) {
               const time = now - lastPlay.playTime
               state.playTime = now
               userList[i.groupId][i.botId].start.push({
@@ -89,7 +89,7 @@ export async function callback () {
           }
           if (lastPlay.appid && lastPlay.appid != player.gameid) {
             const time = now - lastPlay.playTime
-            if (Config.push.enable && Config.push.playEnd) {
+            if (Config.push.enable && Config.push.playEnd && i.play) {
               state.playTime = now
               userList[i.groupId][i.botId].end.push({
                 name: lastPlay.name,
@@ -113,7 +113,7 @@ export async function callback () {
               continue
             }
             // 没有开启状态改变推送
-            if (!Config.push.stateChange) {
+            if (!Config.push.stateChange || !i.state) {
               continue
             }
             // 没有开启离线状态推送
