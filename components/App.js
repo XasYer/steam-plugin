@@ -138,8 +138,8 @@ export default class App {
         }
         // 需要steamId
         if (cfg.steamId) {
-          options.userSteamIdList = await db.user.getAllByUserId(options.uid)
           options.uid = utils.bot.getAtUid(e.at, e.user_id)
+          options.userSteamIdList = await db.user.getAllByUserId(options.uid)
           // 先看看有没有在指令中附带steamId
           if (nums.length) {
             // 最后一个
