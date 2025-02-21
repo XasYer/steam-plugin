@@ -31,7 +31,7 @@ const rule = {
         return 0
       })
       const total = _.sum(data)
-      return `在steam消费了${currency} ${total.toFixed(2)}\n数据来源: 由 客服 -> 购买消费 -> 查看完整的购买记录 计算而来 仅供参考`
+      return `在steam消费了${currency} ${total.toFixed(2)}\n数据来源: 由 客服 -> 购买消费 -> 查看完整的购买记录 计算而来 仅供参考\n也可以前往 客服 -> 我的账户 -> 您 Steam 帐户的相关数据 -> 外部资金消费记录 查看 TotalSpend 的值`
     }
   }
 }
