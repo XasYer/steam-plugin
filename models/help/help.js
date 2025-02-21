@@ -86,6 +86,10 @@ export const helpList = [
         desc: '删除access_token'
       },
       {
+        title: '#steam消费',
+        desc: '查看在steam总消费多少'
+      },
+      {
         title: '#steam家庭库存',
         desc: '查看家庭库存'
       },

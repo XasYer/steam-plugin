@@ -1,5 +1,6 @@
 import { utils } from '#models'
 import { Config } from '#components'
+import moment from 'moment'
 
 export function getBaseURL () {
   const url = 'https://store.steampowered.com'
@@ -269,9 +270,10 @@ export async function addtowishlist (cookie, appid) {
  */
 export async function removefromwishlist (cookie, appid) {
   const sessionid = cookie.split(';').find(i => i.includes('sessionid')).split('=')[1]
-  const data = new URLSearchParams()
-  data.append('appid', appid)
-  data.append('sessionid', sessionid)
+  const data = new URLSearchParams([
+    ['sessionid', sessionid],
+    ['appid', appid]
+  ])
   return utils.request.post('api/removefromwishlist', {
     baseURL: getBaseURL(),
     headers: {
@@ -299,4 +301,28 @@ export async function ajaxgetpartnerevent (clanAccountid, announcementGid) {
       for_edit: false
     }
   }).then(res => res.event || {})
+}
+
+/**
+ * 消费历史记录
+ * @param {string} cookie
+ * @returns {Promise<string>}
+ */
+export async function AjaxLoadMoreHistory (cookie) {
+  const sessionid = cookie.split(';').find(i => i.includes('sessionid')).split('=')[1]
+  const data = new URLSearchParams([
+    ['sessionid', sessionid],
+    ['cursor[wallet_txnid]', 0],
+    ['cursor[timestamp_newest]', moment().unix()],
+    ['cursor[balance]', 0],
+    ['cursor[currency]', 23]
+  ])
+  return utils.request.post('account/AjaxLoadMoreHistory/', {
+    baseURL: getBaseURL(),
+    headers: {
+      Cookie: cookie,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data
+  }).then(res => res.html || '')
 }
