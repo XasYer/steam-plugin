@@ -77,11 +77,6 @@ pnpm install --filter=steam-plugin
 
 ![帮助图](./resources/help/help.jpg)
 
-### TODO: 可能会做的功能
-
-- steam喜加一
-- steam游戏详情
-
 ## 联系方式
 
 - QQ 群: [741577559](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=IvPaOVo_p-6n--FaLm1v39ML9EZaBRCm&authKey=YPs0p%2FRh8MGPQrWZgn99fk4kGB5PtRAoOYIUqK71FBsBYCDdekxCEHFFHnznpYA1&noverify=0&group_code=741577559)
