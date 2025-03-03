@@ -39,12 +39,12 @@ export async function getBindSteamIdsImg (bid, uid, gid, userBindSteamIdList = [
   const enablePushSteamIdList = groupPermission ? await db.push.getAllByUserIdAndGroupId(uid, gid) : []
   const userInfo = {}
   try {
-    await api.IPlayerService.GetPlayerLinkDetails(userBindSteamIdList.map(i => i.steamId))
+    (await api.IPlayerService.GetPlayerLinkDetails(userBindSteamIdList.map(i => i.steamId)))
       .forEach(i => {
         const avatarhash = Buffer.from(i.public_data.sha_digest_avatar, 'base64').toString('hex')
         userInfo[i.public_data.steamid] = {
           name: i.public_data.persona_name,
-          avatar: `https://avatars.steamstatic.com/${avatarhash}_full.jpg`
+          avatar: Config.other.steamAvatar ? `https://avatars.steamstatic.com/${avatarhash}_full.jpg` : ''
         }
       })
   } catch { }
