@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.11.0](https://github.com/XasYer/steam-plugin/compare/v1.10.2...v1.11.0) (2025-03-03)
+
+
+### Features
+
+* steam消费 ([4c4b4c0](https://github.com/XasYer/steam-plugin/commit/4c4b4c0ff1f10e251a2a89f9cd217b146b8179a2))
+* 可开启家庭库存增加推送 `#开启家庭库存推送` ([6b134a9](https://github.com/XasYer/steam-plugin/commit/6b134a97381493faa1f561e7c2a87afb8f0711c5))
+* 库存和愿望单推送 ([6e54986](https://github.com/XasYer/steam-plugin/commit/6e549866c3ddf6b5825f7f6fd933d440e5cebe7b))
+* 检测steam游戏链接发送游戏信息 ([e5d7da4](https://github.com/XasYer/steam-plugin/commit/e5d7da40e9ada982e2b81b549c0b6c1940349863))
+
+
+### Bug Fixes
+
+* #steam不显示steam名字 ([dc9945a](https://github.com/XasYer/steam-plugin/commit/dc9945ac337a257ac4f1c08299a8e506a368dd49))
+* atuid ([dc2fbfa](https://github.com/XasYer/steam-plugin/commit/dc2fbfa2c1d603fabea912a2706c7a09778fe972))
+* 关闭之后还会推送 ([eb2c29d](https://github.com/XasYer/steam-plugin/commit/eb2c29dc78272f5b9d1a6090827cc2af712077ab))
+* 家庭库存定时任务时间错误 ([5decdc0](https://github.com/XasYer/steam-plugin/commit/5decdc0398533d9264242bd70d4028f046da7c3d))
+* 没有图片 ([836de42](https://github.com/XasYer/steam-plugin/commit/836de42c6e801c01796235136d309c0aff3500d7))
+* 获取家庭库存推送列表 ([f138a87](https://github.com/XasYer/steam-plugin/commit/f138a87e7674630411a500ac552d5a3e4a9a0ca3))
+
+
+### Performance Improvements
+
+* 不影响其他指令 ([cf7e28e](https://github.com/XasYer/steam-plugin/commit/cf7e28ef5c2082f38b99563af6749a4b13341312))
+* 优化提示 ([cae5c51](https://github.com/XasYer/steam-plugin/commit/cae5c51fc3a8a42f5bf50241da0ab32731549630))
+* 优化正则 ([26ce6ea](https://github.com/XasYer/steam-plugin/commit/26ce6ea7003d246baee2c23dbfae84bcd8fca0ba))
+* 优化消费展示 ([e82b720](https://github.com/XasYer/steam-plugin/commit/e82b720e8f74b6ce287e1f25ae7cdc670485fc44))
+* 家庭库存推送显示来自用户 ([ae9123e](https://github.com/XasYer/steam-plugin/commit/ae9123ece421f6e7071212e6ee2de7488f174e17))
+* 来自最后一个的steam名称 ([c8424b4](https://github.com/XasYer/steam-plugin/commit/c8424b4d3ab0fb94a3a0cf3e3b2e0152a2105d34))
+
 ## [1.10.2](https://github.com/XasYer/steam-plugin/compare/v1.10.1...v1.10.2) (2025-02-05)
 
 
