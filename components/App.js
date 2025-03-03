@@ -31,7 +31,7 @@ export default class App {
   }
 
   static getReg (text = '') {
-    return new RegExp(`^#${Config.other.requireHashTag ? '' : '?'}steam${text}$`, 'i')
+    return new RegExp(`^#${Config.other.requireHashTag ? '' : '?'}steam\\s*${text}$`, 'i')
   }
 
   static reply (e, msg, options = { recallMsg: 0, quote: false, at: true }) {
