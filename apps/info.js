@@ -95,8 +95,6 @@ const rule = {
           const bg = await api.IPlayerService.GetProfileItemsEquipped(steamId)
           return await Render.simpleRender('info/steam', {
             html: html.replace(/<video[\s\S]*video>/, '')
-              .replace(/https:\/\/cdn.cloudflare.steamstatic.com\/steamcommunity/g, 'https://steamcdn-a.akamaihd.net/steamcommunity')
-              .replace(/https:\/\/shared.cloudflare.steamstatic.com\/store_item_assets/g, 'https://steamcdn-a.akamaihd.net')
               .replace(
                 /<img src="https:\/\/avatars.cloudflare.steamstatic.com\/(.+)_medium.jpg"/,
                 Config.other.steamAvatar
