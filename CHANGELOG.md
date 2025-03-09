@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/XasYer/steam-plugin/compare/v1.11.0...v1.11.1) (2025-03-09)
+
+
+### Bug Fixes
+
+* 状态3游戏图片 ([3a91b4e](https://github.com/XasYer/steam-plugin/commit/3a91b4ec4f0c2eafead79d6bfc530f031633d22b))
+
 ## [1.11.0](https://github.com/XasYer/steam-plugin/compare/v1.10.2...v1.11.0) (2025-03-03)
 
 
