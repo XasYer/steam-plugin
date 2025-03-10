@@ -7,6 +7,10 @@ export const helpList = [
         desc: '查看已绑定的steamId'
       },
       {
+        title: '#steam我的好友码',
+        desc: '查看自己的好友码'
+      },
+      {
         title: '#steam绑定',
         desc: '绑定steamid或好友码'
       },

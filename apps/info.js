@@ -78,6 +78,13 @@ const rule = {
       return `没有找到${appid}相关信息`
     }
   },
+  code: {
+    reg: App.getReg('我的(steamid|好友码)'),
+    cfg: {
+      steamId: true
+    },
+    fnc: async (e, { steamId }) => `steamId: ${steamId}\n好友码: ${utils.steam.getFriendCode(steamId)}`
+  },
   info: {
     reg: App.getReg('(?:信息|状态|info|status)\\s*(\\d*)'),
     cfg: {
