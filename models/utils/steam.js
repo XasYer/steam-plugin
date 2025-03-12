@@ -146,7 +146,7 @@ export async function getAccessToken (userId, steamId) {
   if (!token) {
     return {
       success: false,
-      message: `${steamId}没有绑定accessToken`
+      message: Config.tips.noAccessTokenTips
     }
   }
   return {

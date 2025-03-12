@@ -9,6 +9,9 @@ loadingTips: "在查了...在查了..."
 # 未绑定steamId时的提示语
 noSteamIdTips: "还没有绑定steamId哦, 先绑定steamId吧"
 
+# 未绑定accessToken时的提示语
+noAccessTokenTips: "没有绑定accessToken哦, 先#steam扫码登录吧"
+
 # 重复绑定steamId时的提示语
 repeatBindTips: "这个steamId已经被绑定了, 要不要换一个?"
 
