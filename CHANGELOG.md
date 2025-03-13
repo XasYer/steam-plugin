@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.11.1](https://github.com/XasYer/steam-plugin/compare/v1.11.0...v1.11.1) (2025-03-13)
+
+
+### Bug Fixes
+
+* 状态3游戏图片 ([3a91b4e](https://github.com/XasYer/steam-plugin/commit/3a91b4ec4f0c2eafead79d6bfc530f031633d22b))
+* 还有我的事? ([00c8cf8](https://github.com/XasYer/steam-plugin/commit/00c8cf8e660dfb7387ae556a01565262591a32ed))
+
+
+### Performance Improvements
+
+* steam我的好友码 ([3082457](https://github.com/XasYer/steam-plugin/commit/30824570a34b4aac0d8d7d9886d6a81d4edecfa7))
+* 优化未绑定accessToken的提示语 ([58b9686](https://github.com/XasYer/steam-plugin/commit/58b9686c1875580eb563dc7be90953d7a68a2e65))
+* 修改header图片链接 ([06bef01](https://github.com/XasYer/steam-plugin/commit/06bef0182db44cc25cffc5b17c919e4ac18f61e0))
+
 ## [1.11.0](https://github.com/XasYer/steam-plugin/compare/v1.10.2...v1.11.0) (2025-03-03)
 
 
