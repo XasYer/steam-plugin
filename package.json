@@ -7,7 +7,7 @@
   "scripts": {},
   "dependencies": {
     "@napi-rs/canvas": "^0.1.65",
-    "art-template": "^4.13.2",
+    "art-template": "4.13.2",
     "axios": "^1.7.8",
     "chalk": "^5.3.0",
     "http-proxy-agent": "^7.0.2",
