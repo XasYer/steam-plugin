@@ -122,7 +122,8 @@ const rule = {
       const games = []
       achievementsByGame.availableGameStats.achievements.forEach(all => {
         const i = achievements.find(i => i.name === all.name)
-        const percent = i.percent.toFixed(0)
+        if (!i) return
+        const percent = parseInt(i.percent)
         const info = {
           name: all.displayName,
           desc: all.hidden ? '已隐藏' : all.description,
@@ -136,7 +137,7 @@ const rule = {
       data.push({
         title: '全球成就统计',
         desc: `共${games.length}个`,
-        games: _.orderBy(games, 'percent', 'desc')
+        games: _.orderBy(games, 'appidPercent', 'desc')
       })
       return await Render.render('inventory/index', { data })
     }
