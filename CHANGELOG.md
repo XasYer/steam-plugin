@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.12.0](https://github.com/XasYer/steam-plugin/compare/v1.11.1...v1.12.0) (2025-03-17)
+
+
+### Features
+
+* steam双影奇境数据 ([93e540e](https://github.com/XasYer/steam-plugin/commit/93e540e897ab15ac316ac2f1aab952033ac03b62))
+
+
+### Bug Fixes
+
+* 成就统计 ([97d0492](https://github.com/XasYer/steam-plugin/commit/97d0492aab5c2d122f2e0d314c6970a68d6199fc))
+
 ## [1.11.1](https://github.com/XasYer/steam-plugin/compare/v1.11.0...v1.11.1) (2025-03-13)
 
 
