@@ -326,3 +326,21 @@ export async function AjaxLoadMoreHistory (cookie) {
     data
   }).then(res => res.html || '')
 }
+
+/**
+ * 查看 Steam 云
+ * @param {string} cookie
+ * @param {number} appid
+ * @returns {Promise<string>} html页面 不知道接口捏 那就只能匹配html页面了
+ */
+export async function remotestorageapp (cookie, appid) {
+  return utils.request.get('account/remotestorageapp', {
+    baseURL: getBaseURL(),
+    params: {
+      appid
+    },
+    headers: {
+      Cookie: cookie
+    }
+  })
+}

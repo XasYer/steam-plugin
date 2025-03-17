@@ -68,11 +68,11 @@ export async function GetSchemaForGame (appid) {
  * @returns {Promise<{
  *   steamID: string,
  *   gameName: string,
- *   achievements: {
+ *   achievements?: {
  *     name: string,
  *     achieved: number,
  *   }[],
- *   stats: {
+ *   stats?: {
  *     name: string,
  *     value: number,
  *   }[]
