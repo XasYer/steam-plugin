@@ -3,7 +3,7 @@ import { utils } from '#models'
 /**
  * 获得探索队列
  * @param {string} accessToken
- * @param {string} country 地区代码
+ * @param {string} country 用户地区代码
  * @returns {Promise<{
  *   appids: number[],
  *   country_code: string,

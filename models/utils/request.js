@@ -60,7 +60,7 @@ export default async function request (url, options = {}, retry = { count: 0, ke
     params: {
       key: key || undefined,
       l: 'schinese',
-      cc: 'CN',
+      cc: Config.other.countryCode,
       language: 'schinese',
       ...options.params
     },

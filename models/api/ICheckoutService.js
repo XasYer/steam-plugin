@@ -54,6 +54,7 @@ export async function GetFriendOwnershipForGifting (accessToken, appids) {
 /**
  * 验证购物车
  * @param {string} accessToken
+ * @param {string} country 用户地区代码
  * @returns {Promise<any>}
  */
 export async function ValidateCart (accessToken, country = 'CN') {

@@ -4,7 +4,7 @@ import { utils } from '#models'
  * 添加游戏到购物车
  * @param {string} accessToken
  * @param {number|{packageid?: number,bundleid?: number}} packageid
- * @param {string} country 地区代码
+ * @param {string} country 用户地区代码
  * @returns {Promise<{
  *  line_item_ids: string[]
  *  cart: {
@@ -75,7 +75,7 @@ export async function DeleteCart (accessToken) {
 /**
  * 查看购物车
  * @param {string} accessToken
- * @param {string} country
+ * @param {string} country 用户地区代码
  * @returns {Promise<{
  *   line_items?: {
  *     line_item_id: string
@@ -115,7 +115,7 @@ export async function GetCart (accessToken, country = 'CN') {
  * 删除购物车某一项
  * @param {string} accessToken
  * @param {string} lineItemId
- * @param {string} country
+ * @param {string} country 用户地区代码
  * @returns {Promise<{
  *   line_items: {
  *     line_item_id: string

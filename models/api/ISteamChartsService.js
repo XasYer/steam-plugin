@@ -1,4 +1,5 @@
 import { utils } from '#models'
+import { Config } from '#components'
 
 /**
  * GetBestOfYearPages
@@ -36,10 +37,10 @@ export async function GetBestOfYearPages () {
  */
 export async function GetGamesByConcurrentPlayers () {
   const input = {
-    country_code: 'CN',
+    country_code: Config.other.countryCode,
     context: {
       language: 'schinese',
-      country_code: 'CN'
+      country_code: Config.other.countryCode
     },
     data_request: {
       include_basic_info: true
@@ -77,7 +78,7 @@ export async function GetMostPlayedGames () {
   const input = {
     context: {
       language: 'schinese',
-      country_code: 'CN'
+      country_code: Config.other.countryCode
     },
     data_request: {
       include_basic_info: true

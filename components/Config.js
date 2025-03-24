@@ -159,6 +159,7 @@ class Config {
    *  priority: number,
    *  requireHashTag: boolean,
    *  watchFile: boolean,
+   *  countryCode: string
    * }}
    */
   get other () {

@@ -37,9 +37,14 @@ priority: 5
 # 是否必须携带#号开头才会触发命令 重启后生效
 requireHashTag: false
 
-# 是否监听文件变化 如果不监听则每次更改文件需要重启 
+# 是否监听文件变化 如果不监听则每次更改文件需要重启
 # 改动此配置需重启后生效
 watchFile: true
 
-# 仅用于更新注释
-otherDoc: 1
+# 默认地区代码
+# 部分游戏有锁区中国地区会不可见
+# 排行榜,搜索等会使用这个地区的数据
+# 以及游戏金额等
+# 可通过下面这个接口查看部分地区代码
+# https://api.steampowered.com/IStoreTopSellersService/GetCountryList/v1/?language=schinese
+countryCode: CN

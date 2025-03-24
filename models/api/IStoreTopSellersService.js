@@ -1,4 +1,5 @@
 import { utils } from '#models'
+import { Config } from '#components'
 
 /**
  * GetCountryList
@@ -40,11 +41,11 @@ export async function GetCountryList () {
  */
 export async function GetWeeklyTopSellers (startDate) {
   const input = {
-    country_code: 'CN',
+    country_code: Config.other.countryCode,
     page_count: 100,
     context: {
       language: 'schinese',
-      country_code: 'CN'
+      country_code: Config.other.countryCode
     },
     data_request: {
       include_basic_info: true

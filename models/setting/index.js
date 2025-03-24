@@ -186,6 +186,13 @@ export const cfgSchema = {
         type: 'boolean',
         def: true,
         desc: '如果不监听文件变化则每次改动和设置都需要重启后才会生效'
+      },
+      countryCode: {
+        title: '地区代码',
+        key: '地区代码',
+        type: 'string',
+        def: 'CN',
+        desc: '设置默认地区代码,有些游戏有锁区,影响搜索,排行榜,价格格式等,常用:CN中国 US美国'
       }
     }
   },

@@ -1,5 +1,6 @@
-import { utils } from '#models'
 import _ from 'lodash'
+import { utils } from '#models'
+import { Config } from '#components'
 
 /**
  * 获取多个appid的游戏信息
@@ -188,10 +189,10 @@ export async function GetItems (appids, options = {}) {
         return appid
       }
     }),
-    country_code: 'CN',
+    country_code: Config.other.countryCode,
     context: {
       language: 'schinese',
-      country_code: 'CN'
+      country_code: Config.other.countryCode
     },
     data_request: options
   }

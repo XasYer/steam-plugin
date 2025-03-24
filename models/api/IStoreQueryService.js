@@ -1,4 +1,5 @@
 import { utils } from '#models'
+import { Config } from '#components'
 
 /**
  * 查询热销排行
@@ -18,7 +19,7 @@ export async function Query () {
     query_name: 'SteamCharts Live Top Sellers',
     context: {
       language: 'schinese',
-      country_code: 'CN'
+      country_code: Config.other.countryCode
     },
     query: {
       start: 0,
@@ -33,7 +34,7 @@ export async function Query () {
     data_request: {
       include_basic_info: true
     },
-    overrideCountryCode: 'CN'
+    overrideCountryCode: Config.other.countryCode
   }
   return utils.request.get('IStoreQueryService/Query/v1', {
     params: {
