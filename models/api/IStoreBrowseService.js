@@ -181,29 +181,34 @@ import { Config } from '#components'
  */
 export async function GetItems (appids, options = {}) {
   if (!Array.isArray(appids)) appids = [appids]
-  const data = {
-    ids: appids.map(appid => {
-      if (typeof appid !== 'object') {
-        return { appid }
-      } else {
-        return appid
-      }
-    }),
-    country_code: Config.other.countryCode,
-    context: {
-      language: 'schinese',
-      country_code: Config.other.countryCode
-    },
-    data_request: options
-  }
-  return utils.request.get('IStoreBrowseService/GetItems/v1', {
-    params: {
-      input_json: JSON.stringify(data)
+  const result = {}
+  // 受url长度限制, 大概三百多快四百就会到上限
+  for (const i of _.chunk(appids, 300)) {
+    const data = {
+      ids: i.map(appid => {
+        if (typeof appid !== 'object') {
+          return { appid }
+        } else {
+          return appid
+        }
+      }),
+      country_code: Config.other.countryCode,
+      context: {
+        language: 'schinese',
+        country_code: Config.other.countryCode
+      },
+      data_request: options
     }
-  }).then(res => {
-    const data = res.response.store_items || []
-    return _.keyBy(data, i => i.success === 1 ? i.id : 0)
-  })
+    await utils.request.get('IStoreBrowseService/GetItems/v1', {
+      params: {
+        input_json: JSON.stringify(data)
+      }
+    }).then(res => {
+      const data = res.response.store_items || []
+      Object.assign(result, _.keyBy(data, i => i.success === 1 ? i.id : 0))
+    })
+  }
+  return result
 }
 
 /**

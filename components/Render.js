@@ -38,7 +38,7 @@ const Render = {
         Math.max(...params.data.map(i => i.games?.length || 0)),
         Math.max(1, Number(Config.other.itemLength) || 1)
       )
-      params.data = params.data.map(i => {
+      params.data = await Promise.all(params.data.map(async i => {
         if (!Array.isArray(i.desc)) i.desc = [i.desc].filter(Boolean)
         if (!i.games) i.games = []
         if (i.games.length > hiddenLength) {
@@ -46,14 +46,22 @@ const Render = {
           i.desc.push(`太多辣 ! 已隐藏${length}个项目`)
           i.games.length = hiddenLength
         }
+        const infos = params.schinese ? await utils.steam.getGameSchineseInfo(i.games.map(g => g.appid)) : {}
         i.games = i.games.map(g => {
+          const info = infos[g.appid] || {}
           if (!g.image && !g.noImg) {
             g.image = utils.steam.getHeaderImgUrlByAppid(g.appid)
+          }
+          if (info.name) {
+            g.name = info.name
+            if (g.image) {
+              g.image = utils.steam.getHeaderImgUrlByAppid(info.appid, 'apps', info.header)
+            }
           }
           return g
         })
         return i
-      })
+      }))
       const len = minLength === 1 ? 1.4 : minLength
       data.style = `<style>\n#container,.games{\nwidth: ${len * 370}px;\n}\n</style>`
       // 暂时只支持inventory/index

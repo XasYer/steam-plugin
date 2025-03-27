@@ -46,7 +46,8 @@ const rule = {
       })
       screenshotOptions.desc = `总游戏时长：${getTime(playtimeForever)} / 最近两周游戏时长：${getTime(playtime2weeks)}`
       return await Render.render('inventory/index', {
-        data: [screenshotOptions]
+        data: [screenshotOptions],
+        schinese: true
       })
     }
   },
