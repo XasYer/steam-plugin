@@ -150,9 +150,16 @@ export async function getAccessToken (userId, steamId) {
       message: Config.tips.noAccessTokenTips
     }
   }
-  return {
-    success: true,
-    ...await refreshAccessToken(token)
+  try {
+    return {
+      success: true,
+      ...await refreshAccessToken(token)
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message
+    }
   }
 }
 
