@@ -83,14 +83,8 @@ pnpm install --filter=steam-plugin
 
 ## 使用cloudflare搭建反代 (连接不上steam情况下的备选)
 
-### 1. 来自[@MapleLeaf2007](https://github.com/MapleLeaf2007) 的图文教程
-
-[点我前往 地址: https://mapleleaf.icu/2024/11/29/CloudFlareReverseProxy/](https://mapleleaf.icu/2024/11/29/CloudFlareReverseProxy/)
-
-### 2. 简易版
-
-1. 需要`cloudflare账号`, 以及在`cf托管的域名`
-2. 打开[Workers 和 Pages](https://dash.cloudflare.com/1e36e2833bb5f40af76d604e0894cb93/workers-and-pages), 点击`创建`, 然后点击`创建 Worker`
+1. 需要`cloudflare账号`, 以及在`cf托管的域名`, 自行查看对应教程
+2. 打开cf主页左侧的`Workers 和 Pages`, 点击`创建`, 然后点击`创建 Worker`
 3. 名字随意, 可参考`steam` 然后点击`部署` 再点击`编辑代码`
 4. 复制以下代码到编辑器, `覆盖`原内容, 然后点击`部署`, 出现`版本已保存`即可
    ```js
@@ -109,7 +103,7 @@ pnpm install --filter=steam-plugin
      },
    };
    ```
-5. 依次点击`左上角第3步填写的名字`, `设置`, `域和路由`右边的`添加`, `自定义域`, 然后填入你想设置的二级或多级域名, 比如`steam.example.com`, 然后点`添加域`
+5. 依次点击`左上角第3步填写的名字`, `设置`, `域和路由`右边的`添加`, `自定义域`, 然后填入你想设置的二级或多级域名, 比如`steam.example.com`, 然后点`添加域`, 要改成自己的在cf托管的域名
 6. 测试(可选): 浏览器访问`https://steam.example.com/https://api.steampowered.com/ISteamWebAPIUtil/GetServerInfo/v1/`, `steam.example.com`替换成第5步设置的域名, 如果能看到`servertime`字段, 说明配置成功
 7. 对你的Bot发送`#steam设置通用反代https://steam.example.com/{{url}}`, 域名替换成第5步设置的域名
 
