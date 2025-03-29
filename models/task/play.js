@@ -56,7 +56,8 @@ export async function callback () {
       if (lastPlay.appid != player.gameid || lastPlay.state != state.state) {
         // 找到所有的推送群
         const pushGroups = PushData.filter(i => i.steamId === player.steamid)
-        const iconUrl = utils.steam.getHeaderImgUrlByAppid(player.gameid || lastPlay.appid, 'apps', player.header)
+        const appid = player.gameid || lastPlay.appid
+        const iconUrl = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', player.header)
         for (const i of pushGroups) {
           const avatar = await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId)
           // 0 就是没有人绑定
@@ -78,7 +79,8 @@ export async function callback () {
               state.playTime = now
               userList[i.groupId][i.botId].start.push({
                 name: player.gameextrainfo,
-                appid: `${nickname}(${player.personaname})`,
+                appid,
+                detail: `${nickname}(${player.personaname})`,
                 desc: lastPlay.playTime ? `距离上次 ${utils.formatDuration(time)}` : '',
                 image: iconUrl,
                 avatar,
@@ -93,7 +95,8 @@ export async function callback () {
               state.playTime = now
               userList[i.groupId][i.botId].end.push({
                 name: lastPlay.name,
-                appid: `${nickname}(${player.personaname})`,
+                appid: lastPlay.appid,
+                detail: `${nickname}(${player.personaname})`,
                 desc: `时长: ${utils.formatDuration(time)}`,
                 image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid, 'apps', lastPlay.header),
                 avatar,
@@ -127,7 +130,7 @@ export async function callback () {
             state.onlineTime = now
             userList[i.groupId][i.botId].state.push({
               name: `${nickname}(${player.personaname})`,
-              appid: lastPlay.onlineTime ? `距离上次 ${utils.formatDuration(time)}` : '',
+              detail: lastPlay.onlineTime ? `距离上次 ${utils.formatDuration(time)}` : '',
               desc: `已${utils.steam.getPersonaState(state.state)}`,
               image: avatar || (Config.other.steamAvatar ? i.avatarfull : ''),
               isAvatar: true,
@@ -157,7 +160,7 @@ export async function callback () {
               games: i.start
             })
           } else {
-            data.push(...i.start.map(item => [segment.image(item.image), `[Steam] ${item.appid} 正在玩 ${item.name}\n${item.desc}`]))
+            data.push(...i.start.map(item => [segment.image(item.image), `[Steam] ${item.detail} 正在玩 ${item.name}\n${item.desc}`]))
           }
         }
         if (i.end.length) {
@@ -167,7 +170,7 @@ export async function callback () {
               games: i.end
             })
           } else {
-            data.push(...i.end.map(item => [segment.image(item.image), `[Steam] ${item.appid} 已结束游玩 ${item.name}\n${item.desc}`]))
+            data.push(...i.end.map(item => [segment.image(item.image), `[Steam] ${item.detail} 已结束游玩 ${item.name}\n${item.desc}`]))
           }
         }
         if (i.state.length) {
@@ -179,7 +182,7 @@ export async function callback () {
           } else {
             data.push(...i.state.map(item => [
               item.image ? segment.image(item.image) : '',
-              `[Steam] ${item.name} ${item.desc} \n${item.appid}`
+              `[Steam] ${item.name} ${item.desc} \n${item.detail}`
             ]))
           }
         }

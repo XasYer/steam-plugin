@@ -20,6 +20,9 @@
     {{each item.games i idx}}
     <div class="game-content">
         <div class="index">No. {{idx+1}}</div>
+        {{if i.appid}}
+        <div class="appid">Appid: {{i.appid}}</div>
+        {{/if}}
         <div class="header-img">
             {{if i.image}}
             <img src="{{i.image}}" class="{{i.isAvatar ? 'square' : 'rectangle'}}">
@@ -29,10 +32,10 @@
             <div class="game-title">
                 {{i.name || ''}}
             </div>
-            <div class="game-appid" {{@i.appidPercent 
-                ? `style="width: ${i.appidPercent}%;background-color: #999999;"` 
+            <div class="game-detail" {{@i.detailPercent 
+                ? `style="width: ${i.detailPercent}%;background-color: #999999;"` 
                 : '' }}>
-                {{i.appid || ''}}
+                {{i.detail || ''}}
             </div>
             <div class="game-desc" {{@i.descBgColor 
                 ? `style="background-color: ${i.descBgColor};color: white;width: fit-content;border-radius: 5px; padding: 0 5px;"`

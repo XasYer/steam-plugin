@@ -198,14 +198,14 @@ const rule = {
         if (i.gameid) {
           playing.push({
             name: i.gameextrainfo,
-            appid: nickname,
+            detail: nickname,
             desc: i.personaname,
             image: utils.steam.getHeaderImgUrlByAppid(i.gameid)
           })
         } else {
           notPlaying.push({
             name: nickname,
-            appid: i.personaname,
+            detail: i.personaname,
             desc: utils.steam.getPersonaState(i.personastate),
             image: await utils.bot.getUserAvatar(userInfo.botId, userInfo.userId, userInfo.groupId) || (Config.other.steamAvatar ? i.avatarfull : `https://q.qlogo.cn/g?b=qq&s=100&nk=${userInfo.userId}`),
             isAvatar: true,

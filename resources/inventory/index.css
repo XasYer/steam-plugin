@@ -34,6 +34,15 @@
     background-color: white;
 }
 
+.appid{
+    position: absolute;
+    line-height: 0.8;
+    top: -4px;
+    right: 12px;
+    font-size: 12px;
+    background-color: white;
+}
+
 .game-content {
     align-items: center;
     width: 360px;
@@ -81,7 +90,7 @@
     color: #333;
 }
 
-.game-appid {
+.game-detail {
     font-size: 16px;
     color: #666;
 }

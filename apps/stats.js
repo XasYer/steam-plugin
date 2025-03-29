@@ -41,7 +41,7 @@ const rule = {
       for (const i of stats.userPlayTotal) {
         userPlayTotal.push({
           name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
-          appid: i.steamId,
+          detail: i.steamId,
           desc: `共 ${i.playTotal} 次`,
           image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
           isAvatar: true
@@ -58,7 +58,7 @@ const rule = {
       for (const i of stats.userPlayTime) {
         userPlayTime.push({
           name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
-          appid: i.steamId,
+          detail: i.steamId,
           desc: `共 ${utils.formatDuration(i.playTime) || '正在游玩中'}`,
           image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
           isAvatar: true
@@ -75,7 +75,7 @@ const rule = {
       for (const i of stats.userOnlineTotal) {
         userOnlineTotal.push({
           name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
-          appid: i.steamId,
+          detail: i.steamId,
           desc: `共 ${i.onlineTotal} 次`,
           image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
           isAvatar: true
@@ -92,7 +92,7 @@ const rule = {
       for (const i of stats.userOnlineTime) {
         userOnlineTime.push({
           name: await utils.bot.getUserName(i.botId, i.userId, e.group_id),
-          appid: i.steamId,
+          detail: i.steamId,
           desc: `共 ${utils.formatDuration(i.onlineTime) || '正在游玩中'}`,
           image: await utils.bot.getUserAvatar(i.botId, i.userId, e.group_id),
           isAvatar: true
@@ -137,8 +137,8 @@ const rule = {
               const percent = (i.v / total * 100).toFixed(0)
               return {
                 name: i.name,
-                appid: percent + '%',
-                appidPercent: percent,
+                detail: percent + '%',
+                detailPercent: percent,
                 desc: `${i.v}次`,
                 noImg: true
               }

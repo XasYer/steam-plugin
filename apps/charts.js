@@ -26,7 +26,8 @@ const rule = {
           const price = i.item.best_purchase_option || {}
           games.push({
             name: i.item.name,
-            appid: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
+            appid: i.appid,
+            detail: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `峰值: ${i.peak_in_game}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.item.is_free)
@@ -39,7 +40,8 @@ const rule = {
           const price = i.item.best_purchase_option || {}
           games.push({
             name: i.item.name,
-            appid: `当前玩家: ${i.concurrent_in_game}`,
+            appid: i.appid,
+            detail: `当前玩家: ${i.concurrent_in_game}`,
             desc: `峰值: ${i.peak_in_game}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.item.is_free)
@@ -76,12 +78,13 @@ const rule = {
           games: i.item_ids.map(({ appid }) => {
             const info = appInfo[appid]
             if (!info) {
-              return { appid }
+              return { appid, name: appid }
             }
             const price = info.best_purchase_option || {}
             return {
               name: info.name,
-              appid: `${appid} ${info.reviews?.summary_filtered.review_score_label || ''}`,
+              appid,
+              detail: `${appid} ${info.reviews?.summary_filtered.review_score_label || ''}`,
               desc: info.release ? `${moment.unix(info.release.steam_release_date).format('YYYY年MM月DD日')}` : '',
               image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
               price: getPrice(price, info.is_free)
@@ -111,7 +114,8 @@ const rule = {
           const price = i.item.best_purchase_option || {}
           games.push({
             name: i.item.name,
-            appid: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
+            appid: i.appid,
+            detail: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `持续周数: ${i.consecutive_weeks}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.item.is_free)
@@ -126,7 +130,8 @@ const rule = {
           const price = i.best_purchase_option || {}
           games.push({
             name: i.name,
-            appid: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
+            appid: i.appid,
+            detail: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `持续周数: ${lastWeekInfo ? lastWeekInfo.consecutive_weeks : 1}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
             price: getPrice(price, i.is_free)
@@ -227,7 +232,7 @@ const rule = {
             i.games = i.games.map(appid => {
               const info = infos[appid]
               if (!info) {
-                return { appid }
+                return { appid, name: appid }
               } else {
                 const price = info.best_purchase_option || {}
                 return {

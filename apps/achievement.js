@@ -77,7 +77,7 @@ const rule = {
           if (item) {
             return {
               name: item.name,
-              appid: i.value,
+              detail: i.value,
               desc: item.displayName || '',
               noImg: true
             }
@@ -129,15 +129,15 @@ const rule = {
           desc: all.hidden ? '已隐藏' : all.description,
           image: i ? all.icon : all.icongray,
           isAvatar: true,
-          appid: `${percent}%`,
-          appidPercent: percent
+          detail: `${percent}%`,
+          detailPercent: percent
         }
         games.push(info)
       })
       data.push({
         title: '全球成就统计',
         desc: `共${games.length}个`,
-        games: _.orderBy(games, 'appidPercent', 'desc')
+        games: _.orderBy(games, 'detailPercent', 'desc')
       })
       return await Render.render('inventory/index', { data })
     }

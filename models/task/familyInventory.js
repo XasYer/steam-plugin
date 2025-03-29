@@ -60,7 +60,8 @@ export async function callback () {
         games.push({
           name: app.name,
           image: utils.steam.getHeaderImgUrlByAppid(app.appid),
-          appid: moment.unix(app.rt_time_acquired).format('YYYY-MM-DD HH:mm:ss'),
+          appid: app.appid,
+          detail: moment.unix(app.rt_time_acquired).format('YYYY-MM-DD HH:mm:ss'),
           desc: `来自: ${info?.public_data?.persona_name || steamId}`
         })
       }

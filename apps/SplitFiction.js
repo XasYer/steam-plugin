@@ -46,7 +46,7 @@ const rule = {
         if (flag) completeBranch++
         return {
           name: i.name,
-          appid: `解锁位置: ${i.chapter}-${i.scene}`,
+          detail: `解锁位置: ${i.chapter}-${i.scene}`,
           desc: flag ? '已收集' : '未收集',
           descBgColor: flag ? '#beee11' : '#999999',
           image: join(imgPath, i.name + '.png')
@@ -81,13 +81,13 @@ const rule = {
           games: [
             {
               name: lastSaveChapterMap.name,
-              appid: `${lastSaveChapterMap.chapter}-${lastSaveChapterMap.scene}`,
+              detail: `${lastSaveChapterMap.chapter}-${lastSaveChapterMap.scene}`,
               desc: '最后一次保存',
               image: join(imgPath, lastSaveChapterMap.name + '.png')
             },
             {
               name: furthestUnlockedChapter.name,
-              appid: `${furthestUnlockedChapter.chapter}-${furthestUnlockedChapter.scene}`,
+              detail: `${furthestUnlockedChapter.chapter}-${furthestUnlockedChapter.scene}`,
               desc: '历史最高章节',
               image: join(imgPath, furthestUnlockedChapter.name + '.png')
             }

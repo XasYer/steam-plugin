@@ -95,7 +95,7 @@ export async function render (data, lineItemCount) {
         ctx.save()
 
         const nameY = y + 24
-        const appidY = y + 52
+        const detailY = y + 52
         const descY = y + 79
 
         let currentX = x
@@ -168,11 +168,11 @@ export async function render (data, lineItemCount) {
             ctx.stroke()
 
             // 折扣率的背景色
-            drawBackgroundColor(ctx, '#beee11', priceXOffset, appidY, maxPriceWidth, 20, 10)
+            drawBackgroundColor(ctx, '#beee11', priceXOffset, detailY, maxPriceWidth, 20, 10)
 
             // 折扣率
             ctx.fillStyle = '#333'
-            ctx.fillText(`-${i.price.discount}%`, priceXOffset, appidY)
+            ctx.fillText(`-${i.price.discount}%`, priceXOffset, detailY)
             ctx.font = 'blob 20px MiSans'
             ctx.fillText(i.price.current, priceXOffset, descY)
           } else {
@@ -185,17 +185,17 @@ export async function render (data, lineItemCount) {
         i.name = shortenText(ctx, i.name, maxContentWidth)
         ctx.fillText(i.name, currentX, nameY)
 
-        // appid
+        // detail
         ctx.font = '20px MiSans'
-        i.appid = i.appid ? String(i.appid) : ''
-        i.appid = shortenText(ctx, i.appid, maxContentWidth)
-        if (i.appidPercent) {
+        i.detail = i.detail ? String(i.detail) : ''
+        i.detail = shortenText(ctx, i.detail, maxContentWidth)
+        if (i.detailPercent) {
           ctx.fillStyle = '#999999'
-          ctx.fillRect(currentX, appidY - 18, maxContentWidth * (i.appidPercent / 100), 20)
+          ctx.fillRect(currentX, detailY - 18, maxContentWidth * (i.detailPercent / 100), 20)
         }
 
         ctx.fillStyle = '#666'
-        ctx.fillText(String(i.appid), currentX, appidY)
+        ctx.fillText(String(i.detail), currentX, detailY)
 
         // desc
         i.desc = i.desc || ''
@@ -218,6 +218,16 @@ export async function render (data, lineItemCount) {
         ctx.fillStyle = 'black'
         ctx.fillText(indexText, x + 30, y + 5)
         index++
+
+        // appid
+        if (i.appid) {
+          ctx.textAlign = 'right'
+          const appidText = `Appid: ${i.appid}`
+          const appidWidth = ctx.measureText(appidText).width
+          drawBackgroundColor(ctx, '#ffffff', x + gameWidth - 30 - appidWidth, y + 10, appidWidth + 8, 11, 0)
+          ctx.fillStyle = 'black'
+          ctx.fillText(appidText, x + gameWidth - 30, y + 5)
+        }
 
         ctx.restore()
 
