@@ -67,7 +67,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 60px;
+    /* height: 60px; */
+    line-height: 20px;
 }
 
 .game-info-size-large {

@@ -30,7 +30,7 @@ export async function render (data) {
     ctx.font = '19px MiSans'
     ctx.fillStyle = '#e3ffc2'
 
-    const nickname = shortenText(ctx, i.isAvatar ? i.name : i.appid, 300)
+    const nickname = shortenText(ctx, i.isAvatar ? i.name : i.detail, 300)
 
     x += 85
     y += 15
