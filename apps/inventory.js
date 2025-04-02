@@ -38,7 +38,7 @@ const rule = {
       }
       let playtimeForever = 0
       let playtime2weeks = 0
-      screenshotOptions.games.map(i => {
+      screenshotOptions.games = screenshotOptions.games.map(i => {
         i.desc = `${getTime(i.playtime_forever)} ${i.playtime_2weeks ? `/ ${getTime(i.playtime_2weeks)}` : ''}`
         playtimeForever += i.playtime_forever
         i.playtime_2weeks && (playtime2weeks += i.playtime_2weeks)

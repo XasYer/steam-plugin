@@ -29,33 +29,42 @@ const rule = {
       const appidsInfo = await api.IStoreBrowseService.GetItems(wishlist.map(i => i.appid), {
         include_assets: true
       })
-      for (const i in wishlist) {
-        const appid = wishlist[i].appid
-        const info = appidsInfo[appid]
-        if (!info) {
-          wishlist[i].price = {
-            discount: 0,
-            original: '获取失败'
-          }
-          continue
-        }
-        wishlist[i].image = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header)
-        wishlist[i].desc = moment.unix(wishlist[i].date_added).format('YYYY-MM-DD HH:mm:ss')
-        wishlist[i].name = info.name
-        wishlist[i].price = info.is_free
-          ? {
-              discount: 0,
-              original: '免费'
-            }
-          : {
-              discount: info.best_purchase_option?.discount_pct || 0,
-              original: info.best_purchase_option?.formatted_original_price || info.best_purchase_option?.formatted_final_price || '即将推出',
-              current: info.best_purchase_option?.formatted_final_price || ''
-            }
+      const total = {
+        price: 0,
+        currency: ''
       }
+      const games = wishlist.map(i => {
+        const info = appidsInfo[i.appid] || {
+          best_purchase_option: {
+            formatted_original_price: '获取失败'
+          }
+        }
+        const price = info.best_purchase_option?.formatted_final_price ? /[\d.]+/.exec(info.best_purchase_option?.formatted_final_price)?.[0] : ''
+        if (price) {
+          total.price += parseFloat(price)
+          total.currency = info.best_purchase_option.formatted_final_price.replace(price, '')
+        }
+        return {
+          ...i,
+          name: info.name || i.appid,
+          image: utils.steam.getHeaderImgUrlByAppid(i.appid, 'apps', info.assets?.header),
+          desc: moment.unix(i.date_added).format('YYYY-MM-DD HH:mm:ss'),
+          price: info.is_free
+            ? {
+                discount: 0,
+                original: '免费'
+              }
+            : {
+                discount: info.best_purchase_option?.discount_pct || 0,
+                original: info.best_purchase_option?.formatted_original_price || info.best_purchase_option?.formatted_final_price || '即将推出',
+                current: info.best_purchase_option?.formatted_final_price || ''
+              }
+        }
+      })
       const data = [{
         title: `${nickname} 愿望单共有 ${wishlist.length} 个游戏`,
-        games: _.orderBy(wishlist, 'date_added', 'desc')
+        desc: `清空愿望单需要: ${total.currency}${total.price.toFixed(2)}`,
+        games: _.orderBy(games, 'date_added', 'desc')
       }]
       return await Render.render('inventory/index', {
         data
