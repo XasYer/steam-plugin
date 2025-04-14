@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.12.0](https://github.com/XasYer/steam-plugin/compare/v1.11.1...v1.12.0) (2025-04-14)
+
+
+### Features
+
+* steam双影奇境数据 ([93e540e](https://github.com/XasYer/steam-plugin/commit/93e540e897ab15ac316ac2f1aab952033ac03b62))
+
+
+### Bug Fixes
+
+* 成就统计 ([97d0492](https://github.com/XasYer/steam-plugin/commit/97d0492aab5c2d122f2e0d314c6970a68d6199fc))
+* 搜索没有header ([6dd4a67](https://github.com/XasYer/steam-plugin/commit/6dd4a67afe500eeb77d8e7b932b464913329d9e8))
+* 模式3 ([3f80e08](https://github.com/XasYer/steam-plugin/commit/3f80e08de3e5bd42584fa20be0f90f1609686423))
+
+
+### Performance Improvements
+
+* 优化图片展示appid ([ab46a52](https://github.com/XasYer/steam-plugin/commit/ab46a5222c9fa275a6fb16665c61be7bee5f8f9d))
+* 最近游玩显示中文游戏名 ([99e0c5d](https://github.com/XasYer/steam-plugin/commit/99e0c5dcff33dbe83f1f8456bac03ef49f68dec3))
+* 发售时间精确到秒 ([a7f9c15](https://github.com/XasYer/steam-plugin/commit/a7f9c15a40578fc182db3e16742d5e2d0f643e1a))
+* 可配置默认地区代码 ([3ace5fb](https://github.com/XasYer/steam-plugin/commit/3ace5fbad2ec2c13e9650b4f6c69388bacda2feb))
+* 愿望单添加总计价格 ([855138b](https://github.com/XasYer/steam-plugin/commit/855138b312f48685efc560dbe8a1ed0ee4458323))
+
 ## [1.11.1](https://github.com/XasYer/steam-plugin/compare/v1.11.0...v1.11.1) (2025-03-13)
 
 
