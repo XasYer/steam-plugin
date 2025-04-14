@@ -1,4 +1,4 @@
-import { api } from '#models'
+import { api, utils } from '#models'
 import { App, Render } from '#components'
 
 const appInfo = {
@@ -25,13 +25,17 @@ const rule = {
         const appid = i.match(/data-ds-appid="(\d+)"/)?.[1]
         const name = i.match(/class="match_name">(.*?)<\/div>/)?.[1]
         const price = i.match(/class="match_price">(.*?)<\/div>/)?.[1]
+        const image = i.match(/<img src="(.*?)">/)?.[1]
         return {
           appid,
           name,
-          price: {
-            discount: 0,
-            original: price
-          }
+          image,
+          price: price
+            ? {
+                discount: 0,
+                original: price
+              }
+            : null
         }
       }).filter(Boolean)
       if (!games.length) {
