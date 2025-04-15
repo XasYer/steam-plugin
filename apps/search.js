@@ -1,4 +1,4 @@
-import { api, utils } from '#models'
+import { api } from '#models'
 import { App, Render } from '#components'
 
 const appInfo = {

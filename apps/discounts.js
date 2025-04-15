@@ -39,7 +39,7 @@ const rule = {
           title: item.title,
           games: []
         }
-        for (const i of res[item.key].items) {
+        for (const i of res[item.key]?.items || []) {
           key.games.push({
             appid: i.id,
             name: i.name,
