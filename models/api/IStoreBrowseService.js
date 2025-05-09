@@ -41,6 +41,7 @@ import { Config } from '#components'
  *     appid: number,
  *     type: number,
  *     is_free?: boolean,
+ *     is_coming_soon?: boolean,
  *     categories: {
  *       supported_player_categoryids: number[],
  *       feature_categoryids: number[],
@@ -106,7 +107,7 @@ import { Config } from '#components'
  *         discount_amount: string,
  *         discount_description: string,
  *         discount_end_date: number
- *       },
+ *       }[],
  *     },
  *     purchase_options?: {
  *       packageid: number,

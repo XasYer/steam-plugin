@@ -388,6 +388,28 @@ export async function getGameSchineseInfo (appids) {
 }
 
 /**
+ * 生成价格信息 用于制作图片
+ * @param {Object} price IStoreBrowseService.GetItem().best_purchase_option 的格式 后续再兼容其他的
+ * @param {boolean} isFree
+ * @returns {{
+ *   original: string,
+ *   discount?: number,
+ *   current?: string
+ * }}
+ */
+export function generatePrice (price, isFree = false) {
+  return price?.discount_pct
+    ? {
+        original: price.formatted_original_price,
+        discount: price.discount_pct,
+        current: price.formatted_final_price
+      }
+    : {
+        original: isFree ? '免费开玩' : price?.formatted_final_price || ''
+      }
+}
+
+/**
  * 数字对应的语言中文
  * @param {number} elanguage
  * @returns {string}

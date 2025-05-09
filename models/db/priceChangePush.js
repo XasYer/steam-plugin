@@ -2,25 +2,21 @@ import { Config } from '#components'
 import { sequelize, DataTypes, Op } from './base.js'
 
 /**
- * @typedef {Object} familyInventoryPushColumns
+ * @typedef {Object} priceChangePushColumns
  * @property {number} id 表id
- * @property {string} userId 用户id
- * @property {string} steamId steamId
+ * @property {string} appid appid
  * @property {string} botId 机器人id
  * @property {string} groupId 群组id
+ * @property {number} lastTime 最后推送时间 unix时间戳
  */
 
-export const table = sequelize.define('familyInventoryPush', {
+export const table = sequelize.define('priceChangePush', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true
   },
-  userId: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  steamId: {
+  appid: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -31,6 +27,10 @@ export const table = sequelize.define('familyInventoryPush', {
   groupId: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  lastTime: {
+    type: DataTypes.BIGINT,
+    defaultValue: 0
   }
 }, {
   freezeTableName: true
@@ -40,22 +40,20 @@ await table.sync()
 
 /**
  * 添加一个推送群
- * @param {string} userId
- * @param {string} steamId
+ * @param {string} appid
  * @param {string} botId
  * @param {string} groupId
- * @param {Transaction?} [transaction]
- * @returns {Promise<familyInventoryPushColumns>}
+ * @param {import('sequelize').Transaction?} transaction
+ * @returns {Promise<priceChangePushColumns>}
  */
-export async function add (userId, steamId, botId, groupId, transaction) {
-  userId = String(userId)
+export async function add (appid, botId, groupId, transaction) {
+  appid = String(appid)
   botId = String(botId)
   groupId = String(groupId)
   // 判断是否存在
   const data = await table.findOne({
     where: {
-      userId,
-      steamId,
+      appid,
       botId,
       groupId
     }
@@ -64,8 +62,7 @@ export async function add (userId, steamId, botId, groupId, transaction) {
     return data
   }
   return await table.create({
-    userId,
-    steamId,
+    appid,
     botId,
     groupId
   }, { transaction }).then(result => result?.dataValues)
@@ -73,21 +70,19 @@ export async function add (userId, steamId, botId, groupId, transaction) {
 
 /**
  * 删除推送群
- * @param {string} userId
- * @param {string} steamId
+ * @param {string} appid
  * @param {string} botId
  * @param {string} groupId
- * @param {Transaction?} [transaction]
+ * @param {import('sequelize').Transaction?} [transaction]
  * @returns {Promise<number>}
  */
-export async function del (userId, steamId, botId, groupId, transaction) {
-  userId = String(userId)
+export async function del (appid, botId, groupId, transaction) {
+  appid = String(appid)
   botId = String(botId)
   groupId = String(groupId)
   return await table.destroy({
     where: {
-      userId,
-      steamId,
+      appid,
       botId,
       groupId
     },
@@ -96,9 +91,45 @@ export async function del (userId, steamId, botId, groupId, transaction) {
 }
 
 /**
+ * 更新最后推送时间
+ * @param {string[]} appids
+ * @param {number} lastTime
+ * @returns {Promise<number>}
+ */
+export async function updateLastTime (appids, lastTime) {
+  if (!Array.isArray(appids)) appids = [appids]
+  if (!appids.length) {
+    return 0
+  }
+  return await table.update({
+    lastTime
+  }, {
+    where: {
+      appid: {
+        [Op.in]: appids.map(String)
+      }
+    }
+  }).then(result => result?.[0])
+}
+
+/**
+ * 获得一个群所有的开启推送列
+ * @param {string} groupId
+ * @returns {Promise<priceChangePushColumns[]>}
+ */
+export async function getOneGroup (groupId) {
+  groupId = String(groupId)
+  return await table.findAll({
+    where: {
+      groupId
+    }
+  }).then(result => result?.map(item => item?.dataValues))
+}
+
+/**
  * 获取所有推送群组
  * @param {boolean} [filter=true] 是否使用黑白名单查找 默认开启
- * @returns {Promise<familyInventoryPushColumns[]>}
+ * @returns {Promise<priceChangePushColumns[]>}
  */
 export async function getAll (filter = true) {
   const where = {}

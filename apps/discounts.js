@@ -85,7 +85,7 @@ const rule = {
           appid,
           name: info.name,
           image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets.header),
-          price: getPrice(info.best_purchase_option, info.is_free)
+          price: utils.steam.generatePrice(info.best_purchase_option, info.is_free)
         }
       })
       const data = [{
@@ -122,18 +122,6 @@ const rule = {
       return '已跳过所有游戏~'
     }
   }
-}
-
-function getPrice (price, isFree) {
-  return price?.discount_pct
-    ? {
-        original: price.formatted_original_price,
-        discount: price.discount_pct,
-        current: price.formatted_final_price
-      }
-    : {
-        original: isFree ? '免费开玩' : price.formatted_final_price || ''
-      }
 }
 
 export const app = new App(appInfo, rule).create()

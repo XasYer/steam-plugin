@@ -347,11 +347,57 @@ export const cfgSchema = {
         def: '0 0 12 * * ?',
         desc: '家庭库存推送时间间隔 可以是cron 也可以是数字 单位分钟'
       },
+      priceChange: {
+        title: '游戏降价推送',
+        key: '降价推送',
+        type: 'number',
+        def: 0,
+        desc: '是否开启降价推送 0关闭 1绑定acceseToken可添加 2所有人可添加',
+        input: (n) => {
+          if (n >= 0 && n <= 2) {
+            return n * 1
+          } else {
+            return 0
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '关闭', value: 0 },
+          { label: '绑定acceseToken可添加', value: 1 },
+          { label: '所有人可添加', value: 2 }
+        ]
+      },
+      priceChangeType: {
+        title: '游戏降价推送模式',
+        key: '降价推送模式',
+        type: 'number',
+        def: 1,
+        desc: '降价推送模式 1: 仅降价期间第一次查询推送 2: 每次检查都推送',
+        input: (n) => {
+          if (n >= 1 && n <= 2) {
+            return n * 1
+          } else {
+            return 1
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '仅降价期间第一次查询推送', value: 1 },
+          { label: '每次检查都推送', value: 2 }
+        ]
+      },
+      priceChangeTime: {
+        title: '游戏降价推送间隔',
+        key: '降价推送间隔',
+        type: 'string',
+        def: '0 5 12 * * ?',
+        desc: '库存推送时间间隔 可以是cron 也可以是数字 单位分钟'
+      },
       userInventoryChange: {
         title: '库存变化推送',
         key: '库存推送',
         type: 'number',
-        def: false,
+        def: 0,
         desc: '是否开启库存推送 0关闭 1绑定acceseToken可开启 2所有人可开启 不能批量查询',
         input: (n) => {
           if (n >= 0 && n <= 2) {

@@ -11,6 +11,7 @@ export function startTimer () {
     return
   }
   clearInterval(timer)
+  timer?.cancel?.()
   if (Number(Config.push.userInventoryTime)) {
     timer = setInterval(callback, 1000 * 60 * Config.push.userInventoryTime)
   } else {

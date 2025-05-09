@@ -43,7 +43,7 @@ const rule = {
             `全部评测: ${info.reviews.summary_filtered.review_score_label} (${info.reviews.summary_filtered.review_count}篇评测中有${info.reviews.summary_filtered.percent_positive}%为好评)`,
             `发行日期: ${
             info.release.steam_release_date
-            ? moment.unix(info.release.steam_release_date).format('YYYY-MM-DD HH:mm:ss')
+            ? moment.unix(info.release.steam_release_date).format('YYYY-MM-DD')
             : info.release.custom_release_date_message
             }`,
             `玩家标签: ${tagsCN.map(i => i.name).join(',')}`,

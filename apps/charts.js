@@ -30,7 +30,7 @@ const rule = {
             detail: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `峰值: ${i.peak_in_game}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
-            price: getPrice(price, i.item.is_free)
+            price: utils.steam.generatePrice(price, i.item.is_free)
           })
         }
       } else {
@@ -44,7 +44,7 @@ const rule = {
             detail: `当前玩家: ${i.concurrent_in_game}`,
             desc: `峰值: ${i.peak_in_game}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
-            price: getPrice(price, i.item.is_free)
+            price: utils.steam.generatePrice(price, i.item.is_free)
           })
         }
       }
@@ -87,7 +87,7 @@ const rule = {
               detail: `${appid} ${info.reviews?.summary_filtered.review_score_label || ''}`,
               desc: info.release ? `${moment.unix(info.release.steam_release_date).format('YYYY年MM月DD日')}` : '',
               image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
-              price: getPrice(price, info.is_free)
+              price: utils.steam.generatePrice(price, info.is_free)
             }
           })
         })
@@ -118,7 +118,7 @@ const rule = {
             detail: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `持续周数: ${i.consecutive_weeks}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
-            price: getPrice(price, i.item.is_free)
+            price: utils.steam.generatePrice(price, i.item.is_free)
           })
         }
       } else {
@@ -134,7 +134,7 @@ const rule = {
             detail: change ? `变更: ${change > 0 ? `+${change}` : change}` : '',
             desc: `持续周数: ${lastWeekInfo ? lastWeekInfo.consecutive_weeks : 1}`,
             image: utils.steam.getHeaderImgUrlByAppid(i.appid),
-            price: getPrice(price, i.is_free)
+            price: utils.steam.generatePrice(price, i.is_free)
           })
         }
       }
@@ -239,7 +239,7 @@ const rule = {
                   name: info.name,
                   appid,
                   image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
-                  price: getPrice(price, info.is_free)
+                  price: utils.steam.generatePrice(price, info.is_free)
                 }
               }
             })
@@ -255,18 +255,6 @@ function getYear () {
   const m = moment().month()
   const y = moment().year()
   return m < 11 ? y - 1 : y
-}
-
-function getPrice (price, isFree) {
-  return price?.discount_pct
-    ? {
-        original: price.formatted_original_price,
-        discount: price.discount_pct,
-        current: price.formatted_final_price
-      }
-    : {
-        original: isFree ? '免费开玩' : price.formatted_final_price || ''
-      }
 }
 
 export const app = new App(appInfo, rule).create()

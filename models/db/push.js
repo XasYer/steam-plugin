@@ -58,44 +58,6 @@ export const table = sequelize.define('push', {
 
 await table.sync()
 
-// 修改字段isPush 细分为游玩推送 状态推送 库存推送 愿望单推送
-// 2025年2月15日 七天后删除
-async function PushTableUpdateColumn () {
-  const queryInterface = sequelize.getQueryInterface()
-  // 检查isPush是否存在
-  const isPush = await queryInterface.describeTable('push').then(i => i.isPush)
-  if (!isPush) {
-    return
-  }
-  // 修改isPush字段为play
-  await queryInterface.renameColumn('push', 'isPush', 'play')
-  // 添加state字段
-  await queryInterface.addColumn('push', 'state', {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true
-  })
-  // 添加inventory字段
-  await queryInterface.addColumn('push', 'inventory', {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  })
-  // 添加wishlist字段
-  await queryInterface.addColumn('push', 'wishlist', {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  })
-  // 修改state字段和play一样
-  await table.update({
-    state: true
-  }, {
-    where: {
-      play: true
-    }
-  })
-}
-
-await PushTableUpdateColumn()
-
 /**
  * 添加一个推送群
  * @param {string} userId

@@ -177,6 +177,18 @@ export const helpList = [
       {
         title: '#steam群统计',
         desc: '查看本群的一些统计数据'
+      },
+      {
+        title: '#steam添加降价推送',
+        desc: '添加游戏降价推送, 需要appid'
+      },
+      {
+        title: '#steam删除降价推送',
+        desc: '移除游戏降价推送, 需要appid'
+      },
+      {
+        title: '#steam降价推送列表',
+        desc: '查看降价推送列表以及现在的价格'
       }
     ]
   },

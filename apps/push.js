@@ -1,6 +1,7 @@
 import { App, Config, Render } from '#components'
-import { db, utils, task } from '#models'
+import { db, utils, task, api } from '#models'
 import _ from 'lodash'
+import moment from 'moment'
 
 task.startTask()
 
@@ -73,13 +74,91 @@ const rule = {
       if (!g.success) {
         return g.message
       }
-      if (e.msg.includes('开启')) {
+      const isOpen = e.msg.includes('开启')
+      if (isOpen) {
         await db.familyInventoryPush.add(e.user_id, steamId, e.self_id, e.group_id)
-        return `已开启家庭库存推送到${e.group_id}~`
       } else {
-        await db.familyInventoryPush.del(steamId)
-        return `已关闭家庭库存推送到${e.group_id}~`
+        await db.familyInventoryPush.del(e.user_id, steamId, e.self_id, e.group_id)
       }
+      return `已${isOpen ? '开启' : '关闭'}家庭库存推送到${e.group_id}~`
+    }
+  },
+  priceChange: {
+    reg: App.getReg('(?:开启|关闭|添加|删除)降价推送\\s*(\\d*)'),
+    cfg: {
+      appid: true
+    },
+    fnc: async (e, { appid }) => {
+      if (!Config.push.priceChange) {
+        return Config.tips.pushDisableTips.replace('{{type}}', '降价')
+      }
+      const g = utils.bot.checkGroup(e.group_id)
+      if (!g.success) {
+        return g.message
+      }
+      if (Config.push.priceChange == 1) {
+        const token = await utils.steam.getAccessToken(e.user_id, e.user_id)
+        if (!token.success) {
+          return '需要#steam扫码登录 后才可以开启降价推送~'
+        }
+      }
+      // 看看是不是免费游戏以及未发行的游戏
+      const info = (await api.IStoreBrowseService.GetItems(appid))[appid]
+      if (!info) {
+        return `没有找到appid为${appid}的游戏~`
+      }
+      if (info.is_coming_soon) {
+        return `${info.name}暂未发售~`
+      }
+      if (info.is_free) {
+        return `${info.name}是免费游戏,直接添加入库吧~`
+      }
+      const isOpen = e.msg.includes('开启') || e.msg.includes('添加')
+      if (isOpen) {
+        await db.priceChangePush.add(appid, e.self_id, e.group_id)
+      } else {
+        await db.priceChangePush.del(appid, e.self_id, e.group_id)
+      }
+      return `已${isOpen ? '开启' : '关闭'}${info.name}的降价推送到${e.group_id}~`
+    }
+  },
+  priceChangeList: {
+    reg: App.getReg('(本群)?降价推送列表'),
+    fnc: async e => {
+      const g = utils.bot.checkGroup(e.group_id)
+      if (!g.success) {
+        return g.message
+      }
+      const list = await db.priceChangePush.getOneGroup(e.group_id)
+      if (!list.length) {
+        return '本群还没有开启降价推送的游戏哦'
+      }
+      const infoList = await api.IStoreBrowseService.GetItems(_.uniq(list.map(i => i.appid)), {
+        include_assets: true
+      })
+      const games = []
+      for (const appid in infoList) {
+        const info = infoList[appid]
+        if (!info) {
+          continue
+        }
+        const price = utils.steam.generatePrice(info.best_purchase_option, info.is_free)
+        games.push({
+          appid,
+          name: info.name,
+          image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
+          price,
+          desc: price.discount ? `结束时间: ${moment.unix(info.best_purchase_option.active_discounts.shift().discount_end_date).format('YYYY-MM-DD')}` : undefined
+        })
+      }
+      return await Render.render('inventory/index', {
+        data: [
+          {
+            title: '降价推送列表',
+            games
+          }
+        ]
+      })
     }
   },
   list: {
@@ -236,20 +315,24 @@ const rule = {
       }
       const run = []
       if (Config.push.enable) {
-        task.play.callback()
+        await task.play.callback()
         run.push('游玩推送')
       }
       if (Config.push.familyInventotyAdd) {
-        task.familyInventory.callback()
+        await task.familyInventory.callback()
         run.push('家庭库存推送')
       }
       if (Config.push.userInventoryChange) {
-        task.userInventory.callback()
+        await task.userInventory.callback()
         run.push('库存推送')
       }
       if (Config.push.userWishlistChange) {
-        task.userWishlist.callback()
+        await task.userWishlist.callback()
         run.push('愿望单推送')
+      }
+      if (Config.push.priceChange) {
+        await task.priceChange.callback()
+        run.push('降价推送')
       }
       return '已主动触发' + run.join('、') + '~'
     }
