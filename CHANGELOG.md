@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.13.0](https://github.com/XasYer/steam-plugin/compare/v1.12.0...v1.13.0) (2025-05-09)
+
+
+### Features
+
+* 降价推送 ([89e9745](https://github.com/XasYer/steam-plugin/commit/89e9745cee1003c2c881d4ec067cf0aef4a9ac9d))
+
+
+### Bug Fixes
+
+* steam特惠 ([821df19](https://github.com/XasYer/steam-plugin/commit/821df19a85f55a08cea6019b70489e1185d58683))
+
 ## [1.12.0](https://github.com/XasYer/steam-plugin/compare/v1.11.1...v1.12.0) (2025-04-14)
 
 
