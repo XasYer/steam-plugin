@@ -44,7 +44,7 @@ await table.sync()
  * @param {string} steamId
  * @param {string} botId
  * @param {string} groupId
- * @param {Transaction?} [transaction]
+ * @param {import('sequelize').Transaction?} transaction
  * @returns {Promise<familyInventoryPushColumns>}
  */
 export async function add (userId, steamId, botId, groupId, transaction) {
@@ -77,20 +77,25 @@ export async function add (userId, steamId, botId, groupId, transaction) {
  * @param {string} steamId
  * @param {string} botId
  * @param {string} groupId
- * @param {Transaction?} [transaction]
+ * @param {import('sequelize').Transaction} transaction
  * @returns {Promise<number>}
  */
 export async function del (userId, steamId, botId, groupId, transaction) {
-  userId = String(userId)
-  botId = String(botId)
-  groupId = String(groupId)
+  const where = {}
+  if (userId) {
+    where.userId = String(userId)
+  }
+  if (steamId) {
+    where.steamId = steamId
+  }
+  if (botId) {
+    where.botId = String(botId)
+  }
+  if (groupId) {
+    where.groupId = String(groupId)
+  }
   return await table.destroy({
-    where: {
-      userId,
-      steamId,
-      botId,
-      groupId
-    },
+    where,
     transaction
   }).then(result => result?.[0])
 }

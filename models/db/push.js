@@ -65,7 +65,7 @@ await table.sync()
  * @param {string} botId
  * @param {string} groupId
  * @param {{play: boolean, state: boolean, inventory: boolean, wishlist: boolean}} columns 开启推送的类型
- * @param {Transaction?} [transaction]
+ * @param {import('sequelize').Transaction?} transaction
  * @returns {Promise<PushColumns>}
  */
 export async function set (userId, steamId, botId, groupId, columns = {}, transaction) {
@@ -122,7 +122,7 @@ export async function getAllByUserIdAndGroupId (userId, groupId) {
 /**
  * 删除steamId的所有推送群组
  * @param {string} steamId
- * @param {Transaction?} [transaction]
+ * @param {import('sequelize').Transaction?} transaction
  * @returns {Promise<number>}
  */
 export async function delBySteamId (steamId, transaction) {

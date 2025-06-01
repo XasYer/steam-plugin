@@ -134,11 +134,11 @@ export async function del (userId, steamId) {
     // 删除steamId对应的所有推送数据
     await delBySteamId(steamId, transaction)
     await statsDel(steamId, transaction)
-    await familyInventoryDel(steamId, transaction)
-    transaction.commit()
+    await familyInventoryDel(bind.userId, steamId, undefined, undefined, transaction)
+    await transaction.commit()
     return res
   } catch (error) {
-    transaction.rollback()
+    await transaction.rollback()
     throw error
   }
 }
