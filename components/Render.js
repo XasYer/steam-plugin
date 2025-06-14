@@ -55,7 +55,8 @@ const Render = {
           if (info.name) {
             g.name = info.name
             if (g.image) {
-              g.image = utils.steam.getHeaderImgUrlByAppid(info.appid, 'apps', info.header)
+              // g.image = utils.steam.getHeaderImgUrlByAppid(info.appid, 'apps', info.header)
+              g.image = utils.steam.getHeaderImgUrlByAppid(info.appid, 'apps')
             }
           }
           return g
