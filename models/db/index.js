@@ -1,4 +1,5 @@
 export * as kv from './kv.js'
+export * as base from './base.js'
 export * as user from './user.js'
 export * as push from './push.js'
 export * as game from './game.js'

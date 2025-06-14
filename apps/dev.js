@@ -78,6 +78,31 @@ const rule = {
       await utils.bot.makeForwardMsg(e, msg)
       return true
     }
+  },
+  dbDev: {
+    reg: App.getReg('(?:db|sql|database)dev\\s*(.*)'),
+    cfg: {
+      tips: true
+    },
+    fnc: async e => {
+      if (!e.isMaster) {
+        return '只有主人才可以操作哦~'
+      }
+      const sql = rule.dbDev.reg.exec(e.msg)[1]
+      if (!sql) {
+        return '使用方法: #dbdev + sql语句'
+      }
+      try {
+        const res = await db.base.sequelize.query(sql)
+        await utils.bot.makeForwardMsg(e, [
+          '执行SQL: ' + sql,
+          '结果: ',
+          JSON.stringify(res, null, 2)
+        ])
+      } catch (error) {
+        return '执行失败: ' + error.message
+      }
+    }
   }
 }
 
