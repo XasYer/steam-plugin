@@ -324,13 +324,6 @@ export const cfgSchema = {
         def: 5,
         min: 1,
         type: 'string',
-        input: (n) => {
-          if (n >= 0) {
-            return n * 1
-          } else {
-            return 5
-          }
-        },
         desc: '游玩和状态推送间隔 可以是cron 也可以是数字 单位分钟'
       },
       familyInventotyAdd: {
