@@ -83,7 +83,8 @@ const rule = {
         games: _.orderBy(games, 'playtime', 'desc')
       }]
       return await Render.render('inventory/index', {
-        data
+        data,
+        schinese: true
       })
     }
   },
@@ -110,7 +111,8 @@ const rule = {
         })
       }]
       return await Render.render('inventory/index', {
-        data
+        data,
+        schinese: true
       })
     }
   },

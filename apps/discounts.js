@@ -58,7 +58,10 @@ const rule = {
         }
         data.push(key)
       }
-      return await Render.render('inventory/index', { data })
+      return await Render.render('inventory/index', {
+        data,
+        schinese: true
+      })
     }
   },
   queue: {
@@ -93,7 +96,10 @@ const rule = {
         desc: [`已跳过${skipped}个游戏`, '#steam探索队列跳过+appid', '#steam探索队列全部跳过'],
         games
       }]
-      return await Render.render('inventory/index', { data })
+      return await Render.render('inventory/index', {
+        data,
+        schinese: true
+      })
     }
   },
   queueSkip: {

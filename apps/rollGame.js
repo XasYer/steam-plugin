@@ -38,7 +38,8 @@ const rule = {
       })
       screenshotOptions.desc = '以下游戏从您的游戏库中通过完全随机的方式选出，不代表任何个人或团体的观点'
       return await Render.render('inventory/index', {
-        data: [screenshotOptions]
+        data: [screenshotOptions],
+        schinese: true
       })
     }
   }

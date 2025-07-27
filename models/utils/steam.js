@@ -254,19 +254,15 @@ export async function getUserSummaries (steamIds) {
         throw err
       })
       if (data !== false) {
-        if (Config.push.cacheName) {
-          const names = await getGameSchineseInfo(data.map(i => i.gameid))
-          return data.map(i => {
-            const info = names[i.gameid]
-            if (info) {
-              i.gameextrainfo = info.name
-              i.header = info.header
-            }
-            return i
-          })
-        } else {
-          return data
-        }
+        const names = await getGameSchineseInfo(data.map(i => i.gameid))
+        return data.map(i => {
+          const info = names[i.gameid]
+          if (info) {
+            i.gameextrainfo = info.name
+            i.header = info.header
+          }
+          return i
+        })
       }
     }
     type = 2
@@ -280,19 +276,15 @@ export async function getUserSummaries (steamIds) {
       throw err
     })
     if (data !== false) {
-      if (Config.push.cacheName) {
-        const names = await getGameSchineseInfo(data.map(i => i.gameid))
-        return data.map(i => {
-          const info = names[i.gameid]
-          if (info) {
-            i.gameextrainfo = info.name
-            i.header = info.header
-          }
-          return i
-        })
-      } else {
-        return data
-      }
+      const names = await getGameSchineseInfo(data.map(i => i.gameid))
+      return data.map(i => {
+        const info = names[i.gameid]
+        if (info) {
+          i.gameextrainfo = info.name
+          i.header = info.header
+        }
+        return i
+      })
     }
   }
   return await api.IPlayerService.GetPlayerLinkDetails(steamIds).then(async res => {
@@ -300,12 +292,7 @@ export async function getUserSummaries (steamIds) {
     const appids = res.map(i => i.private_data.game_id).filter(id => id && String(id).length <= 10)
     const appInfo = {}
     if (appids.length) {
-      if (Config.push.cacheName) {
-        Object.assign(appInfo, await getGameSchineseInfo(appids))
-      } else {
-        const info = await api.IStoreBrowseService.GetItems(appids, { include_assets: true })
-        Object.assign(appInfo, info)
-      }
+      Object.assign(appInfo, await getGameSchineseInfo(appids))
     }
     return res.map(i => {
       const avatarhash = Buffer.from(i.public_data.sha_digest_avatar, 'base64').toString('hex')
@@ -366,19 +353,42 @@ export async function getGameSchineseInfo (appids) {
     const cacheAppids = Object.keys(appInfo)
     // 找到没有被缓存的appid
     const noCacheAppids = _.difference(appids, cacheAppids)
-    if (noCacheAppids.length) {
+    // 找到缓存超过3天的appid
+    const now = moment().unix()
+    const cacheExpiredAppids = cacheAppids.filter(i => {
+      const lastUpdatedTime = moment(appInfo[i].updatedAt).unix()
+      return (now - lastUpdatedTime) > 3 * 24 * 60 * 60
+    })
+    const hasCacheAppids = [...noCacheAppids, ...cacheExpiredAppids]
+    if (hasCacheAppids.length) {
       // 获取游戏名
-      const info = await api.IStoreBrowseService.GetItems(noCacheAppids, { include_assets: true })
-      const cache = noCacheAppids.map(i => info[i]
+      const info = await api.IStoreBrowseService.GetItems(hasCacheAppids, { include_assets: true })
+      const cache = hasCacheAppids.map(i => info[i]
         ? ({
-            appid: i,
+            appid: String(i),
             name: info[i].name,
             community: info[i].assets?.community_icon,
             header: info[i].assets?.header
           })
         : null).filter(Boolean)
+      const newCache = []
+      const expiredCache = []
+      cache.forEach(i => {
+        if (noCacheAppids.includes(i.appid)) {
+          newCache.push(i)
+        } else if (cacheExpiredAppids.includes(i.appid)) {
+          expiredCache.push(i)
+        }
+      })
       // 缓存游戏名
-      await db.game.add(cache)
+      if (newCache.length) {
+        await db.game.add(newCache)
+      }
+      if (expiredCache.length) {
+        for (const i of expiredCache) {
+          await db.game.set(i.appid, i)
+        }
+      }
       Object.assign(appInfo, _.keyBy(cache, 'appid'))
     }
     return appInfo

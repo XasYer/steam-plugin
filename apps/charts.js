@@ -55,11 +55,14 @@ const rule = {
           games
         }
       ]
-      return await Render.render('inventory/index', { data })
+      return await Render.render('inventory/index', {
+        data,
+        schinese: true
+      })
     }
   },
   topnewreleases: {
-    reg: App.getReg('最?热门?新品排行榜?单?'),
+    reg: App.getReg('最?(?:热门)?新品排行榜?单?'),
     cfg: {
       tips: true
     },
@@ -84,7 +87,7 @@ const rule = {
             return {
               name: info.name,
               appid,
-              detail: `${appid} ${info.reviews?.summary_filtered.review_score_label || ''}`,
+              detail: info.reviews?.summary_filtered.review_score_label,
               desc: info.release ? `${moment.unix(info.release.steam_release_date).format('YYYY年MM月DD日')}` : '',
               image: utils.steam.getHeaderImgUrlByAppid(appid, 'apps', info.assets?.header),
               price: utils.steam.generatePrice(price, info.is_free)
@@ -92,7 +95,10 @@ const rule = {
           })
         })
       }
-      return await Render.render('inventory/index', { data })
+      return await Render.render('inventory/index', {
+        data,
+        schinese: true
+      })
     }
   },
   topsellers: {
@@ -145,7 +151,10 @@ const rule = {
           games
         }
       ]
-      return await Render.render('inventory/index', { data })
+      return await Render.render('inventory/index', {
+        data,
+        schinese: true
+      })
     }
   },
   beseOfYear: {
@@ -245,7 +254,8 @@ const rule = {
             })
           }
           return i
-        })
+        }),
+        schinese: true
       })
     }
   }

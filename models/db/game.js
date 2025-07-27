@@ -67,3 +67,25 @@ export async function get (appids) {
     }
   }).then(res => res.map(i => i.dataValues)).then(i => _.keyBy(i, 'appid'))
 }
+
+/**
+ * 修改游戏信息
+ * @param {string} appid
+ * @param {{
+ *  name?: string
+ *  community?: string
+ *  header?: string
+ * }} info
+ * @returns {Promise<boolean>}
+ */
+export async function set (appid, info = {}) {
+  appid = String(appid)
+  const item = await table.findOne({
+    where: {
+      appid
+    }
+  })
+  if (!item) return false
+  await item.update(info)
+  return true
+}

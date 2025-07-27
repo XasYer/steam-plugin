@@ -94,7 +94,8 @@ const rule = {
         return '游戏列表为空'
       }
       return await Render.render('inventory/index', {
-        data
+        data,
+        schinese: true
       })
     }
   },

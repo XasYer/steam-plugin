@@ -99,10 +99,6 @@ defaultPush: true
 # 是否随机Bot进行推送, 有多个Bot在同一群群时随机选择一个在线的Bot推送状态 (仅限TRSS)
 randomBot: false
 
-# 是否缓存游戏的中文名
-# 需要单独请求一个接口获取游戏的中文名并缓存在数据库中
-cacheName: true
-
 # 群统计是否过滤掉黑名单群和白名单群
 # 如果关闭则每次会获取忽略黑白名单的所有群 但是不会推送 仅统计
 statusFilterGroup: true

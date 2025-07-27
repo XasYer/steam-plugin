@@ -57,8 +57,8 @@ export async function callback () {
         // 找到所有的推送群
         const pushGroups = PushData.filter(i => i.steamId === player.steamid)
         const appid = player.gameid || lastPlay.appid
-        // const iconUrl = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', player.header)
-        const iconUrl = utils.steam.getHeaderImgUrlByAppid(appid, 'apps')
+        const iconUrl = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', player.header)
+        // const iconUrl = utils.steam.getHeaderImgUrlByAppid(appid, 'apps')
         for (const i of pushGroups) {
           const avatar = await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId)
           // 0 就是没有人绑定
@@ -99,8 +99,8 @@ export async function callback () {
                 appid: lastPlay.appid,
                 detail: `${nickname}(${player.personaname})`,
                 desc: `时长: ${utils.formatDuration(time)}`,
-                // image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid, 'apps', lastPlay.header),
-                image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid, 'apps'),
+                image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid, 'apps', lastPlay.header),
+                // image: utils.steam.getHeaderImgUrlByAppid(lastPlay.appid, 'apps'),
                 avatar,
                 type: 'end'
               })

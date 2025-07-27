@@ -67,7 +67,8 @@ const rule = {
         games: _.orderBy(games, 'date_added', 'desc')
       }]
       return await Render.render('inventory/index', {
-        data
+        data,
+        schinese: true
       })
     }
   },

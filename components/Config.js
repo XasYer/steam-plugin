@@ -135,7 +135,6 @@ class Config {
    *  time: number|string,
    *  defaultPush: boolean,
    *  randomBot: boolean,
-   *  cacheName: boolean,
    *  statusFilterGroup: boolean,
    *  blackBotList: string[],
    *  whiteBotList: string[],
