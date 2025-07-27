@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.13.1](https://github.com/XasYer/steam-plugin/compare/v1.13.0...v1.13.1) (2025-07-27)
+
+
+### Bug Fixes
+
+* header先不使用缓存 ([67d4049](https://github.com/XasYer/steam-plugin/commit/67d40493d15443166d7cb8eb27a9fdbb2eae004a))
+* 部分图片加载失败 ([bda0865](https://github.com/XasYer/steam-plugin/commit/bda08653e8b314d71151f2dc390006d0b6e84fc4))
+
+
+### Performance Improvements
+
+* steamdbdev ([7b3459d](https://github.com/XasYer/steam-plugin/commit/7b3459d820c14d4edbfdedf0ade11e91a45c0664))
+
 ## [1.13.0](https://github.com/XasYer/steam-plugin/compare/v1.12.0...v1.13.0) (2025-06-01)
 
 
