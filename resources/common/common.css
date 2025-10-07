@@ -19,6 +19,7 @@ body {
   transform: scale(1.4);
   transform-origin: 0 0;
   width: 600px;
+  height: fit-content;
 }
 .container {
   width: 600px;
