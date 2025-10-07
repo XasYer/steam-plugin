@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.2](https://github.com/XasYer/steam-plugin/compare/v1.13.1...v1.13.2) (2025-10-07)
+
+
+### Bug Fixes
+
+* 高度自适应 ([9a127bc](https://github.com/XasYer/steam-plugin/commit/9a127bc262b1184635a8415aa0a40acdb2c17a00))
+* 高度自适应 ([04a0c8e](https://github.com/XasYer/steam-plugin/commit/04a0c8ea14662371ca69eb884bb0ce59796c193b))
+
 ## [1.13.1](https://github.com/XasYer/steam-plugin/compare/v1.13.0...v1.13.1) (2025-07-27)
 
 
