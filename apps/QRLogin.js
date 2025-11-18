@@ -34,39 +34,40 @@ const rule = {
   },
   QRLogin: {
     reg: App.getReg(`(?:确认|辅助)${baseReg}(.*)`),
-    fnc: async (e) => {
-      const input = rule.QRLogin.reg.exec(e.msg)[1].trim()
-      let session = input ? JSON.parse(input) : await api.IAuthenticationService.BeginAuthSessionViaQR()
-      if (session.response) {
-        session = session.response
-      }
-      const qrcode = (await QRCode.toDataURL(session.challenge_url)).replace('data:image/png;base64,', 'base64://')
-      await App.reply(e, ['请在30秒内使用steamApp扫描二维码进行登录', segment.image(qrcode)], {
-        recallMsg: 30,
-        quote: true
-      })
-      for (let i = 0; i < 6; i++) {
-        await new Promise(resolve => setTimeout(resolve, 1000 * 5))
-        const qrcodeRes = await api.IAuthenticationService.PollAuthSessionStatus(session.client_id, session.request_id).catch(() => ({}))
-        if (qrcodeRes.access_token) {
-          const jwt = utils.steam.decodeAccessTokenJwt(qrcodeRes.access_token)
-          const cookie = utils.steam.getCookie(jwt.sub, qrcodeRes.access_token)
-          const dbRes = await db.token.set(e.user_id, qrcodeRes.access_token, cookie, qrcodeRes.refresh_token)
-          const user = await db.user.getBySteamId(dbRes.steamId)
-          if (user?.userId) {
-            if (user.userId != e.user_id) {
-              await db.user.del(user.userId, dbRes.steamId)
-              await db.user.add(e.user_id, dbRes.steamId)
-            } else {
-              await db.user.set(e.user_id, dbRes.steamId, true)
-            }
-          } else {
-            await db.user.add(e.user_id, dbRes.steamId)
-          }
-          return `登录成功\nsteamId: ${dbRes.steamId}\n登录名: ${qrcodeRes.account_name.replace(/^(.)(.*)(.)$/, '$1***$3')}\n需要切换到对应的steamId才会生效`
-        }
-      }
-      return '登录超时~请重新触发指令'
+    fnc: async () => {
+      return '听说有冻结风险, 先别用'
+      // const input = rule.QRLogin.reg.exec(e.msg)[1].trim()
+      // let session = input ? JSON.parse(input) : await api.IAuthenticationService.BeginAuthSessionViaQR()
+      // if (session.response) {
+      //   session = session.response
+      // }
+      // const qrcode = (await QRCode.toDataURL(session.challenge_url)).replace('data:image/png;base64,', 'base64://')
+      // await App.reply(e, ['请在30秒内使用steamApp扫描二维码进行登录', segment.image(qrcode)], {
+      //   recallMsg: 30,
+      //   quote: true
+      // })
+      // for (let i = 0; i < 6; i++) {
+      //   await new Promise(resolve => setTimeout(resolve, 1000 * 5))
+      //   const qrcodeRes = await api.IAuthenticationService.PollAuthSessionStatus(session.client_id, session.request_id).catch(() => ({}))
+      //   if (qrcodeRes.access_token) {
+      //     const jwt = utils.steam.decodeAccessTokenJwt(qrcodeRes.access_token)
+      //     const cookie = utils.steam.getCookie(jwt.sub, qrcodeRes.access_token)
+      //     const dbRes = await db.token.set(e.user_id, qrcodeRes.access_token, cookie, qrcodeRes.refresh_token)
+      //     const user = await db.user.getBySteamId(dbRes.steamId)
+      //     if (user?.userId) {
+      //       if (user.userId != e.user_id) {
+      //         await db.user.del(user.userId, dbRes.steamId)
+      //         await db.user.add(e.user_id, dbRes.steamId)
+      //       } else {
+      //         await db.user.set(e.user_id, dbRes.steamId, true)
+      //       }
+      //     } else {
+      //       await db.user.add(e.user_id, dbRes.steamId)
+      //     }
+      //     return `登录成功\nsteamId: ${dbRes.steamId}\n登录名: ${qrcodeRes.account_name.replace(/^(.)(.*)(.)$/, '$1***$3')}\n需要切换到对应的steamId才会生效`
+      //   }
+      // }
+      // return '登录超时~请重新触发指令'
     }
   },
   refreshToken: {
