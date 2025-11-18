@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.13.3](https://github.com/XasYer/steam-plugin/compare/v1.13.2...v1.13.3) (2025-11-18)
+
+
+### Performance Improvements
+
+* 先禁用扫码登录 ([b3c6bc1](https://github.com/XasYer/steam-plugin/commit/b3c6bc1de577e8dfe40b688408a30eccbcb203a0))
+* 可选steam库存发送的模版 ([3d8c301](https://github.com/XasYer/steam-plugin/commit/3d8c3013f9ed64e06dc838a065df0aa210a27528))
+* 库存增加玩过的免费游戏 ([b61f531](https://github.com/XasYer/steam-plugin/commit/b61f53104b92a925dfc236082a37ab4fc18bc741))
+
 ## [1.13.2](https://github.com/XasYer/steam-plugin/compare/v1.13.1...v1.13.2) (2025-10-07)
 
 
