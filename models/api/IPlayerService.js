@@ -330,7 +330,8 @@ export async function GetOwnedGames (steamid) {
     params: {
       steamid,
       include_appinfo: true,
-      include_extended_appinfo: true
+      include_extended_appinfo: true,
+      include_played_free_games: true
     }
   }).then(res => res.response?.games || [])
 }
