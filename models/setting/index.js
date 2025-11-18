@@ -158,6 +158,27 @@ export const cfgSchema = {
         ],
         desc: 'steam状态发送消息的模式 1: 文字 2: 仿steam风格图片 3: steam风格图片(需要社区反代)'
       },
+      inventoryMode: {
+        title: 'steam库存发送模版',
+        key: '库存模式',
+        type: 'number',
+        def: 1,
+        min: 1,
+        max: 2,
+        input: (n) => {
+          if (n >= 1 && n <= 2) {
+            return n * 1
+          } else {
+            return 1
+          }
+        },
+        component: 'RadioGroup',
+        options: [
+          { label: '通用模版', value: 1 },
+          { label: '图片模版', value: 2 }
+        ],
+        desc: 'steam库存发送的模版 1: 通用模版 2: 图片模版'
+      },
       log: {
         title: '日志输出',
         key: '日志',

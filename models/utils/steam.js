@@ -43,9 +43,9 @@ export function getFriendCode (steamId) {
  */
 export function getHeaderImgUrlByAppid (appid, type = 'apps', name = 'header.jpg') {
   if (!appid) return ''
-  // return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`
+  return `https://shared.akamai.steamstatic.com/store_item_assets/steam/${type}/${appid}/${name}`
   // return `https://steamcdn-a.akamaihd.net/steam/${type}/${appid}/${name}`
-  return `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/${type}/${appid}/${name}`
+  // return `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/${type}/${appid}/${name}`
 }
 
 /**
@@ -65,7 +65,8 @@ export function getStaticUrl (path) {
     return `https://shared.cloudflare.steamstatic.com/social_sharing/${path}`
   } else if (path.startsWith('steam')) {
     // return `https://steamcdn-a.akamaihd.net/${path}`
-    return `https://shared.cloudflare.steamstatic.com/store_item_assets/${path}`
+    // return `https://shared.cloudflare.steamstatic.com/store_item_assets/${path}`
+    return `https://shared.akamai.steamstatic.com/store_item_assets/${path}`
   } else {
     return `https://clan.fastly.steamstatic.com/images/${path}`
   }

@@ -40,6 +40,10 @@ export const helpList = [
         desc: '查看steam库存'
       },
       {
+        title: '#steam库存图片',
+        desc: '查看steam库存图片版本'
+      },
+      {
         title: '#steam最近游玩',
         desc: '查看steam最近游玩'
       },

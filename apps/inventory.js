@@ -9,7 +9,80 @@ const appInfo = {
 
 const rule = {
   inventory: {
-    reg: App.getReg('(?:库存|游戏列表|(?:最近|近期)(?:游?玩|运行|启动))\\s*(\\d*)'),
+    reg: App.getReg('(?:库存|游戏列表)(?:图片)?\\s*(\\d*)'),
+    cfg: {
+      tips: true,
+      steamId: true
+    },
+    fnc: async (e, { steamId, uid }) => {
+      const username = await utils.bot.getUserName(e.self_id, uid, e.group_id) || steamId
+      const ownedGames = await api.IPlayerService.GetOwnedGames(steamId)
+      if (!ownedGames.length) {
+        return Config.tips.inventoryEmptyTips
+      }
+      const games = _.orderBy(ownedGames, 'playtime_forever', 'desc')
+      if (Config.other.inventoryMode == 1 && !e.msg.includes('图片')) {
+        let playtimeForever = 0
+        let playtime2weeks = 0
+        const screenshotOptions = {
+          title: `${username} 库存共有 ${games.length} 个游戏`,
+          games: games.map(i => {
+            i.desc = `${getTime(i.playtime_forever)} ${i.playtime_2weeks ? `/ ${getTime(i.playtime_2weeks)}` : ''}`
+            playtimeForever += i.playtime_forever
+            i.playtime_2weeks && (playtime2weeks += i.playtime_2weeks)
+            return i
+          }),
+          desc: ''
+        }
+        screenshotOptions.desc = `总游戏时长：${getTime(playtimeForever)} / 最近两周游戏时长：${getTime(playtime2weeks)}`
+        return await Render.render('inventory/index', {
+          data: [screenshotOptions],
+          schinese: true
+        })
+      } else {
+        const hiddenLength = Config.other.hiddenLength
+        if (games.length > hiddenLength) {
+          games.length = hiddenLength
+        }
+        const items = await api.IStoreBrowseService.GetItems(games.map(i => i.appid), {
+          include_assets: true
+        })
+        const data = games.map(i => {
+          if (!i) {
+            return false
+          }
+          const info = items[i.appid]
+          if (!info || !info?.assets) {
+            return false
+          }
+          const suffix = info.assets.asset_url_format
+          const library = info.assets.library_capsule
+          const image = suffix.replace('${FILENAME}', library)
+          return {
+            image: utils.steam.getStaticUrl(image),
+            size: getInventoryImageSize(i.playtime_forever)
+          }
+        }).filter(Boolean)
+        const { playtimeForever, playtime2weeks } = ownedGames.reduce((acc, i) => {
+          acc.playtimeForever += i.playtime_forever
+          i.playtime_2weeks && (acc.playtime2weeks += i.playtime_2weeks)
+          return acc
+        }, { playtimeForever: 0, playtime2weeks: 0 })
+        return await Render.render('inventory/image', {
+          // data: _.sampleSize(data, data.length)
+          data,
+          avatar: await utils.bot.getUserAvatar(e.self_id, uid, e.group_id),
+          username,
+          count: ownedGames.length,
+          playtimeForever: getTime(playtimeForever),
+          playtime2weeks: getTime(playtime2weeks),
+          limit: hiddenLength
+        })
+      }
+    }
+  },
+  recently: {
+    reg: App.getReg('(?:(?:最近|近期)(?:游?玩|运行|启动))\\s*(\\d*)'),
     cfg: {
       tips: true,
       steamId: true
@@ -21,21 +94,12 @@ const rule = {
         games: [],
         desc: ''
       }
-      if (e.msg.includes('近')) {
-        const games = await api.IPlayerService.GetRecentlyPlayedGames(steamId)
-        if (!games.length) {
-          return Config.tips.recentPlayEmptyTips
-        }
-        screenshotOptions.games = _.orderBy(games, 'playtime_2weeks', 'desc')
-        screenshotOptions.title = `${nickname} 近期游玩了 ${games.length} 个游戏`
-      } else {
-        const games = await api.IPlayerService.GetOwnedGames(steamId)
-        if (!games.length) {
-          return Config.tips.inventoryEmptyTips
-        }
-        screenshotOptions.games = _.orderBy(games, 'playtime_forever', 'desc')
-        screenshotOptions.title = `${nickname} 库存共有 ${games.length} 个游戏`
+      const games = await api.IPlayerService.GetRecentlyPlayedGames(steamId)
+      if (!games.length) {
+        return Config.tips.recentPlayEmptyTips
       }
+      screenshotOptions.games = _.orderBy(games, 'playtime_2weeks', 'desc')
+      screenshotOptions.title = `${nickname} 近期游玩了 ${games.length} 个游戏`
       let playtimeForever = 0
       let playtime2weeks = 0
       screenshotOptions.games = screenshotOptions.games.map(i => {
@@ -159,8 +223,38 @@ const rule = {
  * @param {number} time
  * @returns {string}
 */
-function getTime (time) {
+function getTime(time) {
   return (time / 60).toFixed(1) + 'h'
+}
+
+/**
+ * 获取库存的图片大小
+ * @param {number} time 游戏时间单位分钟
+ * @returns {number}
+ */
+function getInventoryImageSize(time) {
+  // 小于1个小时
+  if (time < 60) {
+    return 1
+  }
+  // 小于24个小时
+  if (time < 1440) {
+    return 2
+  }
+  // 小于72个小时
+  if (time < 4320) {
+    return 3
+  }
+  // 小于7天
+  if (time < 10080) {
+    return 4
+  }
+  // 小于30天
+  if (time < 43200) {
+    return 5
+  }
+  // 大于30天
+  return 6
 }
 
 export const app = new App(appInfo, rule).create()

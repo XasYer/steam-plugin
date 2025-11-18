@@ -151,6 +151,7 @@ class Config {
    * @returns {{
    *  renderScale: number,
    *  renderType: number,
+   *  inventoryMode: number,
    *  hiddenLength: number,
    *  itemLength: number,
    *  steamAvatar: boolean,

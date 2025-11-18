@@ -1,0 +1,38 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{pluResPath}}inventory/image.css" />
+{{@ style}}
+{{/block}}
+
+{{block 'main'}}
+
+<div class="header">
+    <div class="avatar">
+        <img src="{{avatar}}">
+    </div>
+    <div class="user-info">
+        <h1>{{username}}</h1>
+        <div class="stats">
+            <span>拥有游戏：{{count}}</span>
+            <span>总计游戏时长：{{playtimeForever}}</span>
+            <span>最近两周时长：{{playtime2weeks}}</span>
+        </div>
+        <div class="tip">仅展示游戏时长前{{limit}}个游戏</div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="grid-container" id="gameGrid">
+        {{each data i}}
+        <div class="grid-item size-{{i.size}}">
+            <img src="{{i.image}}">
+            {{if i.title}}
+            <div class="game-title">{{i.title}}</div>
+            {{/if}}
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+{{/block}}

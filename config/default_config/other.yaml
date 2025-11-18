@@ -22,6 +22,12 @@ steamAvatar: true
 # 3: 原汁原味的steam风格的迷你卡片(需要社区反代或通用反代)
 infoMode: 2
 
+
+# steam库存 展示的模版
+# 1: 通用模版 会显示游戏名等信息
+# 2: 图片模版 只会显示游戏封面
+inventoryMode: 1
+
 # 是否开启日志
 log: true
 
