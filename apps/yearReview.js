@@ -1,7 +1,6 @@
 import { App } from '#components'
 import { segment } from '#lib'
 import { api, utils } from '#models'
-import _ from 'lodash'
 import moment from 'moment'
 
 const appInfo = {
@@ -15,12 +14,13 @@ const rule = {
     cfg: {
       steamId: true
     },
-    fnc: async (e, { steamId }) => {
-      const year = e.msg.match(/\d+/g)?.shift() || getYear()
+    fnc: async (e, { bindSteamId, textSteamId, nums }) => {
+      const steamId = nums.length > 1 ? textSteamId : bindSteamId
+      const year = nums.pop() || getYear()
       const images = await api.ISaleFeatureService.GetUserYearInReviewShareImage(steamId, year)
-      const i = _.sample(images)
-      if (!i) {
-        return `年度回顾可见性未公开, 获取失败, 可前往\nhttps://store.steampowered.com/replay/${steamId}/${year}\n进行查看`
+      const i = images?.[0]
+      if (!i?.url_path) {
+        return `${year}年度回顾可见性未公开或还没出, 获取失败, 可前往\nhttps://store.steampowered.com/replay/${steamId}/${year}\n进行查看`
       }
       const path = utils.steam.getStaticUrl(i.url_path)
       const buffer = await utils.getImgUrlBuffer(path)
@@ -33,7 +33,7 @@ const rule = {
   }
 }
 
-function getYear () {
+function getYear() {
   const m = moment().month()
   const y = moment().year()
   return m < 11 ? y - 1 : y

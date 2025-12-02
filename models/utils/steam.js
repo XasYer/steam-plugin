@@ -62,7 +62,8 @@ export function getStaticUrl (path) {
     // return `https://cdn.fastly.steamstatic.com/steamcommunity/public/images/${path}`
     return `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/${path}`
   } else if (path.startsWith('replay')) {
-    return `https://shared.cloudflare.steamstatic.com/social_sharing/${path}`
+    // return `https://shared.cloudflare.steamstatic.com/social_sharing/${path}`
+    return `https://shared.akamai.steamstatic.com/social_sharing/${path}`
   } else if (path.startsWith('steam')) {
     // return `https://steamcdn-a.akamaihd.net/${path}`
     // return `https://shared.cloudflare.steamstatic.com/store_item_assets/${path}`

@@ -124,7 +124,8 @@ export default class App {
         }
         const nums = e.msg.match(/\d+/g) || []
         const options = {
-          uid: e.user_id
+          uid: e.user_id,
+          nums: lodash.cloneDeep(nums),
         }
         // 需要appid
         if (cfg.appid) {
@@ -140,6 +141,7 @@ export default class App {
         if (cfg.steamId) {
           options.uid = utils.bot.getAtUid(e.at, e.user_id)
           options.userSteamIdList = await db.user.getAllByUserId(options.uid)
+          options.bindSteamId = options.userSteamIdList.find(i => i.isBind)?.steamId
           // 先看看有没有在指令中附带steamId
           if (nums.length) {
             // 最后一个
@@ -148,15 +150,16 @@ export default class App {
               options.steamId = options.userSteamIdList[steamId - 1].steamId
             } else {
               options.steamId = steamId
+              options.textSteamId = steamId
               options.uid = e.user_id
             }
           } else {
-            options.steamId = options.userSteamIdList.find(i => i.isBind)?.steamId
-            if (!options.steamId) {
+            if (!options.bindSteamId) {
               await App.reply(e, Config.tips.noSteamIdTips, { at: options.uid })
               clearThrottle(key)
               return true
             }
+            options.steamId = options.bindSteamId
           }
           options.steamId = utils.steam.getSteamId(options.steamId)
           options.userSteamIdList = options.userSteamIdList.map(i => i.steamId)
@@ -198,7 +201,7 @@ export default class App {
               try {
                 const { host } = new URL(url)
                 message = message.replace(host, `${i.title}地址`)
-              } catch (error) { }
+              } catch (error) { /* ignore */ }
             }
           }
           App.reply(e, `出错辣! ${message}`, { quote: true })

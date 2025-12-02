@@ -15,7 +15,7 @@ try {
     fs.rmSync(tempDir, { recursive: true, force: true })
   }
   fs.mkdirSync(tempDir)
-} catch { }
+} catch { /* ignore */ }
 
 /**
  * 将对应时间转换成时长字符串
