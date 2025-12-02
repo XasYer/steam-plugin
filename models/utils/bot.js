@@ -12,8 +12,10 @@ export function getBot (botId) {
       return Bot.getBot(botId)
     case 'Trss-Yunzai':
       return Config.push.randomBot ? Bot : Bot[botId]
-    case 'Miao-Yunzai':
-      return Bot.uin == 88888 ? Bot[botId] : Bot
+    case 'Miao-Yunzai': {
+      const bot = Bot[botId]
+      return bot || Bot
+    }
   }
 }
 
