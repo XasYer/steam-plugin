@@ -19,29 +19,30 @@ body {
 }
 
 .user-info h1 {
-    font-size: 34px;
-    margin-bottom: 3px;
+    font-size: 80px;
+    margin-bottom: 15px;
     color: #2b303b;
     text-shadow: 1px 1px 1px #000;
 }
 
 .stats {
     display: flex;
-    gap: 15px;
-    font-size: 26px;
+    gap: 30px;
+    font-size: 48px;
     color: #aaa;
     text-shadow: 1px 1px 1px #000;
 }
 
 .tip {
     color: #d3d3d3;
-    font-size: 22px;
+    font-size: 36px;
     text-shadow: 1px 1px 1px #000;
 }
 
 .header {
     display: flex;
-    padding-left: 15px;
+    padding: 40px 60px;
+    align-items: center;
 }
 
 .content {
@@ -56,6 +57,8 @@ body {
 }
 
 .avatar img {
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
 }
 
