@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.13.3](https://github.com/XasYer/steam-plugin/compare/v1.13.2...v1.13.3) (2026-01-04)
+
+
+### Bug Fixes
+
+* 优化喵崽推送 ([48adf43](https://github.com/XasYer/steam-plugin/commit/48adf43afdad600e952e53b798f39920f55446d8))
+* 年度回顾分享图片以往年份获取失败,固定使用方格式 ([5e20ba3](https://github.com/XasYer/steam-plugin/commit/5e20ba35e9fbcc8b4396968080c43808c1e1f30a))
+
+
+### Performance Improvements
+
+* 先禁用扫码登录 ([b3c6bc1](https://github.com/XasYer/steam-plugin/commit/b3c6bc1de577e8dfe40b688408a30eccbcb203a0))
+* 可选steam库存发送的模版 ([3d8c301](https://github.com/XasYer/steam-plugin/commit/3d8c3013f9ed64e06dc838a065df0aa210a27528))
+* 库存增加玩过的免费游戏 ([b61f531](https://github.com/XasYer/steam-plugin/commit/b61f53104b92a925dfc236082a37ab4fc18bc741))
+
 ## [1.13.2](https://github.com/XasYer/steam-plugin/compare/v1.13.1...v1.13.2) (2025-10-07)
 
 
