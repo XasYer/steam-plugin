@@ -106,6 +106,25 @@ export async function getGroupMemberList (botId, groupId) {
   return result
 }
 
+export async function isGroupMember (botId, uid, gid) {
+  try {
+    if (uid == '0') return true
+    const bot = getBot(botId)
+    if (Version.BotName === 'Karin') {
+      const info = await bot.GetGroupMemberInfo(gid, uid)
+      return !!info
+    } else {
+      uid = Number(uid) || uid
+      gid = Number(gid) || gid
+      const member = bot.pickGroup(gid).pickMember(uid)
+      const info = await member.getInfo?.() || member.info
+      return !!info
+    }
+  } catch {
+    return false
+  }
+}
+
 /**
    * 获取at的id,没有则返回用户id
    * @param {string|string[]} at
