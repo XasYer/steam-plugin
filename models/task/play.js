@@ -60,6 +60,9 @@ export async function callback () {
         const iconUrl = utils.steam.getHeaderImgUrlByAppid(appid, 'apps', player.header)
         // const iconUrl = utils.steam.getHeaderImgUrlByAppid(appid, 'apps')
         for (const i of pushGroups) {
+          if (!await utils.bot.isGroupMember(i.botId, i.userId, i.groupId)) {
+            continue
+          }
           const avatar = await utils.bot.getUserAvatar(i.botId, i.userId, i.groupId)
           // 0 就是没有人绑定
           const nickname = i.userId == '0' ? player.personaname : await utils.bot.getUserName(i.botId, i.userId, i.groupId)
