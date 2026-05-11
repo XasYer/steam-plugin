@@ -48,6 +48,9 @@ export async function callback () {
         }
       })
       for (const g of pushList.filter(p => p.steamId === i.steamId)) {
+        if (!await utils.bot.isGroupMember(g.botId, g.userId, g.groupId)) {
+          continue
+        }
         const username = await utils.bot.getUserName(g.botId, g.userId, g.groupId)
         if (Config.push.pushMode == 1) {
           for (const i of games) {
