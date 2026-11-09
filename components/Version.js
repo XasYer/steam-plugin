@@ -25,10 +25,10 @@ const BotName = (() => {
   } else if (BotPackage.dependencies.react) {
     fs.rmSync(pluginPath, { recursive: true })
     return 'Yunzai-Next'
-  } else if (Array.isArray(global.Bot?.uin)) {
-    return 'Trss-Yunzai'
   } else if (BotPackage.name === 'MangoCat-Yunzai') {
     return 'MangoCat-Yunzai'
+  } else if (Array.isArray(global.Bot?.uin)) {
+    return 'Trss-Yunzai'
   } else if (BotPackage.dependencies.sequelize) {
     return 'Miao-Yunzai'
   } else {
