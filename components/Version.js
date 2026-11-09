@@ -17,7 +17,7 @@ const pluginPackage = JSON.parse(fs.readFileSync(join(pluginPath, 'package.json'
 const pluginVersion = pluginPackage.version
 
 /**
- * @type {'Karin'|'Miao-Yunzai'|'Trss-Yunzai'|'Yunzai-Next'}
+ * @type {'Karin'|'MangoCat-Yunzai'|'Miao-Yunzai'|'Trss-Yunzai'|'Yunzai-Next'}
  */
 const BotName = (() => {
   if (/^karin/i.test(pluginName)) {
@@ -25,6 +25,8 @@ const BotName = (() => {
   } else if (BotPackage.dependencies.react) {
     fs.rmSync(pluginPath, { recursive: true })
     return 'Yunzai-Next'
+  } else if (BotPackage.name === 'MangoCat-Yunzai') {
+    return 'MangoCat-Yunzai'
   } else if (Array.isArray(global.Bot?.uin)) {
     return 'Trss-Yunzai'
   } else if (BotPackage.dependencies.sequelize) {
